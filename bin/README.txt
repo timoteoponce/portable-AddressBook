@@ -1,0 +1,2 @@
+- copy this .exe file to C:/Windows/system32
+- in linux is already installed

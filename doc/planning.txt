@@ -1,0 +1,28 @@
+Use cases
+==========
+* Contacts Management
+	- Create group
+	- Remove group
+	- Edit group
+	- Add contact to group
+	- Create contact
+	- Edit contact
+	- Remove contact
+* Import/export
+	- Import/Export to vcard3
+	- Import/Export to spreadsheet(csv?)
+* Integration
+	- Send email
+
+Non-functional requirements
+===========================
+- Work with windows andin console mode
+
+Iterations
+===========
+	I1 :
+		- Design/Implement data model
+		- Integrate with sqlite
+		- MVC + DAO pattern maybe? 
+		- Running application storing
+	

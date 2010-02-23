@@ -1,0 +1,9 @@
+25/12/2009
+-----------
+	- Class design for data model
+		- Just an initial and functional design
+			- Create entities : Country, City, Protocol
+	* Status: Done
+
+	- Create a DAO approach with reference loading
+	* Status: In process

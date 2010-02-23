@@ -1,0 +1,56 @@
+<project name="classpath" basedir=".">	
+	<!-- Log4J -->
+	<property name="log4j.version" value="1.2.15" />
+	<property name="log4j.home" location="${common.lib}/log4j/${log4j.version}" />
+	<path id="log4j.classpath">
+		<pathelement location="${log4j.home}/log4j-${log4j.version}.jar" />
+	</path>
+	
+	<!-- jdbc-sqlite -->
+		<property name="jdbc-sqlite.version" value="0.5.6" />
+		<property name="jdbc-sqlite.home" location="${common.lib}/jdbc/sqlite/${jdbc-sqlite.version}" />
+		<path id="jdbc-sqlite.classpath">			
+			<fileset dir="${jdbc-sqlite.home}" includes="*.jar"/>
+		</path>
+	
+	<!-- Substance - - >
+	<property name="substance.version" value="5.0" />
+	<property name="substance.home" location="${common.lib}/substance/${substance.version}" />
+	<path id="substance.classpath">
+		<fileset dir="${substance.home}" includes="*.jar"/>		  
+	</path>
+	-->
+
+	<!-- JGoodies bindings - - >
+	<property name="jgoodies-bindings.version" value="2.0.6" />
+	<property name="jgoodies-bindings.home" location="${common.lib}/jgoodies/binding/${jgoodies-bindings.version}" />
+	<path id="jgoodies-bindings.classpath">
+		<fileset dir="${jgoodies-bindings.home}" includes="**/*.jar"/>
+	</path>
+	-->
+
+	<!-- JGoodies looks - - >
+	<property name="jgoodies-looks.version" value="2.2.1" />
+	<property name="jgoodies-looks.home" location="${common.lib}/jgoodies/looks/${jgoodies-looks.version}" />
+	<path id="jgoodies-looks.classpath">
+		<fileset dir="${jgoodies-looks.home}" includes="**/*.jar"/>
+	</path>
+	-->
+
+	<!-- JGoodies forms - - >
+	<property name="jgoodies-forms.version" value="1.2.1" />
+	<property name="jgoodies-forms.home" location="${common.lib}/jgoodies/forms/${jgoodies-forms.version}" />
+	<path id="jgoodies-forms.classpath">
+		<fileset dir="${jgoodies-forms.home}" includes="**/*.jar"/>
+	</path>
+	-->
+
+	<!-- SwingX - - >
+	<property name="swingx.version" value="0.9.5" />
+	<property name="swingx.home" location="${common.lib}/swingx/${swingx.version}" />
+	<path id="swingx.classpath">
+		<fileset dir="${swingx.home}" includes="**/*.jar"/>
+	</path>
+	-->
+
+</project>

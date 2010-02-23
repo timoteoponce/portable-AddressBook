@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="addressBook" default="build" basedir=".">
+	<description>AddressBook application, Juan Timoteo Ponce Ortiz. UAGRM.</description>
+	
+	<property file="build.properties" />
+	<import file="${classpath.location}" />
+
+	<path id="compile.classpath">
+		<fileset dir="lib" includes="**/*.jar" />
+		<path refid="log4j.classpath"/>
+		<path refid="jdbc-sqlite.classpath"/>
+	</path>
+
+	<path id="src.path">
+		<pathelement location="${project.src}" />
+	</path>
+
+	<path id="run.classpath">
+		<path refid="compile.classpath" />		
+		<path location="${project.build}" />
+		<path location="${project.config}" />
+		<path location="${project.resources}" />
+	</path>
+	
+	<path id="test.classpath">
+		<path refid="compile.classpath" />		
+		<path location="${project.build}" />
+		<path location="${project.config}" />
+		<path location="${project.resources}" />
+	</path>
+
+	<!--<taskdef resource="testngtasks" classpath="lib/testng/testng-5.9-jdk15.jar" />-->
+
+	<target name="init">
+		<mkdir dir="${project.config}"/>
+		<mkdir dir="${project.resources}"/>
+		<mkdir dir="${project.src}"/>
+		<mkdir dir="${project.test}"/>
+		<mkdir dir="${project.lib}"/>
+	</target>
+	
+	<target name="compile-test" depends="compile">		
+		<javac encoding="iso-8859-1" destdir="${project.build}" 
+			classpathref="test.classpath" includes="**/*.java" debug="true">
+			<src path="${project.test}" />
+		</javac>
+	</target>
+
+
+	<target name="prepare">
+		<mkdir dir="${project.build}" />
+	</target>
+
+	<target name="build" depends="compile" description="Build the project incrementally.">
+	</target>
+
+	<target name="clean">
+		<delete dir="${project.build}" />
+	</target>
+
+	<target name="compile" depends="prepare" description="Compile the sources (checked in and generated)">
+
+		<copy todir="${project.build}">
+			<fileset dir="${project.src}">
+				<include name="**/*.properties" />
+			</fileset>
+			<!-- copy log4j and proxy settings to application root dir -->
+			<fileset dir="${project.config}">
+				<include name="*.properties" />
+				<include name="*.xml" />
+			</fileset>
+		</copy>
+		<javac encoding="iso-8859-1" destdir="${project.build}" classpathref="compile.classpath" includes="**/*.java" debug="true">
+			<src path="${project.src}" />
+		</javac>
+	</target>
+
+
+	<target name="jar" depends="build" description="Build a distribution jar file">
+		<delete dir="${project.build.dist}" />
+		<mkdir dir="${project.build.dist}" />
+		<jar destfile="${project.build.dist}/${dist.jar.name}">
+			<manifest>
+				<attribute name="Built-By" value="Juan Timoteo Ponce Ortiz." />
+				<section name="common">
+					<attribute name="Specification-Title" value="${application.name}" />
+					<attribute name="Specification-Version" value="${application.release}" />
+					<attribute name="Specification-Vendor" value="${application.author}" />
+					<attribute name="Implementation-Title" value="${application.name}" />
+					<attribute name="Implementation-Version" value="${application.release} ${TODAY}" />
+				</section>
+
+				<attribute name="Main-Class" value="${main.class}" />
+				<attribute name="Class-Path" value="config/ templates/ 
+				lib/apache-ant/1.7.1/ant.jar
+				lib/apache-ant/1.7.1/ant-launcher.jar
+				lib/apache-ant/1.7.1/xercesImpl.jar
+				lib/apache-ant/1.7.1/xml-apis.jar
+				lib/ejb3/ejb3-persistence.jar
+				lib/java_help/2.0/jh.jar
+				lib/jgoodies/forms-1.2.1.jar
+				lib/jgoodies/jgoodies-uif-lite.jar
+				lib/jgoodies/looks-2.2.1.jar
+				lib/l2fprod/7.3/l2fprod-common-all.jar
+				lib/log4j/1.2.15/log4j-1.2.15.jar
+				lib/mdr/1.0/jmi.jar
+				lib/mdr/1.0/jmiutils.jar
+				lib/mdr/1.0/mdrapi.jar
+				lib/mdr/1.0/mof.jar
+				lib/mdr/1.0/nbmdr.jar
+				lib/mdr/1.0/openide-util.jar
+				lib/uml2mof/1.4/umlmetamodel.jar
+				lib/velocity/1.6.1/velocity-1.6.1.jar
+				lib/velocity/1.6.1/velocity-1.6.1-dep.jar
+				lib/jedit_syntax.jar
+				lib/tools.jar" />
+			</manifest>
+			<fileset dir="${project.build}">
+				<include name="**" />
+				<exclude name="**/*Test.class" />
+				<exclude name="*.*" />
+				<exclude name="*.db" />
+			</fileset>
+			<fileset dir="resources">
+				<include name="**" />
+				<exclude name="*.db" />
+			</fileset>
+		</jar>
+	</target>
+
+
+	<!-- def distribution; usually overridden in the build.xml file 
+		<target name="dist" depends="rebuild,distJar">  -->
+	<target name="dist" depends="build,jar">
+		<property name="base.name" value="${ant.project.name}" />
+		<delete dir="release" />
+		<delete dir="dist" />
+		<mkdir dir="dist" />
+		<mkdir dir="release" />
+
+		<copy todir="release/config">
+			<fileset dir="config" includes="**" />
+		</copy>
+
+		<copy todir="release/templates">
+			<fileset dir="templates" includes="**" />
+		</copy>
+
+		<copy todir="release/help">
+			<fileset dir="help" includes="**" />
+		</copy>
+
+		<copy todir="release/lib">
+			<fileset dir="lib" includes="**/*.jar" />
+		</copy>
+
+		<copy todir="release/common_libs">
+			<fileset dir="common_libs" includes="**/*" />
+		</copy>
+
+		<copy todir="release" file="${project.build.dist}/${dist.jar.name}" />
+
+		<zip destfile="dist/${release.name}">
+			<zipfileset dir="release/" includes="**/*.*" />
+		</zip>
+		<delete dir="release" />
+
+	</target>
+
+	<target name="run" description="Run the app" depends="build">
+		<java classname="vista.Main" fork="true" classpathref="run.classpath" />
+	</target>
+
+	<target name="copy-libs" description="Copy repo libs to lib folder">
+		<copy todir="lib">
+			<path refid="compile.classpath" />
+		</copy>
+	</target>
+
+	<!--<target name="test" depends="compile-test">
+		<mkdir dir="${project.build}/reports"/>
+		<testng classpathref="test.classpath"
+			sourcedir="${project.build}" haltonfailure="true" 
+			outputdir="${project.build}/reports">
+			<xmlfileset dir="resources" includes="testng.xml"/>
+		</testng>
+	</target>-->
+
+</project>
