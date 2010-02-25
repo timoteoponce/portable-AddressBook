@@ -9,41 +9,37 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.ponce.addressbook.controller.actions.CommonActions;
 import org.ponce.addressbook.model.Contact;
-import org.ponce.addressbook.model.Entity;
 import org.ponce.addressbook.model.Group;
 import org.ponce.addressbook.model.ReferenceLink;
 import org.ponce.addressbook.model.dao.CacheFactory;
 import org.ponce.addressbook.model.dao.ContactDao;
-import org.ponce.addressbook.model.dao.GenericDao;
 import org.ponce.addressbook.model.dao.GroupDao;
 
-public class SqlGroupDao extends AbstractSqlDao implements GroupDao {
+public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 
 	private static final Logger log = Logger.getLogger(SqlGroupDao.class);
 
 	@Override
-	public void loadReferences(Entity entity, Class<?> clazz) {
+	public void loadReferences(Group entity, Class<?> clazz) {
 		if (clazz.equals(Contact.class)) {
 			final Group group = (Group) entity;
 			ContactDao contactDao = (ContactDao) CacheFactory
 					.getInstance(ContactDao.class);
 
 			group.getContacts().clear();
-			group.getContacts().addAll(
-					(Collection<? extends Contact>) contactDao
-							.getByGroup(entity.getId()));
+			group.getContacts().addAll(contactDao.getByGroup(entity.getId()));
 		}
 	}
 
 	@Override
-	public Set<Entity> getByContact(Integer contactId) {
+	public Set<Group> getByContact(Integer contactId) {
 		// TODO not needed yet
 		return null;
 	}
 
 	@Override
-	public void saveContacts(Entity entity) {
-		final Group group = (Group) entity;		
+	public void saveContacts(Group entity) {
+		final Group group = (Group) entity;
 		removeContactReferences(group);
 
 		for (Contact contact : group.getContacts()) {
@@ -59,8 +55,8 @@ public class SqlGroupDao extends AbstractSqlDao implements GroupDao {
 	private void addContactReference(Group group, Contact contact) {
 		log.info("Adding contact '" + contact.getId() + "' to group -> "
 				+ group.getId());
-		ReferenceLink ref = new ReferenceLink(group.getId(), contact.getId(), null,
-				null, CONTACT_JOIN_TABLE_NAME);
+		ReferenceLink ref = new ReferenceLink(group.getId(), contact.getId(),
+				null, null, CONTACT_JOIN_TABLE_NAME);
 		createReference(ref);
 	}
 
@@ -70,7 +66,7 @@ public class SqlGroupDao extends AbstractSqlDao implements GroupDao {
 	}
 
 	@Override
-	protected void fillValues(Entity entity, ResultSet rs) throws SQLException {
+	protected void fillValues(Group entity, ResultSet rs) throws SQLException {
 		Group group = (Group) entity;
 		group.setId(rs.getInt(1));
 		group.setName(rs.getString(2));
@@ -78,7 +74,7 @@ public class SqlGroupDao extends AbstractSqlDao implements GroupDao {
 	}
 
 	@Override
-	protected String getFields(Entity entity, CommonActions action) {
+	protected String getFields(Group entity, CommonActions action) {
 		String out = "";
 		final Group group = (Group) entity;
 		switch (action) {
@@ -101,7 +97,7 @@ public class SqlGroupDao extends AbstractSqlDao implements GroupDao {
 	}
 
 	@Override
-	protected Entity loadValues(ResultSet rs) throws SQLException {
+	protected Group loadValues(ResultSet rs) throws SQLException {
 		Group group = new Group();
 		fillValues(group, rs);
 
@@ -141,7 +137,7 @@ public class SqlGroupDao extends AbstractSqlDao implements GroupDao {
 	}
 
 	@Override
-	protected Collection<ReferenceLink> getReferences(Entity entity) {
+	protected Collection<ReferenceLink> getReferences(Group entity) {
 		Collection<ReferenceLink> list = new ArrayList<ReferenceLink>();
 		list.add(new ReferenceLink(entity.getId(), null, "ID_GROUP", null,
 				CONTACT_JOIN_TABLE_NAME));

@@ -1,5 +1,7 @@
 package org.ponce.addressbook.model.dao;
 
-public interface CountryDao<T> extends GenericDao<T> {
+import org.ponce.addressbook.model.Country;
+
+public interface CountryDao extends GenericDao<Country> {
 
 }

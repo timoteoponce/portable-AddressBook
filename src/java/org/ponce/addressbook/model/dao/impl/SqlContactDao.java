@@ -11,8 +11,6 @@ import org.apache.log4j.Logger;
 import org.ponce.addressbook.controller.actions.CommonActions;
 import org.ponce.addressbook.model.Address;
 import org.ponce.addressbook.model.Contact;
-import org.ponce.addressbook.model.Entity;
-import org.ponce.addressbook.model.Group;
 import org.ponce.addressbook.model.Phone;
 import org.ponce.addressbook.model.ReferenceLink;
 import org.ponce.addressbook.model.VirtualAddress;
@@ -21,7 +19,7 @@ import org.ponce.addressbook.model.dao.GenericDao;
 import org.ponce.addressbook.model.dao.GroupDao;
 import org.ponce.addressbook.util.Configuration;
 
-public class SqlContactDao extends AbstractSqlDao implements ContactDao {
+public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao {
 
 	private static final Logger log = Logger.getLogger(SqlContactDao.class);
 
@@ -45,14 +43,14 @@ public class SqlContactDao extends AbstractSqlDao implements ContactDao {
 	// }
 
 	@Override
-	public Set<Entity> getByGroup(final Integer groupId) {
+	public Set<Contact> getByGroup(final Integer groupId) {
 		String query = Configuration.getConfigKey(GenericDao.SQL_SELECT_ALL)
 				.trim();
 		query = query.replace(GenericDao.VAR_COLUMNS, "c.*");
 		query = query.replace(GenericDao.VAR_TABLE, TABLE_NAME);
 		query = query + " c INNER JOIN " + GroupDao.CONTACT_JOIN_TABLE_NAME
 				+ " gc ON c.ID = gc.ID_CONTACT";
-		Set<Entity> contacts = new HashSet<Entity>();
+		Set<Contact> contacts = new HashSet<Contact>();
 
 		ResultSet rs = getDatabaseHandler().executeQuery(query);
 		try {
@@ -89,7 +87,7 @@ public class SqlContactDao extends AbstractSqlDao implements ContactDao {
 	// }
 
 	@Override
-	protected void fillValues(Entity entity, ResultSet rs) throws SQLException {
+	protected void fillValues(Contact entity, ResultSet rs) throws SQLException {
 		final Contact contact = (Contact) entity;
 		contact.setId(rs.getInt(1));
 		contact.setFirstName(rs.getString(2));
@@ -97,7 +95,7 @@ public class SqlContactDao extends AbstractSqlDao implements ContactDao {
 	}
 
 	@Override
-	protected String getFields(Entity entity, CommonActions action) {
+	protected String getFields(Contact entity, CommonActions action) {
 		String out = "";
 		final Contact contact = (Contact) entity;
 		switch (action) {
@@ -120,19 +118,19 @@ public class SqlContactDao extends AbstractSqlDao implements ContactDao {
 	}
 
 	@Override
-	public void loadReferences(Entity entity, Class<?> target) {
+	public void loadReferences(Contact entity, Class<?> target) {
 		// TODO implement
 	}
 
 	@Override
-	protected Entity loadValues(ResultSet rs) throws SQLException {
+	protected Contact loadValues(ResultSet rs) throws SQLException {
 		final Contact contact = new Contact();
 		fillValues(contact, rs);
 		return contact;
 	}
 
 	@Override
-	public void saveAddresses(Entity entity) {
+	public void saveAddresses(Contact entity) {
 		final Contact contact = (Contact) entity;
 		removeAddressReferences(contact);
 
@@ -160,7 +158,7 @@ public class SqlContactDao extends AbstractSqlDao implements ContactDao {
 	}
 
 	@Override
-	public void savePhones(Entity entity) {
+	public void savePhones(Contact entity) {
 		final Contact contact = (Contact) entity;
 		removePhoneReferences(contact);
 
@@ -188,7 +186,7 @@ public class SqlContactDao extends AbstractSqlDao implements ContactDao {
 	}
 
 	@Override
-	public void saveVirtualAddresses(Entity entity) {
+	public void saveVirtualAddresses(Contact entity) {
 		final Contact contact = (Contact) entity;
 		removeVirtualAddressReferences(contact);
 
@@ -218,7 +216,7 @@ public class SqlContactDao extends AbstractSqlDao implements ContactDao {
 	}
 
 	@Override
-	protected Collection<ReferenceLink> getReferences(Entity entity) {
+	protected Collection<ReferenceLink> getReferences(Contact entity) {
 		Collection<ReferenceLink> list = new ArrayList<ReferenceLink>();
 
 		list.add(new ReferenceLink(entity.getId(), null, "ID_CONTACT", null,

@@ -1,7 +1,6 @@
 package org.ponce.addressbook.model.dao;
 
 import java.util.Collection;
-import java.util.Set;
 
 public interface GenericDao<T> {
 

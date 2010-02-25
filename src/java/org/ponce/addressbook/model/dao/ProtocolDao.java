@@ -1,5 +1,7 @@
 package org.ponce.addressbook.model.dao;
 
-public interface ProtocolDao<T> extends GenericDao<T> {
+import org.ponce.addressbook.model.Protocol;
+
+public interface ProtocolDao extends GenericDao<Protocol> {
 
 }

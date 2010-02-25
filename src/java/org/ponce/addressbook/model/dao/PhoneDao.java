@@ -1,6 +1,8 @@
 package org.ponce.addressbook.model.dao;
 
+import org.ponce.addressbook.model.Phone;
 
-public interface PhoneDao<T> extends GenericDao<T> {
+
+public interface PhoneDao extends GenericDao<Phone> {
 
 }

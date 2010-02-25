@@ -59,9 +59,7 @@ public class GroupController implements Controller<Group> {
 
 	@Override
 	public Collection<Group> getElements() {
-		final Collection<Group> list = new ArrayList<Group>();
-		list.addAll((Collection<? extends Group>) dao.selectAll());
-		return list;
+		return dao.selectAll();
 	}
 
 	private GroupDao getGroupDao() {

@@ -14,150 +14,150 @@ import org.ponce.addressbook.util.Configuration;
 import org.ponce.data.DatabaseHandler;
 import org.ponce.data.DatabaseHandlerFactory;
 
-public abstract class AbstractSqlDao implements GenericDao<Entity> {
+public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
-    private static final Logger log = Logger.getLogger(SqlGroupDao.class);
+	private static final Logger log = Logger.getLogger(SqlGroupDao.class);
 
-    private final DatabaseHandler handler = DatabaseHandlerFactory
-	    .getDatabaseHandler();
+	private final DatabaseHandler handler = DatabaseHandlerFactory
+			.getDatabaseHandler();
 
-    @Override
-    public void create(Entity entity) {
-	String query = Configuration.getConfigKey(GenericDao.SQL_INSERT).trim();
-	query = query.replace(GenericDao.VAR_TABLE, getTableName());
-	query = query.replace(GenericDao.VAR_VALUES, getFields(entity,
-		CommonActions.CREATE));
-	log.info("Query result: " + handler.executeUpdate(query));
-	// retrieve the generated ID
-	query = Configuration.getConfigKey(GenericDao.SQL_SELECT_LAST_ID);
-	query = query.replace(GenericDao.VAR_TABLE, getTableName());
+	@Override
+	public void create(T entity) {
+		String query = Configuration.getConfigKey(GenericDao.SQL_INSERT).trim();
+		query = query.replace(GenericDao.VAR_TABLE, getTableName());
+		query = query.replace(GenericDao.VAR_VALUES, getFields(entity,
+				CommonActions.CREATE));
+		log.info("Query result: " + handler.executeUpdate(query));
+		// retrieve the generated ID
+		query = Configuration.getConfigKey(GenericDao.SQL_SELECT_LAST_ID);
+		query = query.replace(GenericDao.VAR_TABLE, getTableName());
 
-	ResultSet rs = handler.executeQuery(query);
-	try {
-	    rs.next();
-	    entity.setId(rs.getInt(1));
-	} catch (SQLException e) {
-	    log.error(e, e);
-	} finally {
-	    handler.closeQuietly(rs);
+		ResultSet rs = handler.executeQuery(query);
+		try {
+			rs.next();
+			((Entity)entity).setId(rs.getInt(1));
+		} catch (SQLException e) {
+			log.error(e, e);
+		} finally {
+			handler.closeQuietly(rs);
+		}
 	}
-    }
 
-    @Override
-    public void delete(Entity entity) {
-	String query = Configuration.getConfigKey(GenericDao.SQL_DELETE).trim();
-	query = query.replace(GenericDao.VAR_TABLE, getTableName());
-	query = query.replace(GenericDao.VAR_CONDITION, "id = "
-		+ entity.getId());
+	@Override
+	public void delete(T entity) {
+		String query = Configuration.getConfigKey(GenericDao.SQL_DELETE).trim();
+		query = query.replace(GenericDao.VAR_TABLE, getTableName());
+		query = query.replace(GenericDao.VAR_CONDITION, "id = "
+				+ ((Entity)entity).getId());
 
-	log.info("Query result: " + handler.executeUpdate(query));
-	deleteReferences(entity);
-    }
-
-    protected void deleteReferences(Entity entity) {
-	log.info("Removing all references.");
-	Collection<ReferenceLink> references = getReferences(entity);
-
-	for (ReferenceLink ref : references) {
-	    deleteReference(ref);
+		log.info("Query result: " + handler.executeUpdate(query));
+		deleteReferences(entity);
 	}
-    }
 
-    protected void deleteReference(ReferenceLink ref) {
-	log.info("Removing reference: " + ref.toString());
-	String query = Configuration.getConfigKey(GenericDao.SQL_DELETE).trim();
-	query = query.replace(GenericDao.VAR_TABLE, ref.getTableName());
-	if (ref.getSourceColumn() != null) {
-	    query = query.replace(GenericDao.VAR_CONDITION, ref
-		    .getSourceColumn()
-		    + "=" + ref.getSourceId());
-	} else {
-	    query = query.replace(GenericDao.VAR_CONDITION, ref
-		    .getTargetColumn()
-		    + "=" + ref.getTargetId());
+	protected void deleteReferences(T entity) {
+		log.info("Removing all references.");
+		Collection<ReferenceLink> references = getReferences(entity);
+
+		for (ReferenceLink ref : references) {
+			deleteReference(ref);
+		}
 	}
-	handler.executeUpdate(query);
-    }
 
-    protected void createReference(ReferenceLink ref) {
-	log.info("Adding reference: " + ref.toString());
-	String query = Configuration.getConfigKey(GenericDao.SQL_INSERT).trim();
-	query = query.replace(GenericDao.VAR_TABLE, ref.getTableName());
-	query = query.replace(GenericDao.VAR_VALUES, "(" + ref.getSourceId()
-		+ "," + ref.getTargetId() + ");");
-	getDatabaseHandler().executeUpdate(query);
-    }
-
-    @Override
-    public Entity read(Entity entity) {
-	String query = Configuration.getConfigKey(GenericDao.SQL_SELECT).trim();
-	query = query.replace(GenericDao.VAR_TABLE, getTableName());
-	query = query.replace(GenericDao.VAR_COLUMNS, "*");
-	query = query.replace(GenericDao.VAR_CONDITION, "id = "
-		+ entity.getId());
-	ResultSet rs = handler.executeQuery(query);
-	try {
-	    rs.next();
-	    fillValues(entity, rs);
-	} catch (SQLException e) {
-	    log.error("Error reading entity: " + entity.getId() + " > " + e);
-	    entity = null;
-	} finally {
-	    handler.closeQuietly(rs);
+	protected void deleteReference(ReferenceLink ref) {
+		log.info("Removing reference: " + ref.toString());
+		String query = Configuration.getConfigKey(GenericDao.SQL_DELETE).trim();
+		query = query.replace(GenericDao.VAR_TABLE, ref.getTableName());
+		if (ref.getSourceColumn() != null) {
+			query = query.replace(GenericDao.VAR_CONDITION, ref
+					.getSourceColumn()
+					+ "=" + ref.getSourceId());
+		} else {
+			query = query.replace(GenericDao.VAR_CONDITION, ref
+					.getTargetColumn()
+					+ "=" + ref.getTargetId());
+		}
+		handler.executeUpdate(query);
 	}
-	return entity;
-    }
 
-    @Override
-    public Collection<Entity> selectAll() {
-	Collection<Entity> resultList = new ArrayList<Entity>();
-
-	String query = Configuration.getConfigKey(GenericDao.SQL_SELECT_ALL)
-		.trim();
-	query = query.replace(GenericDao.VAR_TABLE, getTableName());
-	query = query.replace(GenericDao.VAR_COLUMNS, "*");
-	ResultSet rs = handler.executeQuery(query);
-	try {
-	    while (rs.next()) {
-		Entity tempEntity = loadValues(rs);
-		//
-		resultList.add(tempEntity);
-	    }
-	} catch (SQLException e) {
-	    log.error(e, e);
-	} finally {
-	    handler.closeQuietly(rs);
+	protected void createReference(ReferenceLink ref) {
+		log.info("Adding reference: " + ref.toString());
+		String query = Configuration.getConfigKey(GenericDao.SQL_INSERT).trim();
+		query = query.replace(GenericDao.VAR_TABLE, ref.getTableName());
+		query = query.replace(GenericDao.VAR_VALUES, "(" + ref.getSourceId()
+				+ "," + ref.getTargetId() + ");");
+		getDatabaseHandler().executeUpdate(query);
 	}
-	return resultList;
-    }
 
-    @Override
-    public void update(Entity entity) {
-	String query = Configuration.getConfigKey(GenericDao.SQL_UPDATE).trim();
-	query = query.replace(GenericDao.VAR_TABLE, getTableName());
-	query = query.replace(GenericDao.VAR_VALUES, getFields(entity,
-		CommonActions.UPDATE));
-	query = query.replace(GenericDao.VAR_CONDITION, "id = "
-		+ entity.getId());
-	log.info("Query result: " + handler.executeUpdate(query));
-    }
+	@Override
+	public T read(T entity) {
+		String query = Configuration.getConfigKey(GenericDao.SQL_SELECT).trim();
+		query = query.replace(GenericDao.VAR_TABLE, getTableName());
+		query = query.replace(GenericDao.VAR_COLUMNS, "*");
+		query = query.replace(GenericDao.VAR_CONDITION, "id = "
+				+ ((Entity)entity).getId());
+		ResultSet rs = handler.executeQuery(query);
+		try {
+			rs.next();
+			fillValues(entity, rs);
+		} catch (SQLException e) {
+			log.error("Error reading entity: " + ((Entity)entity).getId() + " > " + e);
+			entity = null;
+		} finally {
+			handler.closeQuietly(rs);
+		}
+		return entity;
+	}
 
-    protected DatabaseHandler getDatabaseHandler() {
-	return handler;
-    }
+	@Override
+	public Collection<T> selectAll() {
+		Collection<T> resultList = new ArrayList<T>();
 
-    protected abstract Entity loadValues(ResultSet rs) throws SQLException;
+		String query = Configuration.getConfigKey(GenericDao.SQL_SELECT_ALL)
+				.trim();
+		query = query.replace(GenericDao.VAR_TABLE, getTableName());
+		query = query.replace(GenericDao.VAR_COLUMNS, "*");
+		ResultSet rs = handler.executeQuery(query);
+		try {
+			while (rs.next()) {
+				T tempEntity = loadValues(rs);
+				//
+				resultList.add(tempEntity);
+			}
+		} catch (SQLException e) {
+			log.error(e, e);
+		} finally {
+			handler.closeQuietly(rs);
+		}
+		return resultList;
+	}
 
-    protected abstract String getFields(Entity entity, CommonActions action);
+	@Override
+	public void update(T entity) {
+		String query = Configuration.getConfigKey(GenericDao.SQL_UPDATE).trim();
+		query = query.replace(GenericDao.VAR_TABLE, getTableName());
+		query = query.replace(GenericDao.VAR_VALUES, getFields(entity,
+				CommonActions.UPDATE));
+		query = query.replace(GenericDao.VAR_CONDITION, "id = "
+				+ ((Entity)entity).getId());
+		log.info("Query result: " + handler.executeUpdate(query));
+	}
 
-    protected abstract String getTableName();
+	protected DatabaseHandler getDatabaseHandler() {
+		return handler;
+	}
 
-    protected abstract void fillValues(Entity entity, ResultSet rs)
-	    throws SQLException;
+	protected abstract T loadValues(ResultSet rs) throws SQLException;
 
-    @Override
-    public abstract void loadReferences(Entity entity, Class<?> clazz);
+	protected abstract String getFields(T entity, CommonActions action);
 
-    protected abstract Collection<ReferenceLink> getReferences(Entity entity);
+	protected abstract String getTableName();
+
+	protected abstract void fillValues(T entity, ResultSet rs)
+			throws SQLException;
+
+	@Override
+	public abstract void loadReferences(T entity, Class<?> clazz);
+
+	protected abstract Collection<ReferenceLink> getReferences(T entity);
 
 }

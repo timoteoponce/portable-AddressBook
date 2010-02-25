@@ -1,7 +1,6 @@
 package org.ponce.addressbook.controller;
 
 import java.util.Collection;
-import java.util.Set;
 
 import org.ponce.addressbook.view.View;
 

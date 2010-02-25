@@ -1,5 +1,7 @@
 package org.ponce.addressbook.model.dao;
 
-public interface VirtualAddressDao<T> extends GenericDao<T> {
+import org.ponce.addressbook.model.VirtualAddress;
+
+public interface VirtualAddressDao extends GenericDao<VirtualAddress> {
 
 }
