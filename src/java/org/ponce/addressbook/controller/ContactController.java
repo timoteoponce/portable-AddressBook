@@ -8,6 +8,10 @@ import org.apache.log4j.Logger;
 import org.ponce.addressbook.model.Contact;
 import org.ponce.addressbook.view.View;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class ContactController implements Controller<Contact> {
     
     private static final Logger LOG = Logger.getLogger(ContactController.class);

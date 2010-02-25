@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.ponce.addressbook.util.Configuration;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class SqliteDatabaseHandler extends AbstractDatabaseHandler {
     private static final Logger log = Logger
 	    .getLogger(SqliteDatabaseHandler.class);

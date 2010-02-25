@@ -24,7 +24,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
- * @author Timoteo Ponsh
+ * @author Timoteo Ponce
  */
 public class GroupEdit extends JDialog implements View<Group> {
 

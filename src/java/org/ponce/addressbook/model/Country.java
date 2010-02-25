@@ -1,11 +1,14 @@
 package org.ponce.addressbook.model;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class Country implements Entity {
     private Integer id;
     private String name;
 
     public Country() {
-	// TODO Auto-generated constructor stub
     }
 
     public Country(Integer id, String name) {

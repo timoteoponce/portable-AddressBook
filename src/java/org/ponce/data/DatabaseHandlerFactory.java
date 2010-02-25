@@ -1,5 +1,9 @@
 package org.ponce.data;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class DatabaseHandlerFactory {
     /*
      * Use this if you plan to have multiple databases in runtime private static

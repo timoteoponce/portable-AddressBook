@@ -17,6 +17,10 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class MainView extends JFrame {
     
     private GroupView groupView;

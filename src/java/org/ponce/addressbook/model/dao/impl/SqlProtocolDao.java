@@ -2,6 +2,7 @@ package org.ponce.addressbook.model.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.ponce.addressbook.controller.actions.CommonActions;
@@ -11,6 +12,10 @@ import org.ponce.addressbook.model.dao.CacheFactory;
 import org.ponce.addressbook.model.dao.GenericDao;
 import org.ponce.addressbook.model.dao.ProtocolDao;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class SqlProtocolDao extends AbstractSqlDao<Protocol> implements
 		ProtocolDao {
 
@@ -62,7 +67,7 @@ public class SqlProtocolDao extends AbstractSqlDao<Protocol> implements
 	}
 
 	public static void main(String[] args) {
-		GenericDao<Protocol> dao = (GenericDao<Protocol>) CacheFactory
+		GenericDao<Protocol> dao = CacheFactory
 				.getInstance(ProtocolDao.class);
 		Protocol p1 = new Protocol();
 		p1.setName("HTTP");
@@ -87,7 +92,6 @@ public class SqlProtocolDao extends AbstractSqlDao<Protocol> implements
 
 	@Override
 	protected Collection<ReferenceLink> getReferences(Protocol entity) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<ReferenceLink>();
 	}
 }

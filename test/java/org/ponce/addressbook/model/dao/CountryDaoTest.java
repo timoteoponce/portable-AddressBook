@@ -6,9 +6,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.ponce.addressbook.model.Country;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class CountryDaoTest implements GenericDaoTest {
 
-    final GenericDao<Country> dao = (GenericDao<Country>) CacheFactory
+    final GenericDao<Country> dao = CacheFactory
 	    .getInstance(CountryDao.class);
 
     @Override

@@ -7,6 +7,10 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public abstract class AbstractDatabaseHandler implements DatabaseHandler {
 
     private static final Logger log = Logger

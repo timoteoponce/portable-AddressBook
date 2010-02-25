@@ -8,6 +8,10 @@ import javax.swing.ListCellRenderer;
 
 import org.ponce.addressbook.model.Group;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class GroupListCellRenderer extends JLabel implements ListCellRenderer {
 
 	public GroupListCellRenderer() {

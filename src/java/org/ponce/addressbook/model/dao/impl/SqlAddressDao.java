@@ -2,6 +2,7 @@ package org.ponce.addressbook.model.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.ponce.addressbook.controller.actions.CommonActions;
@@ -10,6 +11,10 @@ import org.ponce.addressbook.model.Country;
 import org.ponce.addressbook.model.ReferenceLink;
 import org.ponce.addressbook.model.dao.AddressDao;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class SqlAddressDao extends AbstractSqlDao<Address> implements
 		AddressDao {
 
@@ -64,8 +69,7 @@ public class SqlAddressDao extends AbstractSqlDao<Address> implements
 
 	@Override
 	protected Collection<ReferenceLink> getReferences(Address entity) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<ReferenceLink>();
 	}
 
 }

@@ -7,8 +7,12 @@ import org.junit.Test;
 import org.ponce.addressbook.model.Contact;
 import org.ponce.addressbook.model.Group;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class GroupDaoTest implements GenericDaoTest {
-	final GroupDao dao = (GroupDao) CacheFactory.getInstance(GroupDao.class);
+	final GroupDao dao = CacheFactory.getInstance(GroupDao.class);
 
 	@Override
 	@Test
@@ -24,7 +28,7 @@ public class GroupDaoTest implements GenericDaoTest {
 
 	private Collection<Contact> createContacts() {
 		Collection<Contact> contactList = new ArrayList<Contact>();
-		GenericDao<Contact> contactDao = (GenericDao<Contact>) CacheFactory
+		GenericDao<Contact> contactDao = CacheFactory
 				.getInstance(ContactDao.class);
 
 		for (int i = 0; i < TEST_ENTRIES; i++) {

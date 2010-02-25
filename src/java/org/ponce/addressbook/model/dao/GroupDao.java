@@ -4,6 +4,10 @@ import java.util.Set;
 
 import org.ponce.addressbook.model.Group;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public interface GroupDao extends GenericDao<Group> {
     static final String TABLE_NAME = "GROUPS";
 

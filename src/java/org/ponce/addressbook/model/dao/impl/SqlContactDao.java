@@ -19,6 +19,10 @@ import org.ponce.addressbook.model.dao.GenericDao;
 import org.ponce.addressbook.model.dao.GroupDao;
 import org.ponce.addressbook.util.Configuration;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao {
 
 	private static final Logger log = Logger.getLogger(SqlContactDao.class);

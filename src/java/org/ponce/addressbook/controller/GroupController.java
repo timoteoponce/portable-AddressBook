@@ -11,6 +11,10 @@ import org.ponce.addressbook.model.dao.CacheFactory;
 import org.ponce.addressbook.model.dao.GroupDao;
 import org.ponce.addressbook.view.View;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class GroupController implements Controller<Group> {
 
 	private static final Logger LOG = Logger.getLogger(GroupController.class);
@@ -63,7 +67,7 @@ public class GroupController implements Controller<Group> {
 	}
 
 	private GroupDao getGroupDao() {
-		GroupDao dao = (GroupDao) CacheFactory.getInstance(GroupDao.class);
+		GroupDao dao = CacheFactory.getInstance(GroupDao.class);
 		return dao;
 	}
 

@@ -4,16 +4,19 @@ import org.junit.Test;
 import org.ponce.addressbook.model.Contact;
 import org.ponce.addressbook.model.Phone;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class ContactDaoTest implements GenericDaoTest {
 
-	final ContactDao dao = (ContactDao) CacheFactory
-			.getInstance(ContactDao.class);
+	final ContactDao dao = CacheFactory.getInstance(ContactDao.class);
 
 	final Contact contact = new Contact();
 
 	@Override
 	@Test
-	public void createEntries() {		
+	public void createEntries() {
 		contact.setFirstName("Juan Timoteo");
 		contact.setLastName("Ponce Ortiz");
 		dao.create(contact);
@@ -36,22 +39,23 @@ public class ContactDaoTest implements GenericDaoTest {
 	}
 
 	private void createPhones() {
-		final GenericDao<Phone> phoneDao = (GenericDao<Phone>) CacheFactory.getInstance(PhoneDao.class);
+		final GenericDao<Phone> phoneDao = CacheFactory
+				.getInstance(PhoneDao.class);
 		Phone phone1 = new Phone();
 		phone1.setHousePhone("1111aa");
 		phone1.setMobilePhone("2222aa");
 		phone1.setWorkPhone("3333aa");
-		
+
 		phoneDao.create(phone1);
-		
+
 		Phone phone2 = new Phone();
 		phone2.setHousePhone("1111bb");
 		phone2.setMobilePhone("2222bb");
 		phone2.setWorkPhone("3333bb");
-		
+
 		phoneDao.create(phone2);
-		
-		contact.getPhones().add(phone1);		
+
+		contact.getPhones().add(phone1);
 		contact.getPhones().add(phone2);
 		dao.savePhones(contact);
 	}

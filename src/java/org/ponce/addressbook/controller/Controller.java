@@ -4,6 +4,11 @@ import java.util.Collection;
 
 import org.ponce.addressbook.view.View;
 
+/**
+ * @author Timoteo Ponce
+ *
+ * @param <T>
+ */
 public interface Controller<T> {
     void addView(View<T> view);
 

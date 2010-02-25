@@ -15,6 +15,10 @@ import org.ponce.addressbook.model.dao.CacheFactory;
 import org.ponce.addressbook.model.dao.ContactDao;
 import org.ponce.addressbook.model.dao.GroupDao;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 
 	private static final Logger log = Logger.getLogger(SqlGroupDao.class);
@@ -23,7 +27,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 	public void loadReferences(Group entity, Class<?> clazz) {
 		if (clazz.equals(Contact.class)) {
 			final Group group = (Group) entity;
-			ContactDao contactDao = (ContactDao) CacheFactory
+			ContactDao contactDao = CacheFactory
 					.getInstance(ContactDao.class);
 
 			group.getContacts().clear();
@@ -124,7 +128,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 		//
 		// dao.create(group3);
 		// log.info("created group : " + group3.getId());
-		GroupDao groupDao = (GroupDao) CacheFactory
+		GroupDao groupDao = CacheFactory
 				.getInstance(SqlGroupDao.class);
 
 		Group myGroup = (Group) groupDao.read(new Group(1, null, null));

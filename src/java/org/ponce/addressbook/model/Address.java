@@ -1,5 +1,9 @@
 package org.ponce.addressbook.model;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class Address implements Entity {
     private Integer id;
     private String street;

@@ -29,7 +29,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
- * @author Timoteo Ponsh
+ * @author Timoteo Ponce
  */
 public class GroupView extends JPanel implements View<Group> {
 	private static final Logger LOG = Logger.getLogger(GroupView.class);

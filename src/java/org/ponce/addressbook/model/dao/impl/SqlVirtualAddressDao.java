@@ -2,6 +2,7 @@ package org.ponce.addressbook.model.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.ponce.addressbook.controller.actions.CommonActions;
@@ -13,6 +14,10 @@ import org.ponce.addressbook.model.dao.GenericDao;
 import org.ponce.addressbook.model.dao.ProtocolDao;
 import org.ponce.addressbook.model.dao.VirtualAddressDao;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
 		implements VirtualAddressDao {
 
@@ -27,7 +32,7 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
 	}
 
 	private Protocol getProtocol(int protocolId) {
-		GenericDao<Protocol> protocolDao = (GenericDao<Protocol>) CacheFactory
+		GenericDao<Protocol> protocolDao = CacheFactory
 				.getInstance(ProtocolDao.class);
 		Protocol protocol = protocolDao.read(new Protocol(protocolId, null,
 				null));
@@ -75,8 +80,7 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
 
 	@Override
 	protected Collection<ReferenceLink> getReferences(VirtualAddress entity) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<ReferenceLink>();
 	}
 
 }

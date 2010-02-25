@@ -4,6 +4,10 @@ import java.util.Set;
 
 import org.ponce.addressbook.model.Contact;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public interface ContactDao extends GenericDao<Contact> {
 	static final String TABLE_NAME = "CONTACTS";
 

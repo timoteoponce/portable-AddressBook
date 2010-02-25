@@ -2,6 +2,11 @@ package org.ponce.addressbook.model.dao;
 
 import java.util.Collection;
 
+/**
+ * @author Timoteo Ponce
+ *
+ * @param <T>
+ */
 public interface GenericDao<T> {
 
 	final String SQL_INSERT = "sql.insert";

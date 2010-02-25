@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * @author Timoteo Ponce
+ *
+ */
 public interface DatabaseHandler {
     void connect();
 

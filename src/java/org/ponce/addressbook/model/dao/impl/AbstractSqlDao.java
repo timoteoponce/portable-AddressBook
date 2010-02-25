@@ -14,6 +14,11 @@ import org.ponce.addressbook.util.Configuration;
 import org.ponce.data.DatabaseHandler;
 import org.ponce.data.DatabaseHandlerFactory;
 
+/**
+ * @author Timoteo Ponce
+ *
+ * @param <T>
+ */
 public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	private static final Logger log = Logger.getLogger(SqlGroupDao.class);
