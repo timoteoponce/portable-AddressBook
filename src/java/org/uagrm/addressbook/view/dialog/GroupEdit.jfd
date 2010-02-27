@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <java version="1.6.0_16" class="java.beans.XMLDecoder"> 
  <object class="com.jformdesigner.model.FormModel"> 
+  <void method="setProperty"> 
+   <string>i18n.bundleName</string> 
+   <string>messages</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.keyPrefix</string> 
+   <string>GroupEdit</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.autoExternalize</string> 
+   <boolean>true</boolean> 
+  </void> 
   <void property="contentType"> 
    <string>form/swing</string> 
   </void> 
@@ -20,12 +32,22 @@
         <string>default, default, default, default, default, fill:default:grow</string> 
        </void> 
       </object> 
+      <void method="setProperty"> 
+       <string>title</string> 
+       <object class="com.jformdesigner.model.FormMessage"> 
+        <null/> 
+        <string>GroupEdit.title</string> 
+       </object> 
+      </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JLabel</string> 
         <void method="setProperty"> 
          <string>text</string> 
-         <string>Name:</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>GroupEdit.label.name</string> 
+         </object> 
         </void> 
         <void method="setProperty"> 
          <string>labelFor</string> 
@@ -77,7 +99,10 @@
         <string>javax.swing.JLabel</string> 
         <void method="setProperty"> 
          <string>text</string> 
-         <string>Description:</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>GroupEdit.label.description</string> 
+         </object> 
         </void> 
         <void method="setProperty"> 
          <string>labelFor</string> 
@@ -129,7 +154,10 @@
         <string>javax.swing.JButton</string> 
         <void method="setProperty"> 
          <string>text</string> 
-         <string>Edit group members</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>GroupEdit.editMembers</string> 
+         </object> 
         </void> 
         <void method="setProperty"> 
          <string>mnemonic</string> 
@@ -173,7 +201,10 @@
           <string>javax.swing.JButton</string> 
           <void method="setProperty"> 
            <string>text</string> 
-           <string>Accept</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>common.accept</string> 
+           </object> 
           </void> 
           <void property="name"> 
            <string>btnAccept</string> 
@@ -204,10 +235,21 @@
           <string>javax.swing.JButton</string> 
           <void method="setProperty"> 
            <string>text</string> 
-           <string>Cancel</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>common.cancel</string> 
+           </object> 
           </void> 
           <void property="name"> 
            <string>btnCancel</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>btnCancelActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
           </void> 
          </object> 
          <object class="com.jformdesigner.model.FormLayoutConstraints"> 

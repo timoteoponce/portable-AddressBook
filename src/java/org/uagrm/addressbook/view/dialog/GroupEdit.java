@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -36,7 +37,7 @@ public class GroupEdit extends JDialog implements View<Group> {
 
     public GroupEdit(Frame owner) {
 	super(owner);
-	initComponents();
+	initComponents();	
     }
 
     private void btnAcceptActionPerformed(ActionEvent e) {
@@ -50,6 +51,10 @@ public class GroupEdit extends JDialog implements View<Group> {
 
     }
 
+    private void btnCancelActionPerformed(ActionEvent e) {
+	this.dispose();
+    }
+
     /*
      * public GroupEdit(Dialog owner) { super(owner); initComponents(); }
      */
@@ -57,6 +62,7 @@ public class GroupEdit extends JDialog implements View<Group> {
     private void initComponents() {
 	// JFormDesigner - Component initialization - DO NOT MODIFY
 	// //GEN-BEGIN:initComponents
+	ResourceBundle bundle = ResourceBundle.getBundle("messages");
 	lblName = new JLabel();
 	txtName = new JTextField();
 	lblDescription = new JLabel();
@@ -67,38 +73,40 @@ public class GroupEdit extends JDialog implements View<Group> {
 	btnCancel = new JButton();
 	CellConstraints cc = new CellConstraints();
 
-	// ======== this ========
+	//======== this ========
+	setTitle(bundle.getString("GroupEdit.title"));
 	Container contentPane = getContentPane();
 	contentPane.setLayout(new FormLayout(
-		"default, 55dlu, 109dlu, default:grow",
-		"5*(default), fill:default:grow"));
+	    "default, 55dlu, 109dlu, default:grow",
+	    "5*(default), fill:default:grow"));
 
-	// ---- lblName ----
-	lblName.setText("Name:");
+	//---- lblName ----
+	lblName.setText(bundle.getString("GroupEdit.label.name"));
 	lblName.setLabelFor(txtName);
 	lblName.setDisplayedMnemonic('N');
 	contentPane.add(lblName, cc.xy(2, 2));
 	contentPane.add(txtName, cc.xy(3, 2));
 
-	// ---- lblDescription ----
-	lblDescription.setText("Description:");
+	//---- lblDescription ----
+	lblDescription.setText(bundle.getString("GroupEdit.label.description"));
 	lblDescription.setLabelFor(txtDescription);
 	lblDescription.setDisplayedMnemonic('D');
 	contentPane.add(lblDescription, cc.xy(2, 3));
 	contentPane.add(txtDescription, cc.xy(3, 3));
 
-	// ---- btnEdit ----
-	btnEdit.setText("Edit group members");
+	//---- btnEdit ----
+	btnEdit.setText(bundle.getString("GroupEdit.editMembers"));
 	btnEdit.setMnemonic('E');
 	contentPane.add(btnEdit, cc.xy(2, 4));
 
-	// ======== panelOperations ========
+	//======== panelOperations ========
 	{
 	    panelOperations.setLayout(new FormLayout(
-		    "default:grow, $lcgap, default:grow", "default"));
+		"default:grow, $lcgap, default:grow",
+		"default"));
 
-	    // ---- btnAccept ----
-	    btnAccept.setText("Accept");
+	    //---- btnAccept ----
+	    btnAccept.setText(bundle.getString("common.accept"));
 	    btnAccept.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    btnAcceptActionPerformed(e);
@@ -106,14 +114,18 @@ public class GroupEdit extends JDialog implements View<Group> {
 	    });
 	    panelOperations.add(btnAccept, cc.xy(1, 1));
 
-	    // ---- btnCancel ----
-	    btnCancel.setText("Cancel");
+	    //---- btnCancel ----
+	    btnCancel.setText(bundle.getString("common.cancel"));
+	    btnCancel.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    btnCancelActionPerformed(e);
+		}
+	    });
 	    panelOperations.add(btnCancel, cc.xy(3, 1));
 	}
 	contentPane.add(panelOperations, cc.xywh(2, 5, 2, 1));
 	pack();
 	setLocationRelativeTo(getOwner());
-	// JFormDesigner - End of component initialization
 	// //GEN-END:initComponents
     }
 
@@ -127,7 +139,6 @@ public class GroupEdit extends JDialog implements View<Group> {
     private JPanel panelOperations;
     private JButton btnAccept;
     private JButton btnCancel;
-
     // JFormDesigner - End of variables declaration //GEN-END:variables
 
     private void loadValues() {
