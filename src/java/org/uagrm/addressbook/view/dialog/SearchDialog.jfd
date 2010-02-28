@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_12" class="java.beans.XMLDecoder"> 
+<java version="1.6.0_16" class="java.beans.XMLDecoder"> 
  <object class="com.jformdesigner.model.FormModel"> 
+  <void method="setProperty"> 
+   <string>i18n.bundleName</string> 
+   <string>messages</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.autoExternalize</string> 
+   <boolean>true</boolean> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.keyPrefix</string> 
+   <string>SearchDialog</string> 
+  </void> 
   <void property="contentType"> 
    <string>form/swing</string> 
   </void> 
@@ -15,6 +27,13 @@
       <void method="setProperty"> 
        <string>defaultCloseOperation</string> 
        <int>2</int> 
+      </void> 
+      <void method="setProperty"> 
+       <string>title</string> 
+       <object class="com.jformdesigner.model.FormMessage"> 
+        <null/> 
+        <string>SearchDialog.title</string> 
+       </object> 
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormContainer"> 
@@ -36,7 +55,7 @@
            <class>com.jgoodies.forms.layout.FormLayout</class> 
            <void method="setProperty"> 
             <string>$columnSpecs</string> 
-            <string>32dlu, labelcompgap, 147dlu, labelcompgap, 59dlu</string> 
+            <string>32dlu, labelcompgap, 124dlu, labelcompgap, 34dlu</string> 
            </void> 
            <void method="setProperty"> 
             <string>$rowSpecs</string> 
@@ -51,7 +70,10 @@
             <string>javax.swing.JLabel</string> 
             <void method="setProperty"> 
              <string>text</string> 
-             <string>Fillter:</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>SearchDialog.filter</string> 
+             </object> 
             </void> 
             <void method="setProperty"> 
              <string>labelFor</string> 
@@ -99,7 +121,10 @@
             <string>javax.swing.JButton</string> 
             <void method="setProperty"> 
              <string>text</string> 
-             <string>Do it</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>SearchDialog.search</string> 
+             </object> 
             </void> 
             <void property="name"> 
              <string>btnFilter</string> 
@@ -217,7 +242,10 @@
             <string>javax.swing.JButton</string> 
             <void method="setProperty"> 
              <string>text</string> 
-             <string>OK</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>common.ok</string> 
+             </object> 
             </void> 
             <void property="name"> 
              <string>okButton</string> 
@@ -248,7 +276,10 @@
             <string>javax.swing.JButton</string> 
             <void method="setProperty"> 
              <string>text</string> 
-             <string>Cancel</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>common.cancel</string> 
+             </object> 
             </void> 
             <void property="name"> 
              <string>cancelButton</string> 
@@ -308,7 +339,7 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>400</int> 
+        <int>420</int> 
         <int>300</int> 
        </object> 
       </void> 

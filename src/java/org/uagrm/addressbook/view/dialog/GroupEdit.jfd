@@ -29,7 +29,7 @@
        </void> 
        <void method="setProperty"> 
         <string>$rowSpecs</string> 
-        <string>default, default, default, default, default, fill:default:grow</string> 
+        <string>default:grow, default, default, default, default, default:grow, default, fill:default</string> 
        </void> 
       </object> 
       <void method="setProperty"> 
@@ -37,6 +37,40 @@
        <object class="com.jformdesigner.model.FormMessage"> 
         <null/> 
         <string>GroupEdit.title</string> 
+       </object> 
+      </void> 
+      <void method="setProperty"> 
+       <string>$sizePolicy</string> 
+       <int>1</int> 
+      </void> 
+      <void method="setProperty"> 
+       <string>$locationPolicy</string> 
+       <int>0</int> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>com.jformdesigner.designer.wrapper.JGoodiesFormsSeparator</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>GroupEdit.separator1.text</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>separator2</string> 
+        </void> 
+       </object> 
+       <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+        <class>com.jgoodies.forms.layout.CellConstraints</class> 
+        <void method="setProperty"> 
+         <string>gridX</string> 
+         <int>2</int> 
+        </void> 
+        <void method="setProperty"> 
+         <string>gridWidth</string> 
+         <int>2</int> 
+        </void> 
        </object> 
       </void> 
       <void method="add"> 
@@ -151,6 +185,36 @@
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
+        <string>com.jformdesigner.designer.wrapper.JGoodiesFormsSeparator</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>GroupEdit.members</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>separator1</string> 
+        </void> 
+       </object> 
+       <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+        <class>com.jgoodies.forms.layout.CellConstraints</class> 
+        <void method="setProperty"> 
+         <string>gridX</string> 
+         <int>2</int> 
+        </void> 
+        <void method="setProperty"> 
+         <string>gridY</string> 
+         <int>4</int> 
+        </void> 
+        <void method="setProperty"> 
+         <string>gridWidth</string> 
+         <int>2</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JButton</string> 
         <void method="setProperty"> 
          <string>text</string> 
@@ -166,16 +230,24 @@
         <void property="name"> 
          <string>btnEdit</string> 
         </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>btnEditActionPerformed</string> 
+          <boolean>true</boolean> 
+         </object> 
+        </void> 
        </object> 
        <object class="com.jformdesigner.model.FormLayoutConstraints"> 
         <class>com.jgoodies.forms.layout.CellConstraints</class> 
         <void method="setProperty"> 
          <string>gridX</string> 
-         <int>2</int> 
+         <int>3</int> 
         </void> 
         <void method="setProperty"> 
          <string>gridY</string> 
-         <int>4</int> 
+         <int>5</int> 
         </void> 
        </object> 
       </void> 
@@ -186,7 +258,7 @@
          <class>com.jgoodies.forms.layout.FormLayout</class> 
          <void method="setProperty"> 
           <string>$columnSpecs</string> 
-          <string>default:grow, labelcompgap, default:grow</string> 
+          <string>default:grow, labelcompgap, default:grow, labelcompgap, default:grow</string> 
          </void> 
          <void method="setProperty"> 
           <string>$rowSpecs</string> 
@@ -222,7 +294,7 @@
           <class>com.jgoodies.forms.layout.CellConstraints</class> 
           <void method="setProperty"> 
            <string>gridX</string> 
-           <int>1</int> 
+           <int>3</int> 
           </void> 
           <void method="setProperty"> 
            <string>gridY</string> 
@@ -256,7 +328,7 @@
           <class>com.jgoodies.forms.layout.CellConstraints</class> 
           <void method="setProperty"> 
            <string>gridX</string> 
-           <int>3</int> 
+           <int>5</int> 
           </void> 
           <void method="setProperty"> 
            <string>gridY</string> 
@@ -273,7 +345,7 @@
         </void> 
         <void method="setProperty"> 
          <string>gridY</string> 
-         <int>5</int> 
+         <int>7</int> 
         </void> 
         <void method="setProperty"> 
          <string>gridWidth</string> 
@@ -297,8 +369,8 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>400</int> 
-        <int>165</int> 
+        <int>405</int> 
+        <int>185</int> 
        </object> 
       </void> 
      </object> 

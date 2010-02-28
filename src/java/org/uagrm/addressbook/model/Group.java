@@ -3,12 +3,14 @@ package org.uagrm.addressbook.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.uagrm.addressbook.view.dialog.SelectableItem;
+
 /**
  * @author Timo
  * @version 1.0
  * @created 16-ene-2010 0:59:51
  */
-public class Group implements Entity {
+public class Group implements SelectableItem {
 
     private Integer id;
     private String name;
@@ -57,6 +59,11 @@ public class Group implements Entity {
     @Override
     public String toString() {	
 	return id + " , " + name + " , " + description;
+    }
+
+    @Override
+    public boolean equals(SelectableItem item) {
+	return this.id.equals(item.getId());
     }
 
 }

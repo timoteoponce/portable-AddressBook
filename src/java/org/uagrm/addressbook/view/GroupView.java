@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
 import org.uagrm.addressbook.view.dialog.GroupEdit;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -45,7 +46,7 @@ public class GroupView extends JPanel implements View<Group> {
 
 	private void init() {
 		groupList.setModel(new DefaultListModel());
-		groupList.setCellRenderer(new GroupListCellRenderer());
+		groupList.setCellRenderer(new CustomListCellRenderer());
 		//
 		updateList();
 	}
@@ -57,7 +58,6 @@ public class GroupView extends JPanel implements View<Group> {
 
 	public void updateList() {
 		getListModel().clear();
-		getListModel().addElement("All");
 
 		Collection<Group> groups = controller.getElements();
 		for (Group group : groups) {

@@ -23,7 +23,7 @@ public class GroupController implements Controller<Group> {
 
 	private final List<View<Group>> viewList = new ArrayList<View<Group>>();
 
-	private GroupDao dao = getGroupDao();
+	private GroupDao dao = CacheFactory.getInstance(GroupDao.class);
 
 	private GroupController() {
 	}
@@ -64,11 +64,6 @@ public class GroupController implements Controller<Group> {
 	@Override
 	public Collection<Group> getElements() {
 		return dao.selectAll();
-	}
-
-	private GroupDao getGroupDao() {
-		GroupDao dao = CacheFactory.getInstance(GroupDao.class);
-		return dao;
 	}
 
 	@Override
