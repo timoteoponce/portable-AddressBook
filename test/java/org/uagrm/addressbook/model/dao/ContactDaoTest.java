@@ -8,7 +8,7 @@ import org.uagrm.addressbook.model.Phone;
  * @author Timoteo Ponce
  *
  */
-public class ContactDaoTest implements GenericDaoTest {
+public class ContactDaoTest implements GenericDaoTestNot {
 
 	final ContactDao dao = CacheFactory.getInstance(ContactDao.class);
 

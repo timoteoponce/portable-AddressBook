@@ -10,7 +10,7 @@ import org.uagrm.addressbook.model.Country;
  * @author Timoteo Ponce
  *
  */
-public class CountryDaoTest implements GenericDaoTest {
+public class CountryDaoTest implements GenericDaoTestNot {
 
     final GenericDao<Country> dao = CacheFactory
 	    .getInstance(CountryDao.class);

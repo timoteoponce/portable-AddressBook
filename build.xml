@@ -175,20 +175,25 @@
 	</target>
 
 	<target name="test" depends="compile-test">
-		<mkdir dir="${project.build}/reports" />
+		<property name="junit.dest" value="${project.build.report}"/>
+		<mkdir dir="${junit.dest}" />
 
-		<junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="no">
+		<junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="yes">
 			<classpath>
 				<path refid="test.classpath" />
 			</classpath>
 			<formatter type="plain" usefile="false" />
-			<formatter type="plain" />
-			<batchtest todir="${project.build}">
+			<formatter type="xml" />
+			<batchtest todir="${junit.dest}">
 				<fileset dir="${project.test}">
-					<include name="**/*Test*.java" />
+					<include name="**/*Test.java" />
 				</fileset>
 			</batchtest>
 		</junit>
+		<junitreport todir="${junit.dest}">
+			<fileset dir="${junit.dest}" includes="TEST-*.xml" />
+			<report format="frames" todir="${junit.dest}" />
+		</junitreport>
 	</target>
 
 </project>

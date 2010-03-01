@@ -11,7 +11,7 @@ import org.uagrm.addressbook.model.Group;
  * @author Timoteo Ponce
  *
  */
-public class GroupDaoTest implements GenericDaoTest {
+public class GroupDaoTest implements GenericDaoTestNot {
 	final GroupDao dao = CacheFactory.getInstance(GroupDao.class);
 
 	@Override
