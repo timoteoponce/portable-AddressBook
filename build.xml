@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project name="addressBook" default="build" basedir=".">
+<project name="portableab" default="build" basedir=".">
 	<description>AddressBook application, Juan Timoteo Ponce Ortiz. UAGRM.</description>
 
 	<property file="build.properties" />
-	<!--<import file="${classpath.location}" />-->
+	<import file="${classpath.location}" />
 
 	<path id="compile.classpath">
-		<fileset dir="lib" includes="**/*.jar" />
-		<!--<path refid="log4j.classpath"/>-->
+		<fileset dir="lib" includes="*.jar" />
+		<!--<path refid="log4j.classpath"/> -->
 		<!--<path refid="jdbc-sqlite.classpath"/>-->
 	</path>
 
@@ -58,7 +57,7 @@
 		<copy todir="${project.build}">
 			<fileset dir="${project.src}">
 				<include name="**/*.properties" />
-			</fileset>			
+			</fileset>
 			<fileset dir="${project.config}">
 				<include name="*.properties" />
 				<include name="*.xml" />
@@ -174,8 +173,10 @@
 		</copy>
 	</target>
 
+	<!-- Tests -->
+
 	<target name="test" depends="compile-test">
-		<property name="junit.dest" value="${project.build.report}"/>
+		<property name="junit.dest" value="${project.build.report}/junit" />
 		<mkdir dir="${junit.dest}" />
 
 		<junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="yes">
@@ -194,6 +195,58 @@
 			<fileset dir="${junit.dest}" includes="TEST-*.xml" />
 			<report format="frames" todir="${junit.dest}" />
 		</junitreport>
+	</target>
+
+	<!-- QA -->
+	<target name="qa" depends="cpd,findbugs,pmd" />
+
+	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="findbugs.classpath" />
+	<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.classpath" />
+	<taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" classpathref="pmd.classpath" />
+
+	<target name="findbugs" depends="build">
+		<property name="findbugs.dest" value="${project.build.report}/findbugs" />
+		<mkdir dir="${findbugs.dest}" />
+
+		<findbugs home="${findbugs.home}" output="xml:withMessages" outputFile="${findbugs.dest}/${ant.project.name}-fb.xml">
+			<auxClasspath refid="compile.classpath" />
+			<sourcePath path="${project.src}" />
+			<class location="${project.build}" />
+		</findbugs>
+	</target>
+
+	<target name="fb-gui" depends="findbugs">		
+		<java jar="${findbugs.home}/lib/findbugs.jar" fork="true">
+			<jvmarg value="-Xmx256M" />
+			<arg value="-project" />
+			<arg value="${findbugs.dest}/${ant.project.name}-fb.xml" />
+			<sysproperty key="findbugs.home" value="${findbugs.home}" />
+		</java>
+	</target>
+
+	<target name="pmd" depends="build">
+		<property name="pmd.dest" value="${project.build.report}/pmd" />
+		<mkdir dir="${pmd.dest}" />
+
+		<pmd shortFilenames="true">
+			<ruleset>rulesets/favorites.xml</ruleset>
+			<ruleset>basic</ruleset>
+			<formatter type="xml" toFile="${pmd.dest}/${ant.project.name}-pmd.xml" linkPrefix="http://pmd.sourceforge.net/xref/" />
+			<fileset dir="${project.src}">
+				<include name="**/*.java" />
+			</fileset>
+		</pmd>
+	</target>
+
+	<target name="cpd" depends="build">
+		<property name="cpd.dest" value="${project.build.report}/cpd" />
+		<mkdir dir="${cpd.dest}" />
+
+		<cpd minimumTokenCount="70" outputFile="${cpd.dest}/cpd.txt">
+			<fileset dir="${project.src}">
+				<include name="**/*.java" />
+			</fileset>
+		</cpd>
 	</target>
 
 </project>

@@ -150,18 +150,17 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 	}
 
 	private void okAction() {
-		// TODO Add contacts to the group!!!
-		this.dispose();
+		for(int i = 0 ; i  < listModel.size(); i++){
+			Contact contact = (Contact) listModel.get(i);
+			group.getContacts().add(contact);
+		}
+		close();
 	}
 
 	private void cancelButtonActionPerformed(ActionEvent e) {
-		cancelAction();
+		close();
 	}
-
-	private void cancelAction() {
-		this.dispose();		
-	}
-
+	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
@@ -345,6 +344,12 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 			listModel.addElement(contact);
 		}
 		listContacts.updateUI();
+	}
+
+	@Override
+	public void close() {
+		getController().removeView(this);
+		this.dispose();		
 	}
 
 }

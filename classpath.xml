@@ -1,18 +1,18 @@
-<project name="classpath" basedir=".">	
-	<!-- Log4J -->
+<project name="classpath" basedir=".">
+	<!-- Log4J - - >
 	<property name="log4j.version" value="1.2.15" />
 	<property name="log4j.home" location="${common.lib}/log4j/${log4j.version}" />
 	<path id="log4j.classpath">
 		<pathelement location="${log4j.home}/log4j-${log4j.version}.jar" />
 	</path>
 	
-	<!-- jdbc-sqlite -->
+	<! - - jdbc-sqlite - - >
 		<property name="jdbc-sqlite.version" value="0.5.6" />
 		<property name="jdbc-sqlite.home" location="${common.lib}/jdbc/sqlite/${jdbc-sqlite.version}" />
 		<path id="jdbc-sqlite.classpath">			
 			<fileset dir="${jdbc-sqlite.home}" includes="*.jar"/>
 		</path>
-	
+	-->
 	<!-- Substance - - >
 	<property name="substance.version" value="5.0" />
 	<property name="substance.home" location="${common.lib}/substance/${substance.version}" />
@@ -52,5 +52,18 @@
 		<fileset dir="${swingx.home}" includes="**/*.jar"/>
 	</path>
 	-->
+
+	<!-- Findbugs -->	
+	<property name="findbugs.home" location="lib/findbugs/" />
+	<path id="findbugs.classpath">
+		<fileset dir="${findbugs.home}" includes="**/*.jar" />
+	</path>
+
+	<!-- PMD -->	
+	<property name="pmd.home" location="lib/pmd/" />
+	<path id="pmd.classpath">
+		<fileset dir="${pmd.home}" includes="**/*.jar" />
+	</path>
+
 
 </project>

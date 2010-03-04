@@ -199,4 +199,10 @@ public class GroupView extends JPanel implements View<Group> {
 		return controller;
 	}
 
+	@Override
+	public void close() {
+		getController().removeView(this);
+		this.setVisible(false);
+	}
+
 }

@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.GroupController;
+import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.view.View;
 
@@ -46,18 +47,18 @@ public class GroupEdit extends JDialog implements View<Group> {
 	}
 
 	private void btnAcceptActionPerformed(ActionEvent e) {
-		if (isCreation) {
-			updateValues();
-			controller.save(group);
-			getController().removeView(this);
-			getController().modelChanged(group);
-			this.dispose();
-		}
-
+		updateValues();
+		controller.save(group);
+		
+		if(!group.getContacts().isEmpty()){
+			controller.saveReferences(group, Contact.class);
+		}		
+		close();
+		getController().modelChanged(group);		
 	}
 
 	private void btnCancelActionPerformed(ActionEvent e) {
-		this.dispose();
+		close();
 	}
 
 	private void btnEditActionPerformed(ActionEvent e) {
@@ -79,35 +80,38 @@ public class GroupEdit extends JDialog implements View<Group> {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("messages");
-		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
-		separator2 = compFactory.createSeparator(bundle.getString("GroupEdit.separator1.text"));
+		DefaultComponentFactory compFactory = DefaultComponentFactory
+				.getInstance();
+		separator2 = compFactory.createSeparator(bundle
+				.getString("GroupEdit.separator1.text"));
 		lblName = new JLabel();
 		txtName = new JTextField();
 		lblDescription = new JLabel();
 		txtDescription = new JTextField();
-		separator1 = compFactory.createSeparator(bundle.getString("GroupEdit.members"));
+		separator1 = compFactory.createSeparator(bundle
+				.getString("GroupEdit.members"));
 		btnEdit = new JButton();
 		panelOperations = new JPanel();
 		btnAccept = new JButton();
 		btnCancel = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		//======== this ========
+		// ======== this ========
 		setTitle(bundle.getString("GroupEdit.title"));
 		Container contentPane = getContentPane();
-		contentPane.setLayout(new FormLayout(
-			"31dlu, 55dlu, 109dlu, default:grow",
-			"default:grow, 4*(default), default:grow, default, fill:16dlu"));
+		contentPane
+				.setLayout(new FormLayout("31dlu, 55dlu, 109dlu, default:grow",
+						"default:grow, 4*(default), default:grow, default, fill:16dlu"));
 		contentPane.add(separator2, cc.xywh(2, 1, 2, 1));
 
-		//---- lblName ----
+		// ---- lblName ----
 		lblName.setText(bundle.getString("GroupEdit.label.name"));
 		lblName.setLabelFor(txtName);
 		lblName.setDisplayedMnemonic('N');
 		contentPane.add(lblName, cc.xy(2, 2));
 		contentPane.add(txtName, cc.xy(3, 2));
 
-		//---- lblDescription ----
+		// ---- lblDescription ----
 		lblDescription.setText(bundle.getString("GroupEdit.label.description"));
 		lblDescription.setLabelFor(txtDescription);
 		lblDescription.setDisplayedMnemonic('D');
@@ -115,7 +119,7 @@ public class GroupEdit extends JDialog implements View<Group> {
 		contentPane.add(txtDescription, cc.xy(3, 3));
 		contentPane.add(separator1, cc.xywh(2, 4, 2, 1));
 
-		//---- btnEdit ----
+		// ---- btnEdit ----
 		btnEdit.setText(bundle.getString("GroupEdit.editMembers"));
 		btnEdit.setMnemonic('E');
 		btnEdit.addActionListener(new ActionListener() {
@@ -125,13 +129,12 @@ public class GroupEdit extends JDialog implements View<Group> {
 		});
 		contentPane.add(btnEdit, cc.xy(3, 5));
 
-		//======== panelOperations ========
+		// ======== panelOperations ========
 		{
 			panelOperations.setLayout(new FormLayout(
-				"2*(default:grow, $lcgap), default:grow",
-				"default"));
+					"2*(default:grow, $lcgap), default:grow", "default"));
 
-			//---- btnAccept ----
+			// ---- btnAccept ----
 			btnAccept.setText(bundle.getString("common.accept"));
 			btnAccept.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -140,7 +143,7 @@ public class GroupEdit extends JDialog implements View<Group> {
 			});
 			panelOperations.add(btnAccept, cc.xy(3, 1));
 
-			//---- btnCancel ----
+			// ---- btnCancel ----
 			btnCancel.setText(bundle.getString("common.cancel"));
 			btnCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -167,6 +170,7 @@ public class GroupEdit extends JDialog implements View<Group> {
 	private JPanel panelOperations;
 	private JButton btnAccept;
 	private JButton btnCancel;
+
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	private void loadValues() {
@@ -201,5 +205,11 @@ public class GroupEdit extends JDialog implements View<Group> {
 		setModel(new Group());
 		btnAccept.setText("Save");
 		LOG.debug("IsCreation: " + value);
+	}
+
+	@Override
+	public void close() {
+		getController().removeView(this);
+		this.dispose();		
 	}
 }
