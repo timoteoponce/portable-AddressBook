@@ -63,6 +63,7 @@
 	<property name="pmd.home" location="lib/pmd/" />
 	<path id="pmd.classpath">
 		<fileset dir="${pmd.home}" includes="**/*.jar" />
+		<path refid="findbugs.classpath"/>
 	</path>
 
 
