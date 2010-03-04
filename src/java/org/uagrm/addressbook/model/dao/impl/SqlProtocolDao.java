@@ -8,7 +8,7 @@ import java.util.Collection;
 import org.uagrm.addressbook.controller.actions.CommonActions;
 import org.uagrm.addressbook.model.Protocol;
 import org.uagrm.addressbook.model.ReferenceLink;
-import org.uagrm.addressbook.model.dao.CacheFactory;
+import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.model.dao.ProtocolDao;
 
@@ -66,7 +66,7 @@ public class SqlProtocolDao extends AbstractSqlDao<Protocol> implements
 	}
 
 	public static void main(String[] args) {
-		GenericDao<Protocol> dao = CacheFactory
+		GenericDao<Protocol> dao = DaoFactory
 				.getInstance(ProtocolDao.class);
 		Protocol p1 = new Protocol();
 		p1.setName("HTTP");

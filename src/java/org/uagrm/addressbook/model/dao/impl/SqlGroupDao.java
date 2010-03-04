@@ -11,7 +11,7 @@ import org.uagrm.addressbook.controller.actions.CommonActions;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.ReferenceLink;
-import org.uagrm.addressbook.model.dao.CacheFactory;
+import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.GroupDao;
 import org.uagrm.addressbook.util.ConfigKeys;
@@ -28,7 +28,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 	public void loadReferences(Group entity, Class<?> clazz) {
 		if (clazz.equals(Contact.class)) {
 			final Group group = (Group) entity;
-			ContactDao contactDao = CacheFactory
+			ContactDao contactDao = DaoFactory
 					.getInstance(ContactDao.class);
 
 			group.getContacts().clear();
@@ -129,7 +129,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 		//
 		// dao.create(group3);
 		// log.info("created group : " + group3.getId());
-		GroupDao groupDao = CacheFactory
+		GroupDao groupDao = DaoFactory
 				.getInstance(SqlGroupDao.class);
 
 		Group myGroup = (Group) groupDao.read(new Group(1, null, null));

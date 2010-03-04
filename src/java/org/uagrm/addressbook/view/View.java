@@ -11,9 +11,7 @@ public interface View<T> {
 
     void setModel(T model);
 
-    void update();
-
-    void setController(Controller<T> controller);
+    void update();    
 
     Controller<T> getController();
 

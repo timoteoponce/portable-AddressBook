@@ -22,11 +22,12 @@ import org.uagrm.addressbook.util.Configuration;
 
 /**
  * @author Timoteo Ponce
- *
+ * 
  */
-public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao {
+public class SqlContactDao extends AbstractSqlDao<Contact> implements
+		ContactDao {
 
-	private static final Logger log = Logger.getLogger(SqlContactDao.class);
+	private static final Logger LOG = Logger.getLogger(SqlContactDao.class);
 
 	// private boolean belongsTo(Contact entity, Group group) {
 	// String query = Configuration.getConfigKey(GenericDao.SQL_SELECT).trim();
@@ -54,7 +55,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao
 		query = query.replace(VAR_COLUMNS, "c.*");
 		query = query.replace(VAR_TABLE, TABLE_NAME);
 		query = query + " c INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS
-				+ " gc ON c.ID = gc.ID_CONTACT";
+				+ " gc ON c.ID = gc.ID_CONTACT WHERE gc.ID_GROUP = " + groupId;
 		Set<Contact> contacts = new HashSet<Contact>();
 
 		ResultSet rs = getDatabaseHandler().executeQuery(query);
@@ -64,32 +65,12 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao
 						.getString(2), rs.getString(3)));
 			}
 		} catch (SQLException e) {
-			log.error(e, e);
+			LOG.error(e, e);
 		} finally {
 			getDatabaseHandler().closeQuietly(rs);
 		}
 		return contacts;
 	}
-
-	// public static void main(String[] args) {
-	// ContactDao contactDao = (ContactDao) CacheFactory
-	// .getInstance(SqlContactDao.class);
-	// GroupDao groupDao = (GroupDao) CacheFactory
-	// .getInstance(SqlGroupDao.class);
-	//
-	// Group myGroup = (Group) groupDao.read(new Group(1, null, null));
-	// log.info("group: " + myGroup.toString());
-	//
-	// Contact contact = new Contact(null, "Timo", "Canaca");
-	// contact.getGroups().add(myGroup);
-	// contactDao.create(contact);
-	// contactDao.saveGroups(contact);
-	//
-	// contact = new Contact(null, "Dios", "Eolo");
-	// contact.getGroups().add(myGroup);
-	// contactDao.create(contact);
-	// contactDao.saveGroups(contact);
-	// }
 
 	@Override
 	protected void fillValues(Contact entity, ResultSet rs) throws SQLException {
@@ -146,7 +127,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao
 				addAddressReference(contact, address);
 			}
 		}
-		log.info("Addresses saved: " + contact.getAddresses().size());
+		LOG.info("Addresses saved: " + contact.getAddresses().size());
 	}
 
 	private void addAddressReference(Contact contact, Address address) {
@@ -156,7 +137,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao
 	}
 
 	private void removeAddressReferences(Contact contact) {
-		log.debug("Removing contact -> address references.");
+		LOG.debug("Removing contact -> address references.");
 		ReferenceLink ref = new ReferenceLink(contact.getId(), null,
 				"ID_CONTACT", null, "CONTACT_ADDRESSES");
 		deleteReference(ref);
@@ -174,7 +155,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao
 				addPhoneReference(contact, phone);
 			}
 		}
-		log.info("Phones saved: " + contact.getPhones().size());
+		LOG.info("Phones saved: " + contact.getPhones().size());
 	}
 
 	private void addPhoneReference(Contact contact, Phone phone) {
@@ -184,7 +165,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao
 	}
 
 	private void removePhoneReferences(Contact contact) {
-		log.debug("Removing contact -> phone references.");
+		LOG.debug("Removing contact -> phone references.");
 		ReferenceLink ref = new ReferenceLink(contact.getId(), null,
 				"ID_CONTACT", null, "CONTACT_PHONES");
 		deleteReference(ref);
@@ -202,7 +183,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao
 				addVirtualAddressReference(contact, vaddress);
 			}
 		}
-		log.info("VirtualAddresses saved: "
+		LOG.info("VirtualAddresses saved: "
 				+ contact.getVirtualAddresses().size());
 	}
 
@@ -214,7 +195,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao
 	}
 
 	private void removeVirtualAddressReferences(Contact contact) {
-		log.debug("Removing contact -> virtualAddress references.");
+		LOG.debug("Removing contact -> virtualAddress references.");
 		ReferenceLink ref = new ReferenceLink(contact.getId(), null,
 				"ID_CONTACT", null, "CONTACT_VIRTUAL_ADDRESSES");
 		deleteReference(ref);

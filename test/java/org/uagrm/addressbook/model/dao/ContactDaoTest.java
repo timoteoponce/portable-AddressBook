@@ -6,11 +6,11 @@ import org.uagrm.addressbook.model.Phone;
 
 /**
  * @author Timoteo Ponce
- *
+ * 
  */
 public class ContactDaoTest implements GenericDaoTestNot {
 
-	final ContactDao dao = CacheFactory.getInstance(ContactDao.class);
+	final ContactDao dao = DaoFactory.getInstance(ContactDao.class);
 
 	final Contact contact = new Contact();
 
@@ -39,7 +39,7 @@ public class ContactDaoTest implements GenericDaoTestNot {
 	}
 
 	private void createPhones() {
-		final GenericDao<Phone> phoneDao = CacheFactory
+		final GenericDao<Phone> phoneDao = DaoFactory
 				.getInstance(PhoneDao.class);
 		Phone phone1 = new Phone();
 		phone1.setHousePhone("1111aa");

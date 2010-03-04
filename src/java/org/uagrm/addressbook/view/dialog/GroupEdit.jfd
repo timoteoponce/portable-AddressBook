@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_16" class="java.beans.XMLDecoder"> 
+<java version="1.6.0_12" class="java.beans.XMLDecoder"> 
  <object class="com.jformdesigner.model.FormModel"> 
   <void method="setProperty"> 
    <string>i18n.bundleName</string> 
@@ -25,11 +25,11 @@
        <class>com.jgoodies.forms.layout.FormLayout</class> 
        <void method="setProperty"> 
         <string>$columnSpecs</string> 
-        <string>default, 55dlu, 109dlu, default:grow</string> 
+        <string>31dlu, 55dlu, 109dlu, default:grow</string> 
        </void> 
        <void method="setProperty"> 
         <string>$rowSpecs</string> 
-        <string>default:grow, default, default, default, default, default:grow, default, fill:default</string> 
+        <string>default:grow, default, default, default, default, default:grow, default, fill:16dlu</string> 
        </void> 
       </object> 
       <void method="setProperty"> 
@@ -369,8 +369,8 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>405</int> 
-        <int>185</int> 
+        <int>410</int> 
+        <int>195</int> 
        </object> 
       </void> 
      </object> 

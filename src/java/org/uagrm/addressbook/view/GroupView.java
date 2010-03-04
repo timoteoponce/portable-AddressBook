@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -21,6 +22,7 @@ import javax.swing.ListSelectionModel;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
+import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
@@ -35,10 +37,10 @@ import com.jgoodies.forms.layout.FormLayout;
 public class GroupView extends JPanel implements View<Group> {
 	private static final Logger LOG = Logger.getLogger(GroupView.class);
 
-	private Controller<Group> controller;
+	private final Controller<Group> controller = ControllerFactory
+			.getInstance(GroupController.class);
 
-	public GroupView(Controller<Group> controller) {
-		this.controller = controller;
+	public GroupView() {
 		controller.addView(this);
 		initComponents();
 		init();
@@ -69,7 +71,7 @@ public class GroupView extends JPanel implements View<Group> {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		GroupView groupView = new GroupView(GroupController.getInstance());
+		GroupView groupView = new GroupView();
 		frame.setContentPane(groupView);
 		frame.setVisible(true);
 	}
@@ -83,10 +85,12 @@ public class GroupView extends JPanel implements View<Group> {
 	}
 
 	private void showPopUpMenu(final int posX, final int posY) {
+		ResourceBundle bundle = ResourceBundle.getBundle("messages");
+		//
 		JPopupMenu menu = new JPopupMenu();
-		JMenuItem createItem = new JMenuItem("Create");
-		JMenuItem editItem = new JMenuItem("Edit");
-		JMenuItem removeItem = new JMenuItem("Remove");
+		JMenuItem createItem = new JMenuItem(bundle.getString("common.create"));
+		JMenuItem editItem = new JMenuItem(bundle.getString("common.edit"));
+		JMenuItem removeItem = new JMenuItem(bundle.getString("common.remove"));
 		menu.add(createItem);
 		menu.add(editItem);
 		menu.add(removeItem);
@@ -195,9 +199,4 @@ public class GroupView extends JPanel implements View<Group> {
 		return controller;
 	}
 
-	@Override
-	public void setController(Controller<Group> controller) {
-		this.controller = controller;
-
-	}
 }

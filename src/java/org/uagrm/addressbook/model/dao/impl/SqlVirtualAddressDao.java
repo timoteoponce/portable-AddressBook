@@ -9,7 +9,7 @@ import org.uagrm.addressbook.controller.actions.CommonActions;
 import org.uagrm.addressbook.model.Protocol;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.VirtualAddress;
-import org.uagrm.addressbook.model.dao.CacheFactory;
+import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.model.dao.ProtocolDao;
 import org.uagrm.addressbook.model.dao.VirtualAddressDao;
@@ -32,7 +32,7 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
 	}
 
 	private Protocol getProtocol(int protocolId) {
-		GenericDao<Protocol> protocolDao = CacheFactory
+		GenericDao<Protocol> protocolDao = DaoFactory
 				.getInstance(ProtocolDao.class);
 		Protocol protocol = protocolDao.read(new Protocol(protocolId, null,
 				null));

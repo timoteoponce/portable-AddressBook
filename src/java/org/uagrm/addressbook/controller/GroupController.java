@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
-import org.uagrm.addressbook.model.dao.CacheFactory;
+import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GroupDao;
 import org.uagrm.addressbook.view.View;
 
@@ -23,7 +23,7 @@ public class GroupController implements Controller<Group> {
 
 	private final List<View<Group>> viewList = new ArrayList<View<Group>>();
 
-	private GroupDao dao = CacheFactory.getInstance(GroupDao.class);
+	private final GroupDao dao = DaoFactory.getInstance(GroupDao.class);
 
 	private GroupController() {
 	}
@@ -69,8 +69,7 @@ public class GroupController implements Controller<Group> {
 	@Override
 	public void addView(View<Group> view) {
 		if (!viewList.contains(view)) {
-			viewList.add(view);
-			view.setController(this);
+			viewList.add(view);			
 			LOG.info("Adding view: " + view);
 		} else {
 			LOG.warn("Duplicated view : " + view);

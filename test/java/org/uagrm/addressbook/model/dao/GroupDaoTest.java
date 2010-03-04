@@ -12,7 +12,7 @@ import org.uagrm.addressbook.model.Group;
  *
  */
 public class GroupDaoTest implements GenericDaoTestNot {
-	final GroupDao dao = CacheFactory.getInstance(GroupDao.class);
+	final GroupDao dao = DaoFactory.getInstance(GroupDao.class);
 
 	@Override
 	@Test
@@ -28,7 +28,7 @@ public class GroupDaoTest implements GenericDaoTestNot {
 
 	private Collection<Contact> createContacts() {
 		Collection<Contact> contactList = new ArrayList<Contact>();
-		GenericDao<Contact> contactDao = CacheFactory
+		GenericDao<Contact> contactDao = DaoFactory
 				.getInstance(ContactDao.class);
 
 		for (int i = 0; i < TEST_ENTRIES; i++) {

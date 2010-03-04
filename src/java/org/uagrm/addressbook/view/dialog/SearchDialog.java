@@ -246,63 +246,63 @@ public class SearchDialog extends JDialog{
 
 		//======== dialogPane ========
 		{
-		    dialogPane.setBorder(Borders.DIALOG_BORDER);
-		    dialogPane.setLayout(new BorderLayout());
+			dialogPane.setBorder(Borders.DIALOG_BORDER);
+			dialogPane.setLayout(new BorderLayout());
 
-		    //======== contentPanel ========
-		    {
-			contentPanel.setLayout(new FormLayout(
-			    "32dlu, $lcgap, 124dlu, $lcgap, 34dlu",
-			    "2*(default, $lgap), default:grow"));
-
-			//---- lblFilter ----
-			lblFilter.setText(bundle.getString("SearchDialog.filter"));
-			lblFilter.setLabelFor(txtFilter);
-			contentPanel.add(lblFilter, cc.xy(1, 1));
-			contentPanel.add(txtFilter, cc.xy(3, 1));
-
-			//---- btnFilter ----
-			btnFilter.setText(bundle.getString("SearchDialog.search"));
-			contentPanel.add(btnFilter, cc.xy(5, 1));
-			contentPanel.add(listSeparator, cc.xywh(1, 3, 5, 1));
-
-			//======== scrollPane ========
+			//======== contentPanel ========
 			{
+				contentPanel.setLayout(new FormLayout(
+					"32dlu, $lcgap, 124dlu, $lcgap, 34dlu",
+					"2*(default, $lgap), default:grow"));
 
-			    //---- elementList ----
-			    elementList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			    scrollPane.setViewportView(elementList);
+				//---- lblFilter ----
+				lblFilter.setText(bundle.getString("SearchDialog.filter"));
+				lblFilter.setLabelFor(txtFilter);
+				contentPanel.add(lblFilter, cc.xy(1, 1));
+				contentPanel.add(txtFilter, cc.xy(3, 1));
+
+				//---- btnFilter ----
+				btnFilter.setText(bundle.getString("SearchDialog.search"));
+				contentPanel.add(btnFilter, cc.xy(5, 1));
+				contentPanel.add(listSeparator, cc.xywh(1, 3, 5, 1));
+
+				//======== scrollPane ========
+				{
+
+					//---- elementList ----
+					elementList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					scrollPane.setViewportView(elementList);
+				}
+				contentPanel.add(scrollPane, cc.xywh(3, 5, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 			}
-			contentPanel.add(scrollPane, cc.xywh(3, 5, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
-		    }
-		    dialogPane.add(contentPanel, BorderLayout.CENTER);
+			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-		    //======== buttonBar ========
-		    {
-			buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
-			buttonBar.setLayout(new FormLayout(
-			    "$glue, $button, $rgap, $button",
-			    "pref"));
+			//======== buttonBar ========
+			{
+				buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
+				buttonBar.setLayout(new FormLayout(
+					"$glue, $button, $rgap, $button",
+					"pref"));
 
-			//---- okButton ----
-			okButton.setText(bundle.getString("common.ok"));
-			okButton.addActionListener(new ActionListener() {
-			    public void actionPerformed(ActionEvent e) {
-				okButtonActionPerformed(e);
-			    }
-			});
-			buttonBar.add(okButton, cc.xy(2, 1));
+				//---- okButton ----
+				okButton.setText(bundle.getString("common.ok"));
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						okButtonActionPerformed(e);
+					}
+				});
+				buttonBar.add(okButton, cc.xy(2, 1));
 
-			//---- cancelButton ----
-			cancelButton.setText(bundle.getString("common.cancel"));
-			cancelButton.addActionListener(new ActionListener() {
-			    public void actionPerformed(ActionEvent e) {
-				cancelButtonActionPerformed(e);
-			    }
-			});
-			buttonBar.add(cancelButton, cc.xy(4, 1));
-		    }
-		    dialogPane.add(buttonBar, BorderLayout.SOUTH);
+				//---- cancelButton ----
+				cancelButton.setText(bundle.getString("common.cancel"));
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						cancelButtonActionPerformed(e);
+					}
+				});
+				buttonBar.add(cancelButton, cc.xy(4, 1));
+			}
+			dialogPane.add(buttonBar, BorderLayout.SOUTH);
 		}
 		contentPane.add(dialogPane, BorderLayout.CENTER);
 		pack();

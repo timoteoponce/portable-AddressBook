@@ -8,11 +8,11 @@ import org.uagrm.addressbook.model.VirtualAddress;
 
 /**
  * @author Timoteo Ponce
- *
+ * 
  */
 public class VirtualAddressDaoTest implements GenericDaoTestNot {
 
-	final GenericDao<VirtualAddress> dao = CacheFactory
+	final VirtualAddressDao dao = DaoFactory
 			.getInstance(VirtualAddressDao.class);
 
 	@Override
@@ -35,7 +35,7 @@ public class VirtualAddressDaoTest implements GenericDaoTestNot {
 	@Test
 	public void updateEntries() {
 		Collection<VirtualAddress> list = dao.selectAll();
-		if(!list.isEmpty()){
+		if (!list.isEmpty()) {
 			VirtualAddress vAddress = list.iterator().next();
 			final Integer id = vAddress.getId();
 			vAddress.setIdentifier("msn:timo.com");
@@ -52,7 +52,7 @@ public class VirtualAddressDaoTest implements GenericDaoTestNot {
 	}
 
 	private Protocol createProtocol(String name, int port) {
-		final ProtocolDao protocolDao = CacheFactory
+		final ProtocolDao protocolDao = DaoFactory
 				.getInstance(ProtocolDao.class);
 
 		Protocol protocol = new Protocol();

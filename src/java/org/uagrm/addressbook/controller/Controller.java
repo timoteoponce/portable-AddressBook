@@ -10,6 +10,7 @@ import org.uagrm.addressbook.view.View;
  * @param <T>
  */
 public interface Controller<T> {
+	
     /*MVC*/
     void addView(View<T> view);
 
