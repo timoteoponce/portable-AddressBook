@@ -67,7 +67,8 @@ public class GroupEdit extends JDialog implements View<Group> {
 
     private void editMembers() {
 	EditContactsDialog dialog = new EditContactsDialog(this,controller);
-	dialog.setVisible(true);
+	controller.addView(dialog);
+	dialog.setVisible(true);	
     }
 
     private void initComponents() {

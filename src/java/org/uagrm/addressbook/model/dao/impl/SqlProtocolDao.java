@@ -48,9 +48,8 @@ public class SqlProtocolDao extends AbstractSqlDao<Protocol> implements
 	}
 
 	@Override
-	protected String getTableName() {
-		// TODO make it constant
-		return "PROTOCOL";
+	protected String getTableName() {		
+		return TABLE_NAME;
 	}
 
 	@Override

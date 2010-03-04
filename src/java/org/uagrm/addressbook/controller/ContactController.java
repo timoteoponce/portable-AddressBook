@@ -78,4 +78,10 @@ public class ContactController implements Controller<Contact> {
 
     }
 
+    @Override
+    public Contact preloadEntity(Contact entity, Class<?> target) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
 }

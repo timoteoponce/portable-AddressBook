@@ -10,6 +10,7 @@ import org.uagrm.addressbook.controller.actions.CommonActions;
 import org.uagrm.addressbook.model.Entity;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.GenericDao;
+import org.uagrm.addressbook.util.ConfigKeys;
 import org.uagrm.addressbook.util.Configuration;
 import org.uagrm.data.DatabaseHandler;
 import org.uagrm.data.DatabaseHandlerFactory;
@@ -20,6 +21,11 @@ import org.uagrm.data.DatabaseHandlerFactory;
  * @param <T>
  */
 public abstract class AbstractSqlDao<T> implements GenericDao<T> {
+    
+        public static final String VAR_TABLE = "${table}";
+        public static final String VAR_VALUES = "${values}";
+        public static final String VAR_CONDITION = "${condition}";
+        public static final String VAR_COLUMNS = "${columns}";
 
 	private static final Logger log = Logger.getLogger(SqlGroupDao.class);
 
@@ -28,14 +34,14 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	@Override
 	public void create(T entity) {
-		String query = Configuration.getConfigKey(GenericDao.SQL_INSERT).trim();
-		query = query.replace(GenericDao.VAR_TABLE, getTableName());
-		query = query.replace(GenericDao.VAR_VALUES, getFields(entity,
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_VALUES, getFields(entity,
 				CommonActions.CREATE));
 		log.info("Query result: " + handler.executeUpdate(query));
 		// retrieve the generated ID
-		query = Configuration.getConfigKey(GenericDao.SQL_SELECT_LAST_ID);
-		query = query.replace(GenericDao.VAR_TABLE, getTableName());
+		query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_LAST_ID);
+		query = query.replace(VAR_TABLE, getTableName());
 
 		ResultSet rs = handler.executeQuery(query);
 		try {
@@ -50,9 +56,9 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	@Override
 	public void delete(T entity) {
-		String query = Configuration.getConfigKey(GenericDao.SQL_DELETE).trim();
-		query = query.replace(GenericDao.VAR_TABLE, getTableName());
-		query = query.replace(GenericDao.VAR_CONDITION, "id = "
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim();
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_CONDITION, "id = "
 				+ ((Entity)entity).getId());
 
 		log.info("Query result: " + handler.executeUpdate(query));
@@ -70,14 +76,15 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	protected void deleteReference(ReferenceLink ref) {
 		log.info("Removing reference: " + ref.toString());
-		String query = Configuration.getConfigKey(GenericDao.SQL_DELETE).trim();
-		query = query.replace(GenericDao.VAR_TABLE, ref.getTableName());
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim();
+		query = query.replace(VAR_TABLE, ref.getTableName());
+		
 		if (ref.getSourceColumn() != null) {
-			query = query.replace(GenericDao.VAR_CONDITION, ref
+			query = query.replace(VAR_CONDITION, ref
 					.getSourceColumn()
 					+ "=" + ref.getSourceId());
 		} else {
-			query = query.replace(GenericDao.VAR_CONDITION, ref
+			query = query.replace(VAR_CONDITION, ref
 					.getTargetColumn()
 					+ "=" + ref.getTargetId());
 		}
@@ -86,19 +93,19 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	protected void createReference(ReferenceLink ref) {
 		log.info("Adding reference: " + ref.toString());
-		String query = Configuration.getConfigKey(GenericDao.SQL_INSERT).trim();
-		query = query.replace(GenericDao.VAR_TABLE, ref.getTableName());
-		query = query.replace(GenericDao.VAR_VALUES, "(" + ref.getSourceId()
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
+		query = query.replace(VAR_TABLE, ref.getTableName());
+		query = query.replace(VAR_VALUES, "(" + ref.getSourceId()
 				+ "," + ref.getTargetId() + ");");
 		getDatabaseHandler().executeUpdate(query);
 	}
 
 	@Override
 	public T read(T entity) {
-		String query = Configuration.getConfigKey(GenericDao.SQL_SELECT).trim();
-		query = query.replace(GenericDao.VAR_TABLE, getTableName());
-		query = query.replace(GenericDao.VAR_COLUMNS, "*");
-		query = query.replace(GenericDao.VAR_CONDITION, "id = "
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT).trim();
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_COLUMNS, "*");
+		query = query.replace(VAR_CONDITION, "id = "
 				+ ((Entity)entity).getId());
 		ResultSet rs = handler.executeQuery(query);
 		try {
@@ -117,10 +124,10 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	public Collection<T> selectAll() {
 		Collection<T> resultList = new ArrayList<T>();
 
-		String query = Configuration.getConfigKey(GenericDao.SQL_SELECT_ALL)
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
 				.trim();
-		query = query.replace(GenericDao.VAR_TABLE, getTableName());
-		query = query.replace(GenericDao.VAR_COLUMNS, "*");
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_COLUMNS, "*");
 		ResultSet rs = handler.executeQuery(query);
 		try {
 			while (rs.next()) {
@@ -138,11 +145,11 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	@Override
 	public void update(T entity) {
-		String query = Configuration.getConfigKey(GenericDao.SQL_UPDATE).trim();
-		query = query.replace(GenericDao.VAR_TABLE, getTableName());
-		query = query.replace(GenericDao.VAR_VALUES, getFields(entity,
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_UPDATE).trim();
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_VALUES, getFields(entity,
 				CommonActions.UPDATE));
-		query = query.replace(GenericDao.VAR_CONDITION, "id = "
+		query = query.replace(VAR_CONDITION, "id = "
 				+ ((Entity)entity).getId());
 		log.info("Query result: " + handler.executeUpdate(query));
 	}

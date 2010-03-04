@@ -14,6 +14,7 @@ import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.CacheFactory;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.GroupDao;
+import org.uagrm.addressbook.util.ConfigKeys;
 
 /**
  * @author Timoteo Ponce
@@ -60,7 +61,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 		log.info("Adding contact '" + contact.getId() + "' to group -> "
 				+ group.getId());
 		ReferenceLink ref = new ReferenceLink(group.getId(), contact.getId(),
-				null, null, CONTACT_JOIN_TABLE_NAME);
+				null, null, GroupDao.TABLE_GROUP_CONTACTS );
 		createReference(ref);
 	}
 
@@ -144,7 +145,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 	protected Collection<ReferenceLink> getReferences(Group entity) {
 		Collection<ReferenceLink> list = new ArrayList<ReferenceLink>();
 		list.add(new ReferenceLink(entity.getId(), null, "ID_GROUP", null,
-				CONTACT_JOIN_TABLE_NAME));
+			GroupDao.TABLE_GROUP_CONTACTS ));
 		return list;
 	}
 

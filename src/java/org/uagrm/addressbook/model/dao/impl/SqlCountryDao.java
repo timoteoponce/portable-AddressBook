@@ -9,6 +9,7 @@ import org.uagrm.addressbook.controller.actions.CommonActions;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.CountryDao;
+import org.uagrm.addressbook.util.ConfigKeys;
 
 /**
  * @author Timoteo Ponce
@@ -42,9 +43,8 @@ public class SqlCountryDao extends AbstractSqlDao<Country> implements
 	}
 
 	@Override
-	protected String getTableName() {
-		// TODO make it constant
-		return "COUNTRY";
+	protected String getTableName() {		
+		return TABLE_NAME;
 	}
 
 	@Override

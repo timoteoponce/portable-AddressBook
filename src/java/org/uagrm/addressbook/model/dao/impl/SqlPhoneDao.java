@@ -46,9 +46,8 @@ public class SqlPhoneDao extends AbstractSqlDao<Phone> implements PhoneDao {
 	}
 
 	@Override
-	protected String getTableName() {
-		// TODO make it constant
-		return "PHONE";
+	protected String getTableName() {		
+		return TABLE_NAME;
 	}
 
 	@Override

@@ -20,6 +20,9 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
     @Override
     abstract public void connect();
 
+    /* (non-Javadoc)
+     * @see org.uagrm.data.DatabaseHandler#executeQuery(java.lang.String)
+     */
     @Override
     public ResultSet executeQuery(String query) {
 	try {
@@ -34,6 +37,9 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
 	throw new RuntimeException();
     }
 
+    /* (non-Javadoc)
+     * @see org.uagrm.data.DatabaseHandler#executeUpdate(java.lang.String)
+     */
     @Override
     public int executeUpdate(String sql) {
 	try {
@@ -50,6 +56,9 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
 	throw new RuntimeException();
     }
 
+    /* (non-Javadoc)
+     * @see org.uagrm.data.DatabaseHandler#getConnection()
+     */
     @Override
     public Connection getConnection() throws SQLException {
 	if (connection == null || connection.isClosed()) {
@@ -58,10 +67,16 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
 	return connection;
     }
 
+    /**
+     * @param connection
+     */
     public void setConnection(Connection connection) {
 	this.connection = connection;
     }
 
+    /* (non-Javadoc)
+     * @see org.uagrm.data.DatabaseHandler#closeQuietly(java.lang.Object)
+     */
     @Override
     public void closeQuietly(Object obj) {
 	try {

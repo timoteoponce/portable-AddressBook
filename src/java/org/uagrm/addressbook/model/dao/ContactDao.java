@@ -9,7 +9,8 @@ import org.uagrm.addressbook.model.Contact;
  *
  */
 public interface ContactDao extends GenericDao<Contact> {
-	static final String TABLE_NAME = "CONTACTS";
+    
+    	static final String TABLE_NAME = "CONTACTS";
 
 	Set<Contact> getByGroup(final Integer groupId);
 

@@ -10,6 +10,7 @@ import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.AddressDao;
+import org.uagrm.addressbook.util.ConfigKeys;
 
 /**
  * @author Timoteo Ponce
@@ -49,9 +50,8 @@ public class SqlAddressDao extends AbstractSqlDao<Address> implements
 	}
 
 	@Override
-	protected String getTableName() {
-		// TODO make it constant
-		return "ADDRESS";
+	protected String getTableName() {		
+		return TABLE_NAME;
 	}
 
 	@Override

@@ -7,5 +7,5 @@ import org.uagrm.addressbook.model.Protocol;
  *
  */
 public interface ProtocolDao extends GenericDao<Protocol> {
-
+    static final String TABLE_NAME = "PROTOCOL";
 }

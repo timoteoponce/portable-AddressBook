@@ -96,4 +96,10 @@ public class GroupController implements Controller<Group> {
 		}
 	}
 
+	@Override
+	public Group preloadEntity(Group entity, Class<?> target) {
+	    dao.loadReferences(entity, target);
+	    return entity;
+	}
+
 }

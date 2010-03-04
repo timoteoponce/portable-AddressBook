@@ -1,6 +1,11 @@
 package org.uagrm.data;
 
+import org.uagrm.addressbook.util.ConfigKeys;
+import org.uagrm.addressbook.util.Configuration;
+
 /**
+ * Factory class used to instantiate {@link DatabaseHandler} objects, this class uses values from 
+ * {@link Configuration} to resolve the current database in use.
  * @author Timoteo Ponce
  *
  */
@@ -13,12 +18,13 @@ public class DatabaseHandlerFactory {
 
     private static DatabaseHandler handler = null;
 
+    /**
+     * Returns or create the {@link DatabaseHandler} configured for this application. 
+     * @return database handler for this application.
+     */
     public static DatabaseHandler getDatabaseHandler() {
 	// if sqlite
-	final String handlerId = SqliteDatabaseHandler.class.getName();// TODO
-								       // read
-								       // from
-								       // configuration
+	final String handlerId = Configuration.getConfigKey(ConfigKeys.DATASOURCE_HANDLER);
 	// file(complete class name or just a key
 	// name 'sqlite'? )
 
@@ -34,8 +40,7 @@ public class DatabaseHandlerFactory {
     }
 
     private static DatabaseHandler createDatabaseHandler(String handlerId) {
-	try {
-
+	try {	    
 	    DatabaseHandler handler = (DatabaseHandler) Class
 		    .forName(handlerId).newInstance();
 	    /*
@@ -43,15 +48,9 @@ public class DatabaseHandlerFactory {
 	     * handlersMap.put(handlerId, handler);
 	     */
 	    return handler;
-	} catch (InstantiationException e) {
-	    e.printStackTrace();
-	} catch (IllegalAccessException e) {
-	    e.printStackTrace();
-	} catch (ClassNotFoundException e) {
-	    e.printStackTrace();
+	} catch (Exception e) {
+	    throw new RuntimeException("Database handler can't be created: " + handlerId,e);
 	}
-	throw new RuntimeException("This is wrong!");// TODO use a custom
-	// exception
     }
 
 }

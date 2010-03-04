@@ -17,6 +17,7 @@ import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.model.dao.GroupDao;
+import org.uagrm.addressbook.util.ConfigKeys;
 import org.uagrm.addressbook.util.Configuration;
 
 /**
@@ -48,11 +49,11 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements ContactDao
 
 	@Override
 	public Set<Contact> getByGroup(final Integer groupId) {
-		String query = Configuration.getConfigKey(GenericDao.SQL_SELECT_ALL)
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
 				.trim();
-		query = query.replace(GenericDao.VAR_COLUMNS, "c.*");
-		query = query.replace(GenericDao.VAR_TABLE, TABLE_NAME);
-		query = query + " c INNER JOIN " + GroupDao.CONTACT_JOIN_TABLE_NAME
+		query = query.replace(VAR_COLUMNS, "c.*");
+		query = query.replace(VAR_TABLE, TABLE_NAME);
+		query = query + " c INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS
 				+ " gc ON c.ID = gc.ID_CONTACT";
 		Set<Contact> contacts = new HashSet<Contact>();
 

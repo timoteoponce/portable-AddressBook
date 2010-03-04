@@ -7,5 +7,5 @@ import org.uagrm.addressbook.model.Address;
  *
  */
 public interface AddressDao extends GenericDao<Address> {
-
+    static final String TABLE_NAME = "ADDRESS";
 }

@@ -43,7 +43,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class SearchDialog extends JDialog {
+public class SearchDialog extends JDialog{
 	private static Logger LOG = Logger.getLogger(SearchDialog.class);
 
 	private final Collection<SelectableItem> validElements = new ArrayList<SelectableItem>();

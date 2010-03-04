@@ -60,9 +60,8 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
 	}
 
 	@Override
-	protected String getTableName() {
-		// TODO make it constant
-		return "VIRTUAL_ADDRESS";
+	protected String getTableName() {		
+		return TABLE_NAME;
 	}
 
 	@Override

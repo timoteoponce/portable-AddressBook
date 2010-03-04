@@ -12,8 +12,9 @@ import javax.swing.*;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
-import org.uagrm.addressbook.controller.GroupController;
+import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.view.View;
 import org.uagrm.addressbook.view.event.SearchEvent;
 import org.uagrm.addressbook.view.event.SearchEventListener;
 import org.uagrm.addressbook.view.event.SearchEventType;
@@ -24,23 +25,34 @@ import com.jgoodies.forms.layout.*;
 /**
  * @author Timoteo Ponce
  */
-public class EditContactsDialog extends JDialog {
+public class EditContactsDialog extends JDialog implements View<Group>{
 
     private static final Logger LOG = Logger
 	    .getLogger(EditContactsDialog.class);
 
     private Controller<Group> groupController;
+    
+    private Group group;
+    
+    private DefaultListModel listModel;
 
     public EditContactsDialog(Frame owner, Controller<Group> groupController) {
 	super(owner);
 	initComponents();
-	this.groupController = groupController;
+	setController(groupController);
+	init();	
+    }
+
+    private void init() {
+	listModel = new DefaultListModel();	
+	this.listContacts.setModel(listModel);	
     }
 
     public EditContactsDialog(Dialog owner, Controller<Group> groupController) {
 	super(owner);
 	initComponents();
-	this.groupController = groupController;
+	setController(groupController);
+	init();
     }
 
     private void btnSearchGroupActionPerformed(ActionEvent e) {
@@ -60,20 +72,46 @@ public class EditContactsDialog extends JDialog {
 		SearchDialog dialog = (SearchDialog ) event.getSource();
 		
 		if(event.getType() == SearchEventType.SELECTED){
-		    LOG.info("Selected group: " + dialog.getSelected());
+		    LOG.debug("Selected group: " + dialog.getSelected());
+		    setModel((Group) dialog.getSelected());		    
 		}else{
-		    LOG.info("Search cancelled");
-		}
+		    LOG.debug("Search cancelled");
+		}		
 	    }
 	});
     }
+
+    private void btnAddActionPerformed(ActionEvent e) {
+	searchContact();
+    }
+
+    private void searchContact() {
+	//implement contact controller
+    }
+
+    private void btnRemoveActionPerformed(ActionEvent e) {
+	removeContact();
+    }
+    
+    private void removeContact() {
+	int index = listContacts.getSelectedIndex();
+	
+	if( index >= 0){
+	    listModel.remove(index);
+	    listContacts.updateUI();
+	}		
+    }
+
+    public void setLocked(boolean value){
+	btnSearchGroup.setEnabled(!value);
+    }   
+
 
     private void initComponents() {
 	// JFormDesigner - Component initialization - DO NOT MODIFY
 	// //GEN-BEGIN:initComponents
 	ResourceBundle bundle = ResourceBundle.getBundle("messages");
-	DefaultComponentFactory compFactory = DefaultComponentFactory
-		.getInstance();
+	DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 	dialogPane = new JPanel();
 	contentPanel = new JPanel();
 	panel1 = new JPanel();
@@ -81,8 +119,7 @@ public class EditContactsDialog extends JDialog {
 	txtGroup = new JTextField();
 	btnSearchGroup = new JButton();
 	panel2 = new JPanel();
-	membersSep = compFactory.createSeparator(bundle
-		.getString("GroupEdit.members"));
+	membersSep = compFactory.createSeparator(bundle.getString("GroupEdit.members"));
 	panel3 = new JPanel();
 	btnAdd = new JButton();
 	btnRemove = new JButton();
@@ -93,37 +130,37 @@ public class EditContactsDialog extends JDialog {
 	cancelButton = new JButton();
 	CellConstraints cc = new CellConstraints();
 
-	// ======== this ========
+	//======== this ========
 	Container contentPane = getContentPane();
 	contentPane.setLayout(new BorderLayout());
 
-	// ======== dialogPane ========
+	//======== dialogPane ========
 	{
 	    dialogPane.setBorder(Borders.DIALOG_BORDER);
 	    dialogPane.setLayout(new BorderLayout());
 
-	    // ======== contentPanel ========
+	    //======== contentPanel ========
 	    {
-		contentPanel.setLayout(new FormLayout("181dlu",
-			"2*(default, $lgap), default:grow"));
+		contentPanel.setLayout(new FormLayout(
+		    "181dlu",
+		    "2*(default, $lgap), default:grow"));
 
-		// ======== panel1 ========
+		//======== panel1 ========
 		{
 		    panel1.setLayout(new FormLayout(
-			    "33dlu, $lcgap, 99dlu, $lcgap, 42dlu", "default"));
+			"33dlu, $lcgap, 99dlu, $lcgap, 42dlu",
+			"default"));
 
-		    // ---- lblGroup ----
-		    lblGroup.setText(bundle
-			    .getString("EditContactsDialog.group"));
+		    //---- lblGroup ----
+		    lblGroup.setText(bundle.getString("EditContactsDialog.group"));
 		    panel1.add(lblGroup, cc.xy(1, 1));
 
-		    // ---- txtGroup ----
+		    //---- txtGroup ----
 		    txtGroup.setEditable(false);
 		    panel1.add(txtGroup, cc.xy(3, 1));
 
-		    // ---- btnSearchGroup ----
-		    btnSearchGroup.setText(bundle
-			    .getString("SearchDialog.search"));
+		    //---- btnSearchGroup ----
+		    btnSearchGroup.setText(bundle.getString("SearchDialog.search"));
 		    btnSearchGroup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			    btnSearchGroupActionPerformed(e);
@@ -133,30 +170,42 @@ public class EditContactsDialog extends JDialog {
 		}
 		contentPanel.add(panel1, cc.xy(1, 1));
 
-		// ======== panel2 ========
+		//======== panel2 ========
 		{
 		    panel2.setLayout(new FormLayout(
-			    "default:grow, $lcgap, default", "default"));
+			"default:grow, $lcgap, default",
+			"default"));
 		    panel2.add(membersSep, cc.xy(1, 1));
 
-		    // ======== panel3 ========
+		    //======== panel3 ========
 		    {
 			panel3.setLayout(new FormLayout(
-				"default, $lcgap, default", "default"));
+			    "default, $lcgap, default",
+			    "default"));
 
-			// ---- btnAdd ----
+			//---- btnAdd ----
 			btnAdd.setText("+");
+			btnAdd.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+				btnAddActionPerformed(e);
+			    }
+			});
 			panel3.add(btnAdd, cc.xy(1, 1));
 
-			// ---- btnRemove ----
+			//---- btnRemove ----
 			btnRemove.setText("-");
+			btnRemove.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+				btnRemoveActionPerformed(e);
+			    }
+			});
 			panel3.add(btnRemove, cc.xy(3, 1));
 		    }
 		    panel2.add(panel3, cc.xy(3, 1));
 		}
 		contentPanel.add(panel2, cc.xy(1, 3));
 
-		// ======== scrollPaneContacts ========
+		//======== scrollPaneContacts ========
 		{
 		    scrollPaneContacts.setViewportView(listContacts);
 		}
@@ -164,17 +213,18 @@ public class EditContactsDialog extends JDialog {
 	    }
 	    dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-	    // ======== buttonBar ========
+	    //======== buttonBar ========
 	    {
 		buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
 		buttonBar.setLayout(new FormLayout(
-			"$glue, $button, $rgap, $button", "pref"));
+		    "$glue, $button, $rgap, $button",
+		    "pref"));
 
-		// ---- okButton ----
+		//---- okButton ----
 		okButton.setText("OK");
 		buttonBar.add(okButton, cc.xy(2, 1));
 
-		// ---- cancelButton ----
+		//---- cancelButton ----
 		cancelButton.setText("Cancel");
 		buttonBar.add(cancelButton, cc.xy(4, 1));
 	    }
@@ -205,4 +255,36 @@ public class EditContactsDialog extends JDialog {
     private JButton okButton;
     private JButton cancelButton;
     // JFormDesigner - End of variables declaration //GEN-END:variables
+
+    @Override
+    public Controller<Group> getController() {	
+	return groupController;
+    }
+
+    @Override
+    public void setController(Controller<Group> controller) {
+	this.groupController = controller;
+    }
+
+    @Override
+    public void setModel(Group model) {
+	this.group = model;
+	update();
+    }
+
+    @Override
+    public void update() {
+	this.txtGroup.setText(group.getName());
+	listModel.clear();
+	
+	if(group.getContacts().isEmpty()){
+	    groupController.preloadEntity(group, Contact.class);
+	}
+	
+	for(Contact contact: group.getContacts()){
+	    listModel.addElement(contact);
+	}
+	listContacts.updateUI();
+    }
+    
 }
