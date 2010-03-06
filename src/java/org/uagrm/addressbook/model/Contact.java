@@ -81,8 +81,20 @@ public class Contact implements SelectableItem {
 	}
 
 	@Override
-	public boolean equals(SelectableItem item) {		
-		return this.id.equals(item.getId());
-	}
+	public boolean equals(SelectableItem item) {	    	
+	    if (this == item)
+		return true;
+	    if (item == null)
+		return false;
+	    if (getClass() != item.getClass())
+		return false;
+	    Contact other = (Contact) item;
+	    if (id == null) {
+		if (other.id != null)
+		    return false;
+	    } else if (!id.equals(other.id))
+		return false;
+	    return true;
+	}	
 
 }

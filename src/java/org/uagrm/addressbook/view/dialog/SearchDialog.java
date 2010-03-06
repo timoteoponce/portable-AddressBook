@@ -20,6 +20,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -31,6 +32,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
+import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.view.event.SearchEvent;
 import org.uagrm.addressbook.view.event.SearchEventListener;
 import org.uagrm.addressbook.view.event.SearchEventType;
@@ -46,8 +48,8 @@ import com.jgoodies.forms.layout.FormLayout;
 public class SearchDialog extends JDialog{
 	private static Logger LOG = Logger.getLogger(SearchDialog.class);
 
-	private final Collection<SelectableItem> validElements = new ArrayList<SelectableItem>();
-	private final Collection<SelectableItem> invalidElements = new ArrayList<SelectableItem>();
+	private final List<SelectableItem> validElements = new ArrayList<SelectableItem>();
+	private final List<SelectableItem> invalidElements = new ArrayList<SelectableItem>();
 	private final EventListenerList listenerList = new EventListenerList();
 
 	public SearchDialog(Frame owner) {
@@ -98,20 +100,20 @@ public class SearchDialog extends JDialog{
 		fireEvent(SearchEventType.CANCELLED);
 	}
 
-	public Collection<SelectableItem> getValidElements() {
+	public List<SelectableItem> getValidElements() {
 		return validElements;
 	}
 
-	public void setValidElements(Collection<SelectableItem> validElements) {
+	public void setValidElements(List<SelectableItem> validElements) {
 		this.validElements.clear();
 		this.validElements.addAll(validElements);
 	}
 
-	public Collection<SelectableItem> getInvalidElements() {
+	public List<SelectableItem> getInvalidElements() {
 		return invalidElements;
 	}
 
-	public void setInvalidElements(Collection<SelectableItem> invalidElements) {
+	public void setInvalidElements(List<SelectableItem> invalidElements) {
 		this.invalidElements.clear();
 		this.invalidElements.addAll(invalidElements);
 	}
@@ -126,7 +128,13 @@ public class SearchDialog extends JDialog{
 	}
 
 	private boolean isInvalid(SelectableItem item) {
-		return invalidElements.contains(item);
+	    //return invalidElements.contains(item);//this doesn't work in all scenarios, why?. I don't know
+	    for(SelectableItem other : invalidElements){
+		if(item.equals(other)){
+		    return true;
+		}
+	    }
+	    return false;
 	}
 
 	class SearchListCellRenderer extends JLabel implements ListCellRenderer {
@@ -147,11 +155,10 @@ public class SearchDialog extends JDialog{
 				setBackground(list.getBackground());
 				setForeground(list.getForeground());
 			}
-
 			final SelectableItem item = (SelectableItem) value;
 			final boolean invalid = isInvalid(item);
 			setText(item.toString());
-			setEnabled(!invalid);
+			setEnabled(!invalid);			
 
 			return this;
 		}
@@ -172,53 +179,53 @@ public class SearchDialog extends JDialog{
 	    }
 	}
 
-//	private static List<SelectableItem> list1 = new ArrayList<SelectableItem>();
-//	private static List<SelectableItem> list2 = new ArrayList<SelectableItem>();
-//
-//	public static void main(String[] args) {
-//		JFrame frame = new JFrame();
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		SearchDialog dialog = new SearchDialog(frame);
-//		createElements();
-//		dialog.setValidElements(list1);
-//		dialog.setInvalidElements(list2);
-//		frame.setVisible(true);
-//		dialog.showDialog();
-//	}
-//
-//	private static void createElements() {
-//		Contact contact = new Contact();
-//		contact.setId(1);
-//		contact.setFirstName("Timoteo");
-//		contact.setLastName("Ponce");
-//		list1.add(contact);
-//
-//		contact = new Contact();
-//		contact.setId(2);
-//		contact.setFirstName("Pedro");
-//		contact.setLastName("Ponce");
-//		list1.add(contact);
-//
-//		contact = new Contact();
-//		contact.setId(3);
-//		contact.setFirstName("Marcelo");
-//		contact.setLastName("Ponce");
-//		list1.add(contact);
-//		list2.add(contact);
-//
-//		contact = new Contact();
-//		contact.setId(4);
-//		contact.setFirstName("Hugo");
-//		contact.setLastName("Ponce");
-//		list1.add(contact);
-//
-//		contact = new Contact();
-//		contact.setId(5);
-//		contact.setFirstName("Miguel");
-//		contact.setLastName("Ponce");
-//		list1.add(contact);
-//		list2.add(contact);
-//	}
+	private static List<SelectableItem> list1 = new ArrayList<SelectableItem>();
+	private static List<SelectableItem> list2 = new ArrayList<SelectableItem>();
+
+	public static void main(String[] args) {
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		SearchDialog dialog = new SearchDialog(frame);
+		createElements();
+		dialog.setValidElements(list1);
+		dialog.setInvalidElements(list2);
+		frame.setVisible(true);
+		dialog.showDialog();
+	}
+
+	private static void createElements() {
+		Contact contact = new Contact();
+		contact.setId(1);
+		contact.setFirstName("Timoteo");
+		contact.setLastName("Ponce");
+		list1.add(contact);
+
+		contact = new Contact();
+		contact.setId(2);
+		contact.setFirstName("Pedro");
+		contact.setLastName("Ponce");
+		list1.add(contact);
+
+		contact = new Contact();
+		contact.setId(3);
+		contact.setFirstName("Marcelo");
+		contact.setLastName("Ponce");
+		list1.add(contact);
+		list2.add(contact);
+
+		contact = new Contact();
+		contact.setId(4);
+		contact.setFirstName("Hugo");
+		contact.setLastName("Ponce");
+		list1.add(contact);
+
+		contact = new Contact();
+		contact.setId(5);
+		contact.setFirstName("Miguel");
+		contact.setLastName("Ponce");
+		list1.add(contact);
+		list2.add(contact);
+	}
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
