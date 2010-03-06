@@ -27,6 +27,7 @@ public class MainView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		groupView = new GroupView();
 		panelGroups.add(groupView, BorderLayout.CENTER);
+		setTitle("MainView");
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException,
