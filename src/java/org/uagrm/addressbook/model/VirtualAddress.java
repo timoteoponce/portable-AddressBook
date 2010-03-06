@@ -80,4 +80,12 @@ public class VirtualAddress implements Entity {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+	    return "VirtualAddress [id=" + id + ", identifier=" + identifier
+		    + ", protocol=" + protocol + ", website=" + website + "]";
+	}
+	
+	
+
 }

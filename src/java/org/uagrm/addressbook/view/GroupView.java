@@ -77,7 +77,7 @@ public class GroupView extends JPanel implements View<Group> {
     }
 
     private void groupListMouseClicked(MouseEvent e) {
-	final int index = groupList.getSelectedIndex();
+	//final int index = groupList.getSelectedIndex();
 
 	if (e.getModifiers() == MouseEvent.BUTTON3_MASK /* && index > 0 */) {
 	    showPopUpMenu(e.getX(), e.getY());

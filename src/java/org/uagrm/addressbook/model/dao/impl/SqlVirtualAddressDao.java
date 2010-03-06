@@ -24,11 +24,11 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
 	@Override
 	protected void fillValues(VirtualAddress entity, ResultSet rs)
 			throws SQLException {
-		final VirtualAddress vAddress = (VirtualAddress) entity;
+		final VirtualAddress vAddress = entity;
 		vAddress.setId(rs.getInt(1));
-		vAddress.setIdentifier(rs.getString(2));
-		vAddress.setProtocol(getProtocol(rs.getInt(3)));
-		vAddress.setWebsite(rs.getString(4));
+		vAddress.setIdentifier(rs.getString("IDENTIFIER"));
+		vAddress.setProtocol(getProtocol(rs.getInt("ID_PROTOCOL")));
+		vAddress.setWebsite(rs.getString("WEBSITE"));
 	}
 
 	private Protocol getProtocol(int protocolId) {
@@ -42,7 +42,7 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
 	@Override
 	protected String getFields(VirtualAddress entity, CommonActions action) {
 		String out = "";
-		final VirtualAddress vAddress = (VirtualAddress) entity;
+		final VirtualAddress vAddress = entity;
 		switch (action) {
 		case CREATE:
 			out = "(null,'" + vAddress.getIdentifier() + "','"

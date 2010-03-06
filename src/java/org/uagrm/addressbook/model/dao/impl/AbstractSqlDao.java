@@ -109,8 +109,11 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 				+ ((Entity)entity).getId());
 		ResultSet rs = handler.executeQuery(query);
 		try {
-			rs.next();
-			fillValues(entity, rs);
+			if(rs.next()){
+			    fillValues(entity, rs);
+			}else{
+			    entity = null;
+			}
 		} catch (SQLException e) {
 			log.error("Error reading entity: " + ((Entity)entity).getId() + " > " + e);
 			entity = null;
