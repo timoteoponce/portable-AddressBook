@@ -242,7 +242,7 @@
 		<property name="cpd.dest" value="${project.build.report}/cpd" />
 		<mkdir dir="${cpd.dest}" />
 
-		<cpd minimumTokenCount="70" outputFile="${cpd.dest}/cpd.txt">
+		<cpd minimumTokenCount="70" format="xml" outputFile="${cpd.dest}/cpd.xml">
 			<fileset dir="${project.src}">
 				<include name="**/*.java" />
 			</fileset>
