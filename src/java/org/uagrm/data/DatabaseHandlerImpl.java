@@ -1,6 +1,7 @@
 package org.uagrm.data;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,8 @@ import java.sql.SQLException;
 import javax.sql.rowset.CachedRowSet;
 
 import org.apache.log4j.Logger;
+import org.uagrm.addressbook.util.ConfigKeys;
+import org.uagrm.addressbook.util.Configuration;
 
 import com.sun.rowset.CachedRowSetImpl;
 
@@ -15,15 +18,45 @@ import com.sun.rowset.CachedRowSetImpl;
  * @author Timoteo Ponce
  * 
  */
-public abstract class AbstractDatabaseHandler implements DatabaseHandler {
-    
-    private static final Logger LOG = Logger.getLogger(AbstractDatabaseHandler.class);
+public class DatabaseHandlerImpl implements DatabaseHandler {
+
+    private static final Logger LOG = Logger
+	    .getLogger(DatabaseHandlerImpl.class.getSimpleName());
 
     private Connection connection;
 
+    private static DatabaseHandler instance;
+
+    private DatabaseHandlerImpl() {
+    }
+
+    public static DatabaseHandler getInstance() {
+	if (instance == null) {
+	    instance = new DatabaseHandlerImpl();
+	}
+	return instance;
+    }
+
+    public static void setInstance(DatabaseHandler instance) {
+	DatabaseHandlerImpl.instance = instance;
+    }
+
     @Override
-    abstract public void connect();
-    
+    public void connect() {
+	try {
+	    final String connectionClass = Configuration
+		    .getConfigKey(ConfigKeys.DB_CONNECTION_CLASS);
+	    final String dbLocation = Configuration
+		    .getConfigKey(ConfigKeys.DB_CONNECTION_LOCATION);
+	    Class.forName(connectionClass);
+	    setConnection(DriverManager.getConnection(dbLocation));
+	} catch (SQLException e) {
+	    LOG.error("Database error", e);
+	} catch (ClassNotFoundException e) {
+	    LOG.error("JDBC definition not found", e);
+	}
+    }
+
     /*
      * (non-Javadoc)
      * 

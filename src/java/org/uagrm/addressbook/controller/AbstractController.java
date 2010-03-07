@@ -8,13 +8,17 @@ import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.view.View;
 
-public abstract class AbstractController<T> implements Controller<T> {
+public abstract class AbstractController<T> implements Controller<T> {    
+
+    private final List<View<T>> viewList = new ArrayList<View<T>>();  
     
-    private static final Logger LOG = Logger.getLogger(AbstractController.class);
+    private final Logger log;
 
-    private final List<View<T>> viewList = new ArrayList<View<T>>();        
-
-    abstract protected GenericDao<T> getDao();
+    abstract protected GenericDao<T> getDao();    
+    
+    public AbstractController() {
+	log = Logger.getLogger(getClass());
+    }
     
     @Override
     abstract public void save(T element);
@@ -26,9 +30,9 @@ public abstract class AbstractController<T> implements Controller<T> {
     public void addView(View<T> view) {
 	if (!viewList.contains(view)) {
 	    viewList.add(view);
-	    LOG.info("Adding view: " + view);
+	    log.info("Adding view: " + view);
 	} else {
-	    LOG.warn("Duplicated view : " + view);
+	    log.warn("Duplicated view : " + view);
 	}	
     }
 
@@ -44,7 +48,7 @@ public abstract class AbstractController<T> implements Controller<T> {
 
     @Override
     public void modelChanged(T model) {
-	LOG.info("Model has changed, updating all views: [ " + model + " ]");
+	log.info("Model has changed, updating all views: [ " + model + " ]");
 	updateAllViews(model);	
     }
 
@@ -56,7 +60,7 @@ public abstract class AbstractController<T> implements Controller<T> {
 
     @Override
     public void removeView(View<T> view) {
-	LOG.info("Removing view: " + view);
+	log.info("Removing view: " + view);
 	viewList.remove(view);	
     }
     

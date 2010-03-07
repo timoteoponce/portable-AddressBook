@@ -5,8 +5,8 @@ package org.uagrm.addressbook.util;
  * 
  */
 public interface ConfigKeys {
-    String DATASOURCE_HANDLER = "datasource.handler";
-    String DATASOURCE_LOCATION = "datasource.location";
+    String DB_CONNECTION_CLASS = "db.connection.class";
+    String DB_CONNECTION_LOCATION = "db.connection.location";
     String DAO_PREFIX = "dao.prefix";    
     // SQL keys
     String SQL_INSERT = "sql.insert";

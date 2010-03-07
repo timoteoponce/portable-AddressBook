@@ -13,7 +13,7 @@ import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.util.ConfigKeys;
 import org.uagrm.addressbook.util.Configuration;
 import org.uagrm.data.DatabaseHandler;
-import org.uagrm.data.DatabaseHandlerFactory;
+import org.uagrm.data.DatabaseHandlerImpl;
 
 /**
  * @author Timoteo Ponce
@@ -25,12 +25,15 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
     public static final String VAR_TABLE = "${table}";
     public static final String VAR_VALUES = "${values}";
     public static final String VAR_CONDITION = "${condition}";
-    public static final String VAR_COLUMNS = "${columns}";
+    public static final String VAR_COLUMNS = "${columns}";    
 
-    private static final Logger LOG = Logger.getLogger(AbstractSqlDao.class.getName());
-
-    private final DatabaseHandler handler = DatabaseHandlerFactory
-	    .getDatabaseHandler();
+    private final DatabaseHandler handler = DatabaseHandlerImpl.getInstance();
+    
+    private final Logger log;
+    
+    public AbstractSqlDao() {
+	log = Logger.getLogger(getClass());
+    }
 
     @Override
     public void create(T entity) {
@@ -39,7 +42,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	query = query.replace(VAR_TABLE, getTableName());
 	query = query.replace(VAR_VALUES, getFields(entity,
 		CommonActions.CREATE));
-	LOG.info("Query result: " + handler.executeUpdate(query));
+	log.info("Query result: " + handler.executeUpdate(query));
 	// retrieve the generated ID
 	query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_LAST_ID);
 	query = query.replace(VAR_TABLE, getTableName());
@@ -49,7 +52,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	    rs.next();
 	    ((Entity) entity).setId(rs.getInt(1));
 	} catch (SQLException e) {
-	    LOG.error(e, e);
+	    log.error(e, e);
 	} finally {
 	    handler.closeQuietly(rs);
 	}
@@ -62,12 +65,12 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	query = query.replace(VAR_CONDITION, "id = "
 		+ ((Entity) entity).getId());
 
-	LOG.info("Query result: " + handler.executeUpdate(query));
+	log.info("Query result: " + handler.executeUpdate(query));
 	deleteReferences(entity);
     }
 
     protected void deleteReferences(T entity) {
-	LOG.info("Removing all references.");
+	log.info("Removing all references.");
 	Collection<ReferenceLink> references = getReferences(entity);
 
 	for (ReferenceLink ref : references) {
@@ -76,7 +79,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
     }
 
     protected void deleteReference(ReferenceLink ref) {
-	LOG.info("Removing reference: " + ref.toString());
+	log.info("Removing reference: " + ref.toString());
 	String query = Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim();
 	query = query.replace(VAR_TABLE, ref.getTableName());
 
@@ -91,7 +94,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
     }
 
     protected void createReference(ReferenceLink ref) {
-	LOG.info("Adding reference: " + ref.toString());
+	log.info("Adding reference: " + ref.toString());
 	String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
 	query = query.replace(VAR_TABLE, ref.getTableName());
 	query = query.replace(VAR_VALUES, "(" + ref.getSourceId() + ","
@@ -114,7 +117,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 		entity = null;
 	    }
 	} catch (SQLException e) {
-	    LOG.error("Error reading entity: " + ((Entity) entity).getId()
+	    log.error("Error reading entity: " + ((Entity) entity).getId()
 		    + " > " + e);
 	    entity = null;
 	} finally {
@@ -139,7 +142,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 		resultList.add(tempEntity);
 	    }
 	} catch (SQLException e) {
-	    LOG.error(e, e);
+	    log.error(e, e);
 	} finally {
 	    handler.closeQuietly(rs);
 	}
@@ -154,7 +157,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 		CommonActions.UPDATE));
 	query = query.replace(VAR_CONDITION, "id = "
 		+ ((Entity) entity).getId());
-	LOG.info("Query result: " + handler.executeUpdate(query));
+	log.info("Query result: " + handler.executeUpdate(query));
     }
 
     protected DatabaseHandler getDatabaseHandler() {
