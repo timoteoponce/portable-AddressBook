@@ -16,14 +16,14 @@ import com.sun.rowset.CachedRowSetImpl;
  * 
  */
 public abstract class AbstractDatabaseHandler implements DatabaseHandler {
+    
+    private static final Logger LOG = Logger.getLogger(AbstractDatabaseHandler.class);
 
-    private static final Logger LOG = Logger
-	    .getLogger(AbstractDatabaseHandler.class);
     private Connection connection;
 
     @Override
     abstract public void connect();
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -34,8 +34,7 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
 	try {
 	    LOG.info("Query:" + query);
 	    connection = getConnection();
-	    final PreparedStatement pstat = connection.prepareStatement(
-		    query);
+	    final PreparedStatement pstat = connection.prepareStatement(query);
 	    final ResultSet rs = pstat.executeQuery();
 
 	    final CachedRowSet rowSet = new CachedRowSetImpl();
@@ -60,8 +59,7 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
 	try {
 	    LOG.info("update:" + sql);
 	    connection = getConnection();
-	    final PreparedStatement pstat = connection.prepareStatement(
-		    sql);
+	    final PreparedStatement pstat = connection.prepareStatement(sql);
 	    final int result = pstat.executeUpdate();
 	    return result;
 	} catch (SQLException e) {

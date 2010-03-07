@@ -16,70 +16,70 @@ import org.uagrm.addressbook.model.dao.VirtualAddressDao;
 
 /**
  * @author Timoteo Ponce
- *
+ * 
  */
 public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
-		implements VirtualAddressDao {
+	implements VirtualAddressDao {
 
-	@Override
-	protected void fillValues(VirtualAddress entity, ResultSet rs)
-			throws SQLException {
-		final VirtualAddress vAddress = entity;
-		vAddress.setId(rs.getInt(1));
-		vAddress.setIdentifier(rs.getString("IDENTIFIER"));
-		vAddress.setProtocol(getProtocol(rs.getInt("ID_PROTOCOL")));
-		vAddress.setWebsite(rs.getString("WEBSITE"));
+    @Override
+    protected void fillValues(VirtualAddress entity, ResultSet rs)
+	    throws SQLException {
+	final VirtualAddress vAddress = entity;
+	vAddress.setId(rs.getInt(1));
+	vAddress.setIdentifier(rs.getString("IDENTIFIER"));
+	vAddress.setProtocol(getProtocol(rs.getInt("ID_PROTOCOL")));
+	vAddress.setWebsite(rs.getString("WEBSITE"));
+    }
+
+    private Protocol getProtocol(int protocolId) {
+	GenericDao<Protocol> protocolDao = DaoFactory
+		.getInstance(ProtocolDao.class);
+	Protocol protocol = protocolDao.read(new Protocol(protocolId, null,
+		null));
+	return protocol;
+    }
+
+    @Override
+    protected String getFields(VirtualAddress entity, CommonActions action) {
+	String out = "";
+	final VirtualAddress vAddress = entity;
+	switch (action) {
+	case CREATE:
+	    out = "(null,'" + vAddress.getIdentifier() + "','"
+		    + vAddress.getWebsite() + "',"
+		    + vAddress.getProtocol().getId() + ");";
+	    break;
+
+	case UPDATE:
+	    out = "identifier = '" + vAddress.getIdentifier() + "',website='"
+		    + vAddress.getWebsite() + "',id_protocol="
+		    + vAddress.getProtocol().getId();
+	    break;
 	}
+	return out;
+    }
 
-	private Protocol getProtocol(int protocolId) {
-		GenericDao<Protocol> protocolDao = DaoFactory
-				.getInstance(ProtocolDao.class);
-		Protocol protocol = protocolDao.read(new Protocol(protocolId, null,
-				null));
-		return protocol;
-	}
+    @Override
+    protected String getTableName() {
+	return TABLE_NAME;
+    }
 
-	@Override
-	protected String getFields(VirtualAddress entity, CommonActions action) {
-		String out = "";
-		final VirtualAddress vAddress = entity;
-		switch (action) {
-		case CREATE:
-			out = "(null,'" + vAddress.getIdentifier() + "','"
-					+ vAddress.getWebsite() + "',"
-					+ vAddress.getProtocol().getId() + ");";
-			break;
+    @Override
+    public void loadReferences(VirtualAddress entity, Class<?> clazz) {
+	// not used
+    }
 
-		case UPDATE:
-			out = "identifier = '" + vAddress.getIdentifier() + "',website='"
-					+ vAddress.getWebsite() + "',id_protocol="
-					+ vAddress.getProtocol().getId();
-			break;
-		}
-		return out;
-	}
+    @Override
+    protected VirtualAddress loadValues(ResultSet rs) throws SQLException {
+	VirtualAddress vAddress = new VirtualAddress();
+	fillValues(vAddress, rs);
 
-	@Override
-	protected String getTableName() {		
-		return TABLE_NAME;
-	}
+	return vAddress;
+    }
 
-	@Override
-	public void loadReferences(VirtualAddress entity, Class<?> clazz) {
-		// not used
-	}
-
-	@Override
-	protected VirtualAddress loadValues(ResultSet rs) throws SQLException {
-		VirtualAddress vAddress = new VirtualAddress();
-		fillValues(vAddress, rs);
-
-		return vAddress;
-	}
-
-	@Override
-	protected Collection<ReferenceLink> getReferences(VirtualAddress entity) {
-		return new ArrayList<ReferenceLink>();
-	}
+    @Override
+    protected Collection<ReferenceLink> getReferences(VirtualAddress entity) {
+	return new ArrayList<ReferenceLink>();
+    }
 
 }

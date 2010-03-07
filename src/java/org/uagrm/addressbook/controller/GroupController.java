@@ -1,27 +1,22 @@
 package org.uagrm.addressbook.controller;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.dao.DaoFactory;
+import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.model.dao.GroupDao;
-import org.uagrm.addressbook.view.View;
 
 /**
  * @author Timoteo Ponce
  * 
  */
-public class GroupController implements Controller<Group> {
+public class GroupController extends AbstractController<Group> implements
+	Controller<Group> {
 
     private static final Logger LOG = Logger.getLogger(GroupController.class);
 
     private static Controller<Group> instance;
-
-    private final List<View<Group>> viewList = new ArrayList<View<Group>>();
 
     private final GroupDao dao = DaoFactory.getInstance(GroupDao.class);
 
@@ -39,7 +34,6 @@ public class GroupController implements Controller<Group> {
     public void save(Group group) {
 	LOG.debug("Saving group");
 	// save or update the group
-
 	if (group.getId() == null) {
 	    LOG.debug("Creating...");
 	    dao.create(group);
@@ -51,57 +45,16 @@ public class GroupController implements Controller<Group> {
 
     @Override
     public void saveReferences(Group group, Class<?> target) {
-	LOG.info("Saving Group references: " + target + " [ " + group.getContacts().size() + " ]");
+	LOG.info("Saving Group references: " + target + " [ "
+		+ group.getContacts().size() + " ]");
 	if (target.equals(Contact.class)) {
 	    dao.saveContacts(group);
 	}
     }
 
     @Override
-    public void delete(Group group) {
-	dao.delete(group);
-    }
-
-    @Override
-    public Collection<Group> getElements() {
-	return dao.selectAll();
-    }
-
-    @Override
-    public void addView(View<Group> view) {
-	if (!viewList.contains(view)) {
-	    viewList.add(view);
-	    LOG.info("Adding view: " + view);
-	} else {
-	    LOG.warn("Duplicated view : " + view);
-	}
-    }
-
-    @Override
-    public void removeView(View<Group> view) {
-	LOG.info("Removing view: " + view);
-	viewList.remove(view);
-    }
-
-    @Override
-    public void modelChanged(Group model) {
-	LOG.info("Model has changed, updating all views: [ " + model + " ]");
-	updateAllViews(model);
-    }
-
-    @Override
-    public void updateAllViews(Group model) {
-	//I'm using a copy list to avoid the exception :java.util.ConcurrentModificationException
-	List<View<Group>> copyList = new ArrayList<View<Group>>(viewList);	
-	for (View<Group> view : copyList) {
-	    view.update(model);
-	}
-    }
-
-    @Override
-    public Group preloadEntity(Group entity, Class<?> target) {
-	dao.loadReferences(entity, target);
-	return entity;
+    protected GenericDao<Group> getDao() {
+	return dao;
     }
 
 }

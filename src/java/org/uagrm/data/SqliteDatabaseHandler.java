@@ -12,8 +12,8 @@ import org.uagrm.addressbook.util.Configuration;
  * 
  */
 public class SqliteDatabaseHandler extends AbstractDatabaseHandler {
-	private static final Logger log = Logger
-			.getLogger(SqliteDatabaseHandler.class);
+	private static final Logger LOG = Logger
+			.getLogger(SqliteDatabaseHandler.class);	
 
 	/*
 	 * (non-Javadoc)
@@ -28,10 +28,10 @@ public class SqliteDatabaseHandler extends AbstractDatabaseHandler {
 					+ Configuration
 							.getConfigKey(ConfigKeys.DATASOURCE_LOCATION)));
 		} catch (SQLException e) {
-			log.error("Database error", e);
+			LOG.error("Database error", e);
 		} catch (ClassNotFoundException e) {
-			log.error("JDBC definition not found", e);
+			LOG.error("JDBC definition not found", e);
 		}
-	}
+	}	
 
 }

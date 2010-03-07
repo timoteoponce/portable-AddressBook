@@ -10,66 +10,58 @@ import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.AddressDao;
-import org.uagrm.addressbook.util.ConfigKeys;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author Timoteo Ponce
- *
+ * 
  */
 public class SqlAddressDao extends AbstractSqlDao<Address> implements
-		AddressDao {
+	AddressDao {
 
-	@Override
-	protected void fillValues(Address entity, ResultSet rs) throws SQLException {
-		final Address address = (Address) entity;
-		address.setId(rs.getInt(1));
-		address.setCity(rs.getString(2));
-		address.setCountry(getCountry(rs.getInt(3)));
-		address.setNumber(rs.getString(4));
-		address.setStreet(rs.getString(5));
-	}
+    @Override
+    protected void fillValues(Address entity, ResultSet rs) throws SQLException {
+	final Address address = entity;
+	address.setId(rs.getInt(1));
+	address.setCity(rs.getString(2));
+	address.setCountry(getCountry(rs.getInt(3)));
+	address.setNumber(rs.getString(4));
+	address.setStreet(rs.getString(5));
+    }
 
-	private Country getCountry(int int1) {
-		// TODO implement!!
-		return null;
-	}
+    private Country getCountry(int int1) {
+	// TODO implement!!
+	throw new NotImplementedException();
+    }
 
-	@Override
-	protected String getFields(Address entity, CommonActions action) {
-		String out = "";
-		switch (action) {
-		case CREATE:
-			// TODO implement
-			break;
+    @Override
+    protected String getFields(Address entity, CommonActions action) {
+	// TODO implement
+	throw new NotImplementedException();	
+    }
 
-		case UPDATE:
-			// TODO implement
-			break;
-		}
-		return out;
-	}
+    @Override
+    protected String getTableName() {
+	return TABLE_NAME;
+    }
 
-	@Override
-	protected String getTableName() {		
-		return TABLE_NAME;
-	}
+    @Override
+    public void loadReferences(Address entity, Class<?> clazz) {
+	// not used
+    }
 
-	@Override
-	public void loadReferences(Address entity, Class<?> clazz) {
-		// not used
-	}
+    @Override
+    protected Address loadValues(ResultSet rs) throws SQLException {
+	Address address = new Address();
+	fillValues(address, rs);
 
-	@Override
-	protected Address loadValues(ResultSet rs) throws SQLException {
-		Address address = new Address();
-		fillValues(address, rs);
+	return address;
+    }
 
-		return address;
-	}
-
-	@Override
-	protected Collection<ReferenceLink> getReferences(Address entity) {
-		return new ArrayList<ReferenceLink>();
-	}
+    @Override
+    protected Collection<ReferenceLink> getReferences(Address entity) {
+	return new ArrayList<ReferenceLink>();
+    }
 
 }
