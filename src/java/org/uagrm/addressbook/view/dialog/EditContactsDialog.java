@@ -4,12 +4,25 @@
 
 package org.uagrm.addressbook.view.dialog;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dialog;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.ContactController;
@@ -23,8 +36,10 @@ import org.uagrm.addressbook.view.event.SearchEvent;
 import org.uagrm.addressbook.view.event.SearchEventListener;
 import org.uagrm.addressbook.view.event.SearchEventType;
 
-import com.jgoodies.forms.factories.*;
-import com.jgoodies.forms.layout.*;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * @author Timoteo Ponce
@@ -342,11 +357,10 @@ public class EditContactsDialog extends JDialog implements View<Group> {
     @Override
     public void setModel(Group model) {
 	this.group = model;
-	update();
+	loadValues();
     }
 
-    @Override
-    public void update() {
+    private void loadValues() {
 	this.txtGroup.setText(group.getName());
 	listModel.clear();
 
@@ -358,6 +372,15 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 	    listModel.addElement(contact);
 	}
 	listContacts.updateUI();
+    }
+
+    @Override
+    public void update(Group model) {
+	if( model == null){//was deleted
+	    this.close();
+	}else if (this.group.equals(model)) {
+	    setModel(model);
+	}
     }
 
     @Override

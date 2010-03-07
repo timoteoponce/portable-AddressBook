@@ -3,13 +3,11 @@ package org.uagrm.addressbook.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GroupDao;
 import org.uagrm.addressbook.view.View;
 
 /**
@@ -55,7 +53,7 @@ public class ContactController implements Controller<Contact> {
 	}
 
 	@Override
-	public void updateAllViews() {
+	public void updateAllViews(Contact model) {
 		// TODO Auto-generated method stub
 
 	}

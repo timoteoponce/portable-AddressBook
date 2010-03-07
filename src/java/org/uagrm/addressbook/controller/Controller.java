@@ -16,7 +16,7 @@ public interface Controller<T> {
 
     void removeView(View<T> view);
 
-    void updateAllViews();
+    void updateAllViews(T model);
 
     void modelChanged(T model);
     

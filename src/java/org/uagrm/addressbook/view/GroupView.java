@@ -152,10 +152,9 @@ public class GroupView extends JPanel implements View<Group> {
 
     public void deleteGroup() {
 	final int index = groupList.getSelectedIndex();
-	if (index > 0) {
-	    final Group group = (Group) groupList.getSelectedValue();
+	if (index > 0) {	    
 	    controller.delete((Group) groupList.getSelectedValue());
-	    controller.modelChanged(group);
+	    controller.modelChanged(null);
 	}
     }
 
@@ -202,8 +201,10 @@ public class GroupView extends JPanel implements View<Group> {
     }
 
     @Override
-    public void update() {
-	LOG.debug("Updating view: " +this.getClass().getSimpleName());
+    public void update(Group model) {
+	if( model != null ){//was removed
+	    LOG.debug("Updating view: " +this.getClass().getSimpleName()+", changed group: " + model.getId());
+	}
 	updateList();
     }
 

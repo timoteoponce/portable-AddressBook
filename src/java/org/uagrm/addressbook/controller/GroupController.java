@@ -86,13 +86,15 @@ public class GroupController implements Controller<Group> {
     @Override
     public void modelChanged(Group model) {
 	LOG.info("Model has changed, updating all views: [ " + model + " ]");
-	updateAllViews();
+	updateAllViews(model);
     }
 
     @Override
-    public void updateAllViews() {
-	for (View<Group> view : viewList) {
-	    view.update();
+    public void updateAllViews(Group model) {
+	//I'm using a copy list to avoid the exception :java.util.ConcurrentModificationException
+	List<View<Group>> copyList = new ArrayList<View<Group>>(viewList);	
+	for (View<Group> view : copyList) {
+	    view.update(model);
 	}
     }
 

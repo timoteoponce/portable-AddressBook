@@ -17,7 +17,7 @@ import com.sun.rowset.CachedRowSetImpl;
  */
 public abstract class AbstractDatabaseHandler implements DatabaseHandler {
 
-    private static final Logger log = Logger
+    private static final Logger LOG = Logger
 	    .getLogger(AbstractDatabaseHandler.class);
     private Connection connection;
 
@@ -32,8 +32,9 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
     @Override
     public ResultSet executeQuery(String query) {
 	try {
-	    log.info("Query:" + query);
-	    final PreparedStatement pstat = getConnection().prepareStatement(
+	    LOG.info("Query:" + query);
+	    connection = getConnection();
+	    final PreparedStatement pstat = connection.prepareStatement(
 		    query);
 	    final ResultSet rs = pstat.executeQuery();
 
@@ -42,7 +43,7 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
 
 	    return rowSet;
 	} catch (SQLException e) {
-	    log.error("Database error", e);
+	    LOG.error("Database error", e);
 	} finally {
 	    closeQuietly(connection);
 	}
@@ -57,13 +58,14 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
     @Override
     public int executeUpdate(String sql) {
 	try {
-	    log.info("update:" + sql);
-	    final PreparedStatement pstat = getConnection().prepareStatement(
+	    LOG.info("update:" + sql);
+	    connection = getConnection();
+	    final PreparedStatement pstat = connection.prepareStatement(
 		    sql);
 	    final int result = pstat.executeUpdate();
 	    return result;
 	} catch (SQLException e) {
-	    log.error("Database error", e);
+	    LOG.error("Database error", e);
 	} finally {
 	    closeQuietly(connection);
 	}
@@ -104,7 +106,7 @@ public abstract class AbstractDatabaseHandler implements DatabaseHandler {
 		((Connection) obj).close();
 	    }
 	} catch (SQLException e) {
-	    log.error("Database error", e);
+	    LOG.error("Database error", e);
 	}
     }
 }

@@ -9,14 +9,13 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
-import javax.swing.*;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import com.jgoodies.forms.factories.*;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
@@ -26,6 +25,7 @@ import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.view.View;
 
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -193,9 +193,13 @@ public class GroupEdit extends JDialog implements View<Group> {
     }
 
     @Override
-    public void update() {
-	LOG.info("Updating view ..");
-	loadValues();
+    public void update(Group model) {
+	if( model == null){//was deleted
+	    this.close();
+	}else if( this.group.equals(model)){
+	    LOG.info("Updating model : " + this.getClass().getName() + ", values: " + model.toString());
+	    setModel(model);
+	}
     }
 
     public void setIsCreation(boolean value) {
