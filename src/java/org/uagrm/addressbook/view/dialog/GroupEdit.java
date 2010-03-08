@@ -47,11 +47,12 @@ public class GroupEdit extends JDialog implements View<Group> {
     }
 
     private void btnAcceptActionPerformed(ActionEvent e) {
+	setVisible(false);
 	updateValues();
 	controller.save(group);
 	controller.saveReferences(group, Contact.class);
 	close();
-	getController().modelChanged(group);
+	getController().fireChange(group);
     }
 
     private void btnCancelActionPerformed(ActionEvent e) {
@@ -71,7 +72,7 @@ public class GroupEdit extends JDialog implements View<Group> {
 	dialog.setModel(group);
 	dialog.setLocked(isCreation);
 	controller.addView(dialog);
-	dialog.setVisible(true);	
+	dialog.setVisible(true);
     }
 
     private void initComponents() {
@@ -194,11 +195,14 @@ public class GroupEdit extends JDialog implements View<Group> {
 
     @Override
     public void update(Group model) {
-	if( model == null){//was deleted
-	    this.close();
-	}else if( this.group.equals(model)){
-	    LOG.info("Updating model : " + this.getClass().getName() + ", values: " + model.toString());
-	    setModel(model);
+	if (this.isVisible()) {
+	    if (model == null) {// was deleted
+		this.close();
+	    } else if (this.group.equals(model)) {
+		LOG.info("Updating model : " + this.getClass().getName()
+			+ ", values: " + model.toString());
+		setModel(model);
+	    }
 	}
     }
 
@@ -206,7 +210,7 @@ public class GroupEdit extends JDialog implements View<Group> {
 	this.isCreation = value;
 	setModel(new Group());
 	btnAccept.setText("Save");
-	LOG.debug("IsCreation: " + value);	
+	LOG.debug("IsCreation: " + value);
     }
 
     @Override

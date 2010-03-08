@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
@@ -25,6 +24,7 @@ import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
 import org.uagrm.addressbook.view.dialog.GroupEdit;
 
@@ -39,31 +39,29 @@ public class GroupView extends JPanel implements View<Group> {
 
     private final Controller<Group> controller = ControllerFactory
 	    .getInstance(GroupController.class);
+    
+    private final ListModel<Group> listModel;
 
     public GroupView() {
+	listModel = new ListModel<Group>();
 	controller.addView(this);
 	initComponents();
 	init();
     }
 
     private void init() {
-	groupList.setModel(new DefaultListModel());
+	groupList.setModel(listModel);
 	groupList.setCellRenderer(new CustomListCellRenderer());
 	//
 	updateList();
-    }
-
-    private DefaultListModel getListModel() {
-	return (DefaultListModel) groupList.getModel();
-
-    }
+    }    
 
     public void updateList() {
-	getListModel().clear();
+	listModel.clear();
 
 	Collection<Group> groups = controller.getElements();
 	for (Group group : groups) {
-	    getListModel().addElement(group);
+	    listModel.addElement(group);
 	}
 	groupList.updateUI();
     }
@@ -154,7 +152,7 @@ public class GroupView extends JPanel implements View<Group> {
 	final int index = groupList.getSelectedIndex();
 	if (index > 0) {	    
 	    controller.delete((Group) groupList.getSelectedValue());
-	    controller.modelChanged(null);
+	    controller.fireChange(null);
 	}
     }
 
@@ -197,7 +195,7 @@ public class GroupView extends JPanel implements View<Group> {
     // JFormDesigner - End of variables declaration //GEN-END:variables
     @Override
     public void setModel(Group model) {
-	// TODO Auto-generated method stub
+	// not used
     }
 
     @Override

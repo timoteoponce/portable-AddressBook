@@ -18,7 +18,7 @@ public interface Controller<T> {
 
     void updateAllViews(T model);
 
-    void modelChanged(T model);
+    void fireChange(T model);
     
     /*Business*/
     

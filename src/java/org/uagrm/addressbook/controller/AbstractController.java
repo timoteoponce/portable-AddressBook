@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.view.View;
@@ -47,7 +49,7 @@ public abstract class AbstractController<T> implements Controller<T> {
     }
 
     @Override
-    public void modelChanged(T model) {
+    public void fireChange(T model) {
 	log.info("Model has changed, updating all views: [ " + model + " ]");
 	updateAllViews(model);	
     }
@@ -65,11 +67,16 @@ public abstract class AbstractController<T> implements Controller<T> {
     }
     
     @Override
-    public void updateAllViews(T model) {
+    public void updateAllViews(final T model) {
 	//I'm using a copied list to avoid the exception :java.util.ConcurrentModificationException
 	List<View<T>> copyList = new ArrayList<View<T>>(viewList);	
-	for (View<T> view : copyList) {
-	    view.update(model);
+	for (final View<T> view : copyList) {
+	    SwingUtilities.invokeLater(new Runnable() {	        
+	        @Override
+	        public void run() {
+	            view.update(model);
+	        }
+	    });	    
 	}	
     }  
 

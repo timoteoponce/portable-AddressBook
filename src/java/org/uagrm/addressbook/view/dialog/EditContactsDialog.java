@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -31,6 +30,7 @@ import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.View;
 import org.uagrm.addressbook.view.event.SearchEvent;
 import org.uagrm.addressbook.view.event.SearchEventListener;
@@ -55,7 +55,7 @@ public class EditContactsDialog extends JDialog implements View<Group> {
     private final Controller<Contact> contactController = ControllerFactory
 	    .getInstance(ContactController.class);
 
-    private final DefaultListModel listModel = new DefaultListModel();
+    private final ListModel<Contact> listModel = new ListModel<Contact>();
 
     private Group group;
 
@@ -125,7 +125,7 @@ public class EditContactsDialog extends JDialog implements View<Group> {
     private List<SelectableItem> getListElements() {
 	List<SelectableItem> list = new ArrayList<SelectableItem>();
 
-	for (int i = 0; i < listModel.size(); i++) {
+	for (int i = 0; i < listModel.getSize(); i++) {
 	    list.add((SelectableItem) listModel.getElementAt(i));
 	}
 	return list;
@@ -164,7 +164,7 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 	int index = listContacts.getSelectedIndex();
 
 	if (index >= 0) {
-	    listModel.remove(index);
+	    listModel.removeElement(index);
 	    listContacts.updateUI();
 	}
     }
@@ -178,9 +178,10 @@ public class EditContactsDialog extends JDialog implements View<Group> {
     }
 
     private void okAction() {
+	this.setVisible(false);
 	group.getContacts().clear();
-	for (int i = 0; i < listModel.size(); i++) {
-	    Contact contact = (Contact) listModel.get(i);
+	for (int i = 0; i < listModel.getSize(); i++) {
+	    Contact contact = (Contact) listModel.getElementAt(i);
 	    group.getContacts().add(contact);
 	}
 	close();
@@ -376,10 +377,12 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 
     @Override
     public void update(Group model) {
-	if( model == null){//was deleted
-	    this.close();
-	}else if (this.group.equals(model)) {
-	    setModel(model);
+	if (this.isVisible()) {
+	    if (model == null) {// was deleted
+		this.close();
+	    } else if (this.group.equals(model)) {
+		setModel(model);
+	    }
 	}
     }
 
