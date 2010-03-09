@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="portableab" default="build" basedir=".">
-	<description>AddressBook application, Juan Timoteo Ponce Ortiz. UAGRM.</description>
+	<description>Portable AddressBook application, Juan Timoteo Ponce Ortiz. UAGRM.</description>
 
 	<property file="build.properties" />
 	<import file="${classpath.location}" />

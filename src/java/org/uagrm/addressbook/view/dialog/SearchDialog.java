@@ -12,9 +12,11 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -31,7 +33,6 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.Contact;
-import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.event.SearchEvent;
 import org.uagrm.addressbook.view.event.SearchEventListener;
 import org.uagrm.addressbook.view.event.SearchEventType;
@@ -49,7 +50,6 @@ public class SearchDialog extends JDialog{
 
 	private final List<SelectableItem> validElements = new ArrayList<SelectableItem>();
 	private final List<SelectableItem> invalidElements = new ArrayList<SelectableItem>();
-	private final ListModel<SelectableItem> listModel = new ListModel<SelectableItem>();
 	private final EventListenerList listenerList = new EventListenerList();
 
 	public SearchDialog(Frame owner) {
@@ -63,15 +63,18 @@ public class SearchDialog extends JDialog{
 	}
 
 	private void init() {
-	    	elementList.setModel(listModel);
+	    	elementList.setModel(new DefaultListModel());
 		elementList.setCellRenderer(new SearchListCellRenderer());
-		listModel.clear();
+		getListModel().clear();
 		//
 		for (SelectableItem item : validElements) {
-			listModel.addElement(item);
+			getListModel().addElement(item);
 		}
 	}
-	
+
+	private DefaultListModel getListModel() {
+		return (DefaultListModel) elementList.getModel();
+	}
 
 	public SearchDialog(Dialog owner) {
 		super(owner);

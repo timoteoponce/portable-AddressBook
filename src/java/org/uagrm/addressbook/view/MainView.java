@@ -2,16 +2,20 @@ package org.uagrm.addressbook.view;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import org.uagrm.addressbook.controller.ControllerFactory;
+import org.uagrm.addressbook.controller.GroupController;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -29,6 +33,7 @@ public class MainView extends JFrame {
 		initComponents();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		groupView = new GroupView();
+		ControllerFactory.getInstance(GroupController.class).addView(groupView);
 		panelGroups.add(groupView, BorderLayout.CENTER);
 		setTitle("MainView");
 	}

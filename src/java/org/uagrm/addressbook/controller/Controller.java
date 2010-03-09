@@ -16,22 +16,13 @@ public interface Controller<T> {
 
     void removeView(View<T> view);
 
-    void updateAllViews(T model);
-
-    void fireChange(T model);
+	void updateAllViews(T model);
     
     /*Business*/
     
     Collection<T> getElements();
     
-    void save(T element);
-
-    /**
-     * Saves the entity references defined by the target class.
-     * @param element
-     * @param target
-     */
-    void saveReferences(T element, Class<?> target);
+	void save(T element);
 
     void delete(T element);
     

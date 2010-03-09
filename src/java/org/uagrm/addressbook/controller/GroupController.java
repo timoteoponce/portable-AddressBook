@@ -12,49 +12,51 @@ import org.uagrm.addressbook.model.dao.GroupDao;
  * 
  */
 public class GroupController extends AbstractController<Group> implements
-	Controller<Group> {
+		Controller<Group> {
 
-    private static final Logger LOG = Logger.getLogger(GroupController.class);
+	private static final Logger LOG = Logger.getLogger(GroupController.class);
 
-    private static Controller<Group> instance;
+	private static Controller<Group> instance;
 
-    private final GroupDao dao = DaoFactory.getInstance(GroupDao.class);
+	private final GroupDao dao = DaoFactory.getInstance(GroupDao.class);
 
-    private GroupController() {
-    }
-
-    public static Controller<Group> getInstance() {
-	if (instance == null) {
-	    instance = new GroupController();
+	private GroupController() {
 	}
-	return instance;
-    }
 
-    @Override
-    public void save(Group group) {
-	LOG.debug("Saving group");
-	// save or update the group
-	if (group.getId() == null) {
-	    LOG.debug("Creating...");
-	    dao.create(group);
-	} else {
-	    LOG.debug("Updating...");
-	    dao.update(group);
+	public static Controller<Group> getInstance() {
+		if (instance == null) {
+			instance = new GroupController();
+		}
+		return instance;
 	}
-    }
 
-    @Override
-    public void saveReferences(Group group, Class<?> target) {
-	LOG.info("Saving Group references: " + target + " [ "
-		+ group.getContacts().size() + " ]");
-	if (target.equals(Contact.class)) {
-	    dao.saveContacts(group);
+	@Override
+	public void save(Group group) {
+		LOG.debug("Saving group");
+		// save or update the group
+		if (group.getId() == null) {
+			LOG.debug("Creating...");
+			dao.create(group);
+		} else {
+			LOG.debug("Updating...");
+			dao.update(group);
+		}
+		saveReferences(group, Contact.class);
+		updateAllViews(group);
 	}
-    }
 
-    @Override
-    protected GenericDao<Group> getDao() {
-	return dao;
-    }
+	@Override
+	protected void saveReferences(Group group, Class<?> target) {
+		LOG.info("Saving Group references: " + target + " [ "
+				+ group.getContacts().size() + " ]");
+		if (target.equals(Contact.class)) {
+			dao.saveContacts(group);
+		}
+	}
+
+	@Override
+	protected GenericDao<Group> getDao() {
+		return dao;
+	}
 
 }
