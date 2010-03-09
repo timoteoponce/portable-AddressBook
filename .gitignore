@@ -2,5 +2,6 @@
 /.project
 /.classpath
 /.settings
-/build-eclipse
 /log
+/build-eclipse
+/build-ant
