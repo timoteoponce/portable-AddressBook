@@ -5,6 +5,7 @@
 package org.uagrm.addressbook.view.dialog;
 
 import java.awt.Container;
+import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +43,11 @@ public class GroupEdit extends JDialog implements View<Group> {
 
 	public GroupEdit(Frame owner) {
 		super(owner);
+		initComponents();
+	}
+	
+	public GroupEdit(Dialog parent) {
+		super(parent);
 		initComponents();
 	}
 

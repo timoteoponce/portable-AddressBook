@@ -11,6 +11,8 @@ import org.uagrm.addressbook.view.View;
 public abstract class AbstractController<T> implements Controller<T> {
 
 	private final List<View<T>> viewList = new ArrayList<View<T>>();
+	
+	private final List<T> cachedElementList = new ArrayList<T>();
 
 	private final Logger log;
 
@@ -29,9 +31,9 @@ public abstract class AbstractController<T> implements Controller<T> {
 	public void addView(View<T> view) {
 		if (!viewList.contains(view)) {
 			viewList.add(view);
-			log.info("Adding view: " + view);
+			log.info("Adding view: " + view.getClass().getName());
 		} else {
-			log.warn("Duplicated view : " + view);
+			log.warn("Duplicated view : " + view.getClass().getName());
 		}
 	}
 
@@ -43,7 +45,10 @@ public abstract class AbstractController<T> implements Controller<T> {
 
 	@Override
 	public Collection<T> getElements() {
-		return getDao().selectAll();
+		if(cachedElementList.isEmpty()){
+			refreshElementList();
+		}
+		return cachedElementList;
 	}
 
 	@Override
@@ -54,18 +59,24 @@ public abstract class AbstractController<T> implements Controller<T> {
 
 	@Override
 	public void removeView(View<T> view) {
-		log.debug("Removing view: " + view.getClass().getSimpleName());
+		log.debug("Removing view: " + view.getClass().getName());
 		viewList.remove(view);
 	}
 
 	@Override
 	public void updateAllViews(T model) {
+		refreshElementList();
 		// I'm using a copied list to avoid the exception
 		// :java.util.ConcurrentModificationException
 		List<View<T>> copyList = new ArrayList<View<T>>(viewList);
 		for (View<T> view : copyList) {
 			view.update(model);
 		}
+	}
+
+	private void refreshElementList() {
+		cachedElementList.clear();
+		cachedElementList.addAll(getDao().selectAll());
 	}
 
 }

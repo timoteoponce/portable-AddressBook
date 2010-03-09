@@ -40,7 +40,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 	public Set<Group> getByContact(Integer contactId) {
 		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
 				.trim();
-		query = query.replace(VAR_COLUMNS, "c.*");
+		query = query.replace(VAR_COLUMNS, "g.*");
 		query = query.replace(VAR_TABLE, TABLE_NAME);
 		query = query + " g INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS
 				+ " gc ON g.ID = gc.ID_GROUP WHERE gc.ID_CONTACT = " + contactId;

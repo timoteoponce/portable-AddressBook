@@ -48,5 +48,9 @@ public class ListModel<T> extends AbstractListModel {
 		elementList.clear();
 		fireIntervalRemoved(this, 0, 0);
 	}
+	
+	public List<T> getElements(){
+		return this.elementList;
+	}
 
 }

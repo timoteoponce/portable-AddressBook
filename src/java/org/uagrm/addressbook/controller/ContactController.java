@@ -2,11 +2,13 @@ package org.uagrm.addressbook.controller;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.Contact;
+import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GenericDao;
+import org.uagrm.addressbook.model.dao.GroupDao;
 
 import com.sun.jndi.cosnaming.IiopUrl.Address;
 
@@ -48,8 +50,11 @@ public class ContactController extends AbstractController<Contact> implements
 		} else {
 			LOG.debug("Updating...");
 			dao.update(contact);
-		}
-		saveReferences(contact, Contact.class);
+		}		
+		saveReferences(contact, Address.class);
+		saveReferences(contact, Phone.class);
+		saveReferences(contact, VirtualAddress.class);
+		saveReferences(contact, Group.class);		
 		updateAllViews(contact);
 	}
 
@@ -62,6 +67,8 @@ public class ContactController extends AbstractController<Contact> implements
 			dao.savePhones(contact);
 		}else if (target.equals(VirtualAddress.class)) {
 			dao.saveVirtualAddresses(contact);
+		}else if (target.equals(Group.class)) {
+			dao.saveGroups(contact);
 		}
 	}
 

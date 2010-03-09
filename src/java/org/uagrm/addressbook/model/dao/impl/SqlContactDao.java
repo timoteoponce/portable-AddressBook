@@ -55,7 +55,8 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	}
 
 	@Override
-	protected void fillValues(Contact contact, ResultSet rs) throws SQLException {		
+	protected void fillValues(Contact contact, ResultSet rs)
+			throws SQLException {
 		contact.setId(rs.getInt(1));
 		contact.setFirstName(rs.getString(2));
 		contact.setLastName(rs.getString(3));
@@ -63,7 +64,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 
 	@Override
 	protected String getFields(Contact contact, CommonActions action) {
-		String out = "";		
+		String out = "";
 		switch (action) {
 		case CREATE:
 			out = "(null,'" + contact.getFirstName() + "','"
@@ -85,7 +86,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 
 	@Override
 	public void loadReferences(Contact contact, Class<?> target) {
-		if (target.equals(Group.class)) {			
+		if (target.equals(Group.class)) {
 			GroupDao groupDao = DaoFactory.getInstance(GroupDao.class);
 
 			contact.getGroups().clear();
@@ -101,61 +102,51 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	}
 
 	@Override
-	public void saveAddresses(Contact contact) {		
-		removeAddressReferences(contact);
+	public void saveGroups(Contact contact) {
+		deleteReference(new ReferenceLink(null, contact.getId(), null,
+				"ID_CONTACT", "GROUP_CONTACTS"));
+
+		for (Group group : contact.getGroups()) {
+			createReference(new ReferenceLink(group.getId(), contact.getId(),
+					null, null, "GROUP_CONTACTS"));
+		}
+		LOG.info("Addresses saved: " + contact.getAddresses().size());
+	}
+
+	@Override
+	public void saveAddresses(Contact contact) {
+		deleteReference(new ReferenceLink(contact.getId(), null, "ID_CONTACT",
+				null, "CONTACT_ADDRESSES"));
 
 		for (Address address : contact.getAddresses()) {
 			if (address.getId() == null) {
 				throw new IllegalArgumentException("Unsaved address");
 			} else {// update
-				addAddressReference(contact, address);
+				createReference(new ReferenceLink(contact.getId(), address
+						.getId(), null, null, "CONTACT_ADDRESSES"));
 			}
 		}
 		LOG.info("Addresses saved: " + contact.getAddresses().size());
 	}
 
-	private void addAddressReference(Contact contact, Address address) {
-		ReferenceLink ref = new ReferenceLink(contact.getId(), address.getId(),
-				null, null, "CONTACT_ADDRESSES");
-		createReference(ref);
-	}
-
-	private void removeAddressReferences(Contact contact) {
-		LOG.debug("Removing contact -> address references.");
-		ReferenceLink ref = new ReferenceLink(contact.getId(), null,
-				"ID_CONTACT", null, "CONTACT_ADDRESSES");
-		deleteReference(ref);
-	}
-
 	@Override
-	public void savePhones(Contact contact) {		
-		removePhoneReferences(contact);
+	public void savePhones(Contact contact) {
+		deleteReference(new ReferenceLink(contact.getId(), null, "ID_CONTACT",
+				null, "CONTACT_PHONES"));
 
 		for (Phone phone : contact.getPhones()) {
 			if (phone.getId() == null) {
 				throw new IllegalArgumentException("Unsaved phone");
 			} else {// update
-				addPhoneReference(contact, phone);
+				createReference(new ReferenceLink(contact.getId(), phone
+						.getId(), null, null, "CONTACT_PHONES"));
 			}
 		}
 		LOG.info("Phones saved: " + contact.getPhones().size());
 	}
 
-	private void addPhoneReference(Contact contact, Phone phone) {
-		ReferenceLink ref = new ReferenceLink(contact.getId(), phone.getId(),
-				null, null, "CONTACT_PHONES");
-		createReference(ref);
-	}
-
-	private void removePhoneReferences(Contact contact) {
-		LOG.debug("Removing contact -> phone references.");
-		ReferenceLink ref = new ReferenceLink(contact.getId(), null,
-				"ID_CONTACT", null, "CONTACT_PHONES");
-		deleteReference(ref);
-	}
-
 	@Override
-	public void saveVirtualAddresses(Contact contact) {		
+	public void saveVirtualAddresses(Contact contact) {
 		removeVirtualAddressReferences(contact);
 
 		for (VirtualAddress vaddress : contact.getVirtualAddresses()) {

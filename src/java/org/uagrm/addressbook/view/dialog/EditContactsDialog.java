@@ -116,20 +116,12 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 		dialog
 				.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) contactController
 						.getElements()));
-		dialog.setInvalidElements(getListElements());
+		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) listModel.getElements()));
 
 		dialog.showDialog();
 		dialog.addSearchEventListener(getSearchContactListener());
 	}
-
-	private List<SelectableItem> getListElements() {
-		List<SelectableItem> list = new ArrayList<SelectableItem>();
-
-		for (int i = 0; i < listModel.getSize(); i++) {
-			list.add(listModel.getElement(i));
-		}
-		return list;
-	}
+	
 
 	private SearchEventListener getSearchContactListener() {
 		SearchEventListener listener = new SearchEventListener() {

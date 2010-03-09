@@ -105,10 +105,10 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		dialog
 				.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) groupController
 						.getElements()));
-		// dialog.setInvalidElements(getListElements());
+		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>)groupListModel.getElements()));
 		dialog.showDialog();
 		dialog.addSearchEventListener(getSearchGroupListener());
-	}
+	}	
 
 	private SearchEventListener getSearchGroupListener() {
 		SearchEventListener listener = new SearchEventListener() {

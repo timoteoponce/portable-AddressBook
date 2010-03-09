@@ -10,7 +10,6 @@ import org.uagrm.addressbook.controller.actions.CommonActions;
 import org.uagrm.addressbook.model.Entity;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.GenericDao;
-import org.uagrm.addressbook.model.dao.GroupDao;
 import org.uagrm.addressbook.util.ConfigKeys;
 import org.uagrm.addressbook.util.Configuration;
 import org.uagrm.data.DatabaseHandler;
@@ -163,8 +162,8 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	protected DatabaseHandler getDatabaseHandler() {
 		return handler;
-	}
-
+	}	
+	
 	abstract protected T loadValues(ResultSet rs) throws SQLException;
 
 	abstract protected String getFields(T entity, CommonActions action);

@@ -40,6 +40,8 @@ public class GroupView extends JPanel implements View<Group> {
 	private final Controller<Group> controller = ControllerFactory
 			.getInstance(GroupController.class);
 	private final ListModel<Group> listModel = new ListModel<Group>();
+	
+	private JFrame mainWindow;
 
 	public GroupView() {
 		initComponents();
@@ -61,16 +63,7 @@ public class GroupView extends JPanel implements View<Group> {
 			listModel.addElement(group);
 		}
 		groupList.updateUI();
-	}
-
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		GroupView groupView = new GroupView();
-		ControllerFactory.getInstance(GroupController.class).addView(groupView);
-		frame.setContentPane(groupView);
-		frame.setVisible(true);
-	}
+	}	
 
 	private void groupListMouseClicked(MouseEvent e) {
 		// final int index = groupList.getSelectedIndex();
@@ -110,7 +103,7 @@ public class GroupView extends JPanel implements View<Group> {
 	}
 
 	public void showcreateDialog() {
-		GroupEdit dialog = new GroupEdit(null);
+		GroupEdit dialog = new GroupEdit(mainWindow);
 		dialog.setIsCreation(true);
 		controller.addView(dialog);
 		dialog.setVisible(true);
@@ -129,7 +122,7 @@ public class GroupView extends JPanel implements View<Group> {
 	public void showEditDialog() {
 		final int index = groupList.getSelectedIndex();
 		if (index > 0) {
-			GroupEdit dialog = new GroupEdit(null);
+			GroupEdit dialog = new GroupEdit(mainWindow);
 			dialog.setModel((Group) groupList.getSelectedValue());
 			controller.addView(dialog);
 			dialog.setVisible(true);
@@ -213,6 +206,10 @@ public class GroupView extends JPanel implements View<Group> {
 	public void close() {
 		getController().removeView(this);
 		this.setVisible(false);
+	}
+
+	public void setMainView(JFrame mainView) {
+		this.mainWindow = mainView;		
 	}
 
 }

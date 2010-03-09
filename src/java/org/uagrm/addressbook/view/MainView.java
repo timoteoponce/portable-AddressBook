@@ -36,6 +36,7 @@ public class MainView extends JFrame {
 		initComponents();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		groupView = new GroupView();
+		groupView.setMainView(this);
 		ControllerFactory.getInstance(GroupController.class).addView(groupView);
 		panelGroups.add(groupView, BorderLayout.CENTER);
 		setTitle("MainView");
