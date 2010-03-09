@@ -10,6 +10,7 @@ import org.uagrm.addressbook.controller.actions.CommonActions;
 import org.uagrm.addressbook.model.Entity;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.GenericDao;
+import org.uagrm.addressbook.model.dao.GroupDao;
 import org.uagrm.addressbook.util.ConfigKeys;
 import org.uagrm.addressbook.util.Configuration;
 import org.uagrm.data.DatabaseHandler;
@@ -22,160 +23,160 @@ import org.uagrm.data.DatabaseHandlerImpl;
  */
 public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
-    public static final String VAR_TABLE = "${table}";
-    public static final String VAR_VALUES = "${values}";
-    public static final String VAR_CONDITION = "${condition}";
-    public static final String VAR_COLUMNS = "${columns}";    
+	public static final String VAR_TABLE = "${table}";
+	public static final String VAR_VALUES = "${values}";
+	public static final String VAR_CONDITION = "${condition}";
+	public static final String VAR_COLUMNS = "${columns}";
 
-    private final DatabaseHandler handler = DatabaseHandlerImpl.getInstance();
-    
-    private final Logger log;
-    
-    public AbstractSqlDao() {
-	log = Logger.getLogger(getClass());
-    }
+	private final DatabaseHandler handler = DatabaseHandlerImpl.getInstance();
 
-    @Override
-    public void create(T entity) {
+	private final Logger log;
 
-	String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
-	query = query.replace(VAR_TABLE, getTableName());
-	query = query.replace(VAR_VALUES, getFields(entity,
-		CommonActions.CREATE));
-	log.info("Query result: " + handler.executeUpdate(query));
-	// retrieve the generated ID
-	query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_LAST_ID);
-	query = query.replace(VAR_TABLE, getTableName());
-
-	ResultSet rs = handler.executeQuery(query);
-	try {
-	    rs.next();
-	    ((Entity) entity).setId(rs.getInt(1));
-	} catch (SQLException e) {
-	    log.error(e, e);
-	} finally {
-	    handler.closeQuietly(rs);
+	public AbstractSqlDao() {
+		log = Logger.getLogger(getClass());
 	}
-    }
 
-    @Override
-    public void delete(T entity) {
-	String query = Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim();
-	query = query.replace(VAR_TABLE, getTableName());
-	query = query.replace(VAR_CONDITION, "id = "
-		+ ((Entity) entity).getId());
+	@Override
+	public void create(T entity) {
 
-	log.info("Query result: " + handler.executeUpdate(query));
-	deleteReferences(entity);
-    }
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_VALUES, getFields(entity,
+				CommonActions.CREATE));
+		log.info("Query result: " + handler.executeUpdate(query));
+		// retrieve the generated ID
+		query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_LAST_ID);
+		query = query.replace(VAR_TABLE, getTableName());
 
-    protected void deleteReferences(T entity) {
-	log.info("Removing all references.");
-	Collection<ReferenceLink> references = getReferences(entity);
-
-	for (ReferenceLink ref : references) {
-	    deleteReference(ref);
+		ResultSet rs = handler.executeQuery(query);
+		try {
+			rs.next();
+			((Entity) entity).setId(rs.getInt(1));
+		} catch (SQLException e) {
+			log.error(e, e);
+		} finally {
+			handler.closeQuietly(rs);
+		}
 	}
-    }
 
-    protected void deleteReference(ReferenceLink ref) {
-	log.info("Removing reference: " + ref.toString());
-	String query = Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim();
-	query = query.replace(VAR_TABLE, ref.getTableName());
+	@Override
+	public void delete(T entity) {
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim();
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_CONDITION, "id = "
+				+ ((Entity) entity).getId());
 
-	if (ref.getSourceColumn() != null) {
-	    query = query.replace(VAR_CONDITION, ref.getSourceColumn() + "="
-		    + ref.getSourceId());
-	} else {
-	    query = query.replace(VAR_CONDITION, ref.getTargetColumn() + "="
-		    + ref.getTargetId());
+		log.info("Query result: " + handler.executeUpdate(query));
+		deleteReferences(entity);
 	}
-	handler.executeUpdate(query);
-    }
 
-    protected void createReference(ReferenceLink ref) {
-	log.info("Adding reference: " + ref.toString());
-	String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
-	query = query.replace(VAR_TABLE, ref.getTableName());
-	query = query.replace(VAR_VALUES, "(" + ref.getSourceId() + ","
-		+ ref.getTargetId() + ");");
-	getDatabaseHandler().executeUpdate(query);
-    }
+	protected void deleteReferences(T entity) {
+		log.info("Removing all references.");
+		Collection<ReferenceLink> references = getReferences(entity);
 
-    @Override
-    public T read(T entity) {
-	String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT).trim();
-	query = query.replace(VAR_TABLE, getTableName());
-	query = query.replace(VAR_COLUMNS, "*");
-	query = query.replace(VAR_CONDITION, "id = "
-		+ ((Entity) entity).getId());
-	ResultSet rs = handler.executeQuery(query);
-	try {
-	    if (rs.next()) {
-		fillValues(entity, rs);
-	    } else {
-		entity = null;
-	    }
-	} catch (SQLException e) {
-	    log.error("Error reading entity: " + ((Entity) entity).getId()
-		    + " > " + e);
-	    entity = null;
-	} finally {
-	    handler.closeQuietly(rs);
+		for (ReferenceLink ref : references) {
+			deleteReference(ref);
+		}
 	}
-	return entity;
-    }
 
-    @Override
-    public Collection<T> selectAll() {
-	Collection<T> resultList = new ArrayList<T>();
+	protected void deleteReference(ReferenceLink ref) {
+		log.info("Removing reference: " + ref.toString());
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim();
+		query = query.replace(VAR_TABLE, ref.getTableName());
 
-	String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
-		.trim();
-	query = query.replace(VAR_TABLE, getTableName());
-	query = query.replace(VAR_COLUMNS, "*");
-	ResultSet rs = handler.executeQuery(query);
-	try {
-	    while (rs.next()) {
-		T tempEntity = loadValues(rs);
-		//
-		resultList.add(tempEntity);
-	    }
-	} catch (SQLException e) {
-	    log.error(e, e);
-	} finally {
-	    handler.closeQuietly(rs);
+		if (ref.getSourceColumn() != null) {
+			query = query.replace(VAR_CONDITION, ref.getSourceColumn() + "="
+					+ ref.getSourceId());
+		} else {
+			query = query.replace(VAR_CONDITION, ref.getTargetColumn() + "="
+					+ ref.getTargetId());
+		}
+		handler.executeUpdate(query);
 	}
-	return resultList;
-    }
 
-    @Override
-    public void update(T entity) {
-	String query = Configuration.getConfigKey(ConfigKeys.SQL_UPDATE).trim();
-	query = query.replace(VAR_TABLE, getTableName());
-	query = query.replace(VAR_VALUES, getFields(entity,
-		CommonActions.UPDATE));
-	query = query.replace(VAR_CONDITION, "id = "
-		+ ((Entity) entity).getId());
-	log.info("Query result: " + handler.executeUpdate(query));
-    }
+	protected void createReference(ReferenceLink ref) {
+		log.info("Adding reference: " + ref.toString());
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
+		query = query.replace(VAR_TABLE, ref.getTableName());
+		query = query.replace(VAR_VALUES, "(" + ref.getSourceId() + ","
+				+ ref.getTargetId() + ");");
+		getDatabaseHandler().executeUpdate(query);
+	}	
 
-    protected DatabaseHandler getDatabaseHandler() {
-	return handler;
-    }
+	@Override
+	public T read(T entity) {
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT).trim();
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_COLUMNS, "*");
+		query = query.replace(VAR_CONDITION, "id = "
+				+ ((Entity) entity).getId());
+		ResultSet rs = handler.executeQuery(query);
+		try {
+			if (rs.next()) {
+				fillValues(entity, rs);
+			} else {
+				entity = null;
+			}
+		} catch (SQLException e) {
+			log.error("Error reading entity: " + ((Entity) entity).getId()
+					+ " > " + e);
+			entity = null;
+		} finally {
+			handler.closeQuietly(rs);
+		}
+		return entity;
+	}
 
-    abstract protected T loadValues(ResultSet rs) throws SQLException;
+	@Override
+	public Collection<T> selectAll() {
+		Collection<T> resultList = new ArrayList<T>();
 
-    abstract protected String getFields(T entity, CommonActions action);
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
+				.trim();
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_COLUMNS, "*");
+		ResultSet rs = handler.executeQuery(query);
+		try {
+			while (rs.next()) {
+				T tempEntity = loadValues(rs);
+				//
+				resultList.add(tempEntity);
+			}
+		} catch (SQLException e) {
+			log.error(e, e);
+		} finally {
+			handler.closeQuietly(rs);
+		}
+		return resultList;
+	}
 
-    abstract protected String getTableName();
+	@Override
+	public void update(T entity) {
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_UPDATE).trim();
+		query = query.replace(VAR_TABLE, getTableName());
+		query = query.replace(VAR_VALUES, getFields(entity,
+				CommonActions.UPDATE));
+		query = query.replace(VAR_CONDITION, "id = "
+				+ ((Entity) entity).getId());
+		log.info("Query result: " + handler.executeUpdate(query));
+	}
 
-    abstract protected void fillValues(T entity, ResultSet rs)
-	    throws SQLException;
+	protected DatabaseHandler getDatabaseHandler() {
+		return handler;
+	}
 
-    @Override
-    abstract public void loadReferences(T entity, Class<?> clazz);
+	abstract protected T loadValues(ResultSet rs) throws SQLException;
 
-    abstract protected Collection<ReferenceLink> getReferences(T entity);
+	abstract protected String getFields(T entity, CommonActions action);
+
+	abstract protected String getTableName();
+
+	abstract protected void fillValues(T entity, ResultSet rs)
+			throws SQLException;
+
+	@Override
+	abstract public void loadReferences(T entity, Class<?> clazz);
+
+	abstract protected Collection<ReferenceLink> getReferences(T entity);
 
 }

@@ -126,7 +126,7 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 		List<SelectableItem> list = new ArrayList<SelectableItem>();
 
 		for (int i = 0; i < listModel.getSize(); i++) {
-			list.add((SelectableItem) listModel.getElementAt(i));
+			list.add(listModel.getElement(i));
 		}
 		return list;
 	}
@@ -164,8 +164,7 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 		int index = listContacts.getSelectedIndex();
 
 		if (index >= 0) {
-			listModel.removeElement(index);
-			listContacts.updateUI();
+			listModel.removeElement(index);			
 		}
 	}
 
@@ -180,7 +179,7 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 	private void okAction() {
 		group.getContacts().clear();
 		for (int i = 0; i < listModel.getSize(); i++) {
-			Contact contact = (Contact) listModel.getElementAt(i);
+			Contact contact = listModel.getElement(i);
 			group.getContacts().add(contact);
 		}
 		close();
@@ -370,8 +369,7 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 
 		for (Contact contact : group.getContacts()) {
 			listModel.addElement(contact);
-		}
-		listContacts.updateUI();
+		}		
 	}
 
 	@Override
