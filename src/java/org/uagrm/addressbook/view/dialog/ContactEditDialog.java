@@ -105,10 +105,12 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		dialog
 				.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) groupController
 						.getElements()));
-		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>)groupListModel.getElements()));
+		dialog
+				.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) groupListModel
+						.getElements()));
 		dialog.showDialog();
 		dialog.addSearchEventListener(getSearchGroupListener());
-	}	
+	}
 
 	private SearchEventListener getSearchGroupListener() {
 		SearchEventListener listener = new SearchEventListener() {
@@ -377,14 +379,15 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	@Override
-	public void update(Contact model) {
-		if (model == null) {// was deleted
-			this.close();
-		} else if (this.contact.equals(model)) {
-			LOG.info("Updating model : " + this.getClass().getName()
-					+ ", values: " + model.toString());
-			setModel(model);
+	public void update(Observable source, Object model) {
+		if (source.equals(controller)) {
+			if (model == null) {// was deleted
+				this.close();
+			} else if (this.contact.equals((Contact) model)) {
+				LOG.info("Updating model : " + this.getClass().getName()
+						+ ", values: " + model.toString());
+				setModel((Contact) model);
+			}
 		}
-
 	}
 }

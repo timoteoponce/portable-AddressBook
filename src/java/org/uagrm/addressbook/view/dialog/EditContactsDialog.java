@@ -10,8 +10,8 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -116,12 +116,13 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 		dialog
 				.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) contactController
 						.getElements()));
-		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) listModel.getElements()));
+		dialog
+				.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) listModel
+						.getElements()));
 
 		dialog.showDialog();
 		dialog.addSearchEventListener(getSearchContactListener());
 	}
-	
 
 	private SearchEventListener getSearchContactListener() {
 		SearchEventListener listener = new SearchEventListener() {
@@ -156,7 +157,7 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 		int index = listContacts.getSelectedIndex();
 
 		if (index >= 0) {
-			listModel.removeElement(index);			
+			listModel.removeElement(index);
 		}
 	}
 
@@ -361,15 +362,6 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 
 		for (Contact contact : group.getContacts()) {
 			listModel.addElement(contact);
-		}		
-	}
-
-	@Override
-	public void update(Group model) {
-		if (model == null) {// was deleted
-			this.close();
-		} else if (this.group.equals(model)) {
-			setModel(model);
 		}
 	}
 
@@ -379,4 +371,14 @@ public class EditContactsDialog extends JDialog implements View<Group> {
 		this.dispose();
 	}
 
+	@Override
+	public void update(Observable source, Object model) {
+		if (source.equals(groupController)) {
+			if (model == null) {// was deleted
+				this.close();
+			} else if (this.group.equals((Group) model)) {
+				setModel((Group) model);
+			}
+		}
+	}
 }

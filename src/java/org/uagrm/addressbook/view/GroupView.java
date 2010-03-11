@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
@@ -40,7 +41,7 @@ public class GroupView extends JPanel implements View<Group> {
 	private final Controller<Group> controller = ControllerFactory
 			.getInstance(GroupController.class);
 	private final ListModel<Group> listModel = new ListModel<Group>();
-	
+
 	private JFrame mainWindow;
 
 	public GroupView() {
@@ -63,7 +64,7 @@ public class GroupView extends JPanel implements View<Group> {
 			listModel.addElement(group);
 		}
 		groupList.updateUI();
-	}	
+	}
 
 	private void groupListMouseClicked(MouseEvent e) {
 		// final int index = groupList.getSelectedIndex();
@@ -189,15 +190,6 @@ public class GroupView extends JPanel implements View<Group> {
 	}
 
 	@Override
-	public void update(Group model) {
-		if (model != null) {// was removed
-			LOG.debug("Updating view: " + this.getClass().getSimpleName()
-					+ ", changed group: " + model.getId());
-		}
-		updateList();
-	}
-
-	@Override
 	public Controller<Group> getController() {
 		return controller;
 	}
@@ -209,7 +201,19 @@ public class GroupView extends JPanel implements View<Group> {
 	}
 
 	public void setMainView(JFrame mainView) {
-		this.mainWindow = mainView;		
+		this.mainWindow = mainView;
+	}
+
+	@Override
+	public void update(Observable source, Object model) {
+		if (source.equals(controller)) {
+			if (model != null) {// was removed
+				Group temp = (Group) model;
+				LOG.debug("Updating view: " + this.getClass().getSimpleName()
+						+ ", changed group: " + temp.getId());
+			}
+			updateList();
+		}
 	}
 
 }

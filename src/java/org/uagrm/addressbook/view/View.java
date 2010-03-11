@@ -1,5 +1,7 @@
 package org.uagrm.addressbook.view;
 
+import java.util.Observer;
+
 import org.uagrm.addressbook.controller.Controller;
 
 /**
@@ -7,11 +9,9 @@ import org.uagrm.addressbook.controller.Controller;
  *
  * @param <T>
  */
-public interface View<T> {
+public interface View<T> extends Observer{
 
-    void setModel(T model);
-
-    void update(T model);    
+    void setModel(T model);        
 
     Controller<T> getController();
     

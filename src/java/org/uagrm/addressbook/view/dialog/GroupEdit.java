@@ -9,6 +9,7 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -45,7 +46,7 @@ public class GroupEdit extends JDialog implements View<Group> {
 		super(owner);
 		initComponents();
 	}
-	
+
 	public GroupEdit(Dialog parent) {
 		super(parent);
 		initComponents();
@@ -193,18 +194,7 @@ public class GroupEdit extends JDialog implements View<Group> {
 	public void setModel(Group model) {
 		this.group = model;
 		loadValues();
-	}
-
-	@Override
-	public void update(Group model) {
-		if (model == null) {// was deleted
-			this.close();
-		} else if (this.group.equals(model)) {
-			LOG.info("Updating model : " + this.getClass().getName()
-					+ ", values: " + model.toString());
-			setModel(model);
-		}
-	}
+	}	
 
 	public void setIsCreation(boolean value) {
 		this.isCreation = value;
@@ -217,5 +207,18 @@ public class GroupEdit extends JDialog implements View<Group> {
 	public void close() {
 		getController().removeView(this);
 		this.dispose();
+	}
+
+	@Override
+	public void update(Observable source, Object model) {
+		if (source.equals(controller)) {
+			if (model == null) {// was deleted
+				this.close();
+			} else if (this.group.equals((Group) model)) {
+				LOG.info("Updating model : " + this.getClass().getName()
+						+ ", values: " + model.toString());
+				setModel((Group) model);
+			}
+		}
 	}
 }

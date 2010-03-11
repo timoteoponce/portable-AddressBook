@@ -3,14 +3,13 @@ package org.uagrm.addressbook.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.dao.GenericDao;
-import org.uagrm.addressbook.view.View;
 
-public abstract class AbstractController<T> implements Controller<T> {
-
-	private final List<View<T>> viewList = new ArrayList<View<T>>();
+public abstract class AbstractController<T> extends Observable implements Controller<T> {	
 	
 	private final List<T> cachedElementList = new ArrayList<T>();
 
@@ -28,13 +27,9 @@ public abstract class AbstractController<T> implements Controller<T> {
 	abstract protected void saveReferences(T element, Class<?> target);
 
 	@Override
-	public void addView(View<T> view) {
-		if (!viewList.contains(view)) {
-			viewList.add(view);
-			log.info("Adding view: " + view.getClass().getName());
-		} else {
-			log.warn("Duplicated view : " + view.getClass().getName());
-		}
+	public void addView(Observer observer) {		
+		log.debug("Adding view: " + observer.getClass().getName());
+		this.addObserver(observer);
 	}
 
 	@Override
@@ -58,20 +53,15 @@ public abstract class AbstractController<T> implements Controller<T> {
 	}
 
 	@Override
-	public void removeView(View<T> view) {
-		log.debug("Removing view: " + view.getClass().getName());
-		viewList.remove(view);
+	public void removeView(Observer observer) {
+		log.debug("Removing view: " + observer.getClass().getName());		
+		this.deleteObserver(observer);
 	}
-
-	@Override
+	
 	public void updateAllViews(T model) {
 		refreshElementList();
-		// I'm using a copied list to avoid the exception
-		// :java.util.ConcurrentModificationException
-		List<View<T>> copyList = new ArrayList<View<T>>(viewList);
-		for (View<T> view : copyList) {
-			view.update(model);
-		}
+		setChanged();
+		notifyObservers(model);
 	}
 
 	private void refreshElementList() {

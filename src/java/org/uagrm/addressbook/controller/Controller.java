@@ -1,22 +1,19 @@
 package org.uagrm.addressbook.controller;
 
 import java.util.Collection;
-
-import org.uagrm.addressbook.view.View;
+import java.util.Observer;
 
 /**
  * @author Timoteo Ponce
  *
- * @param <T>
+ * @param <T> Target entity take from org.uagrm.addressboo.model.
  */
 public interface Controller<T> {
 	
     /*MVC*/
-    void addView(View<T> view);
+    void addView(Observer view);
 
-    void removeView(View<T> view);
-
-	void updateAllViews(T model);
+    void removeView(Observer view);	
     
     /*Business*/
     
