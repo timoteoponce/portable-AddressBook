@@ -1,5 +1,5 @@
 /*
- * Created by JFormDesigner on Sat Mar 13 12:55:24 VET 2010
+ * Created by JFormDesigner on Sat Mar 13 12:55:36 VET 2010
  */
 
 package org.uagrm.addressbook.view;
@@ -9,7 +9,7 @@ import java.util.Observable;
 import javax.swing.JPanel;
 
 import org.uagrm.addressbook.controller.Controller;
-import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.model.Contact;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -17,8 +17,8 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class GroupView extends JPanel implements View<Group> {
-	public GroupView() {
+public class ContactView extends JPanel implements View<Contact> {
+	public ContactView() {
 		initComponents();
 	}
 
@@ -40,13 +40,13 @@ public class GroupView extends JPanel implements View<Group> {
 	}
 
 	@Override
-	public Controller<Group> getController() {
+	public Controller<Contact> getController() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setModel(Group model) {
+	public void setModel(Contact model) {
 		// TODO Auto-generated method stub
 
 	}

@@ -29,7 +29,7 @@ import com.jgoodies.forms.layout.*;
 import com.jgoodies.uif_lite.panel.*;
 
 /**
- * @author Timoteo Ponsh
+ * @author Timoteo Ponce
  */
 public class ContactEditDialog extends JDialog implements View<Contact> {
 

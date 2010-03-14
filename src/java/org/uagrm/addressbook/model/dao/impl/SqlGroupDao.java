@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.uagrm.addressbook.controller.actions.CommonActions;
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.ReferenceLink;
@@ -95,7 +95,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 	}
 
 	@Override
-	protected String getFields(Group group, CommonActions action) {
+	protected String getFields(Group group, ActionType action) {
 		String out = "";		
 		switch (action) {
 		case CREATE:

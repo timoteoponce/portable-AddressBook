@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.uagrm.addressbook.controller.actions.CommonActions;
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Protocol;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.VirtualAddress;
@@ -40,7 +40,7 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
     }
 
     @Override
-    protected String getFields(VirtualAddress entity, CommonActions action) {
+    protected String getFields(VirtualAddress entity, ActionType action) {
 	String out = "";
 	final VirtualAddress vAddress = entity;
 	switch (action) {

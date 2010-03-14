@@ -30,15 +30,24 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
  */
 public class MainView extends JFrame {
 
-	private final GroupView groupView;
+	private final GroupListView groupListView;
+	private final ContactListView contactListView;
 
 	public MainView() {
 		initComponents();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		groupView = new GroupView();
-		groupView.setMainView(this);
-		ControllerFactory.getInstance(GroupController.class).addView(groupView);
-		panelGroups.add(groupView, BorderLayout.CENTER);
+		// groupView
+		groupListView = new GroupListView();
+		groupListView.setMainView(this);
+		ControllerFactory.getInstance(GroupController.class).addView(groupListView);
+		panelGroups.add(groupListView, BorderLayout.CENTER);
+		// contactView
+		contactListView = new ContactListView();
+		contactListView.setMainView(this);
+		ControllerFactory.getInstance(ContactController.class).addView(
+				contactListView);
+		panelContacts.add(contactListView, BorderLayout.CENTER);
+		//
 		setTitle("MainView");
 	}
 
@@ -53,7 +62,7 @@ public class MainView extends JFrame {
 	}
 
 	private void tbButtonCreateGroupActionPerformed(ActionEvent e) {
-	    groupView.showcreateDialog();
+	    groupListView.showcreateDialog();
 	}
 
 	private void tbButtonCreateContactActionPerformed(ActionEvent e) {
@@ -74,6 +83,7 @@ public class MainView extends JFrame {
 		tbButtonCreateContact = new JButton();
 		mainPanel = new JPanel();
 		panelGroups = new SimpleInternalFrame();
+		panelContacts = new SimpleInternalFrame();
 		CellConstraints cc = new CellConstraints();
 
 		//======== this ========
@@ -110,7 +120,7 @@ public class MainView extends JFrame {
 		//======== mainPanel ========
 		{
 			mainPanel.setLayout(new FormLayout(
-				"63dlu, $lcgap, 56dlu, $lcgap, default:grow",
+					"63dlu:grow, $lcgap, 75dlu:grow, $lcgap, default:grow",
 				"default:grow"));
 
 			//======== panelGroups ========
@@ -120,6 +130,17 @@ public class MainView extends JFrame {
 				panelGroupsContentPane.setLayout(new BorderLayout());
 			}
 			mainPanel.add(panelGroups, cc.xywh(1, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+
+			// ======== panelContacts ========
+			{
+				panelContacts.setTitle(bundle
+						.getString("MainView.panelContacts.title"));
+				Container panelContactsContentPane = panelContacts
+						.getContentPane();
+				panelContactsContentPane.setLayout(new BorderLayout());
+			}
+			mainPanel.add(panelContacts, cc.xywh(3, 1, 1, 1,
+					CellConstraints.FILL, CellConstraints.FILL));
 		}
 		contentPane.add(mainPanel, cc.xywh(3, 3, 1, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
 		setSize(485, 415);
@@ -135,5 +156,6 @@ public class MainView extends JFrame {
 	private JButton tbButtonCreateContact;
 	private JPanel mainPanel;
 	private SimpleInternalFrame panelGroups;
+	private SimpleInternalFrame panelContacts;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 }

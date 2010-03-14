@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
-import org.uagrm.addressbook.controller.actions.CommonActions;
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Entity;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.GenericDao;
@@ -41,7 +41,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 		String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
 		query = query.replace(VAR_TABLE, getTableName());
 		query = query.replace(VAR_VALUES, getFields(entity,
-				CommonActions.CREATE));
+				ActionType.CREATE));
 		log.info("Query result: " + handler.executeUpdate(query));
 		// retrieve the generated ID
 		query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_LAST_ID);
@@ -154,7 +154,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 		String query = Configuration.getConfigKey(ConfigKeys.SQL_UPDATE).trim();
 		query = query.replace(VAR_TABLE, getTableName());
 		query = query.replace(VAR_VALUES, getFields(entity,
-				CommonActions.UPDATE));
+				ActionType.UPDATE));
 		query = query.replace(VAR_CONDITION, "id = "
 				+ ((Entity) entity).getId());
 		log.info("Query result: " + handler.executeUpdate(query));
@@ -166,7 +166,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	
 	abstract protected T loadValues(ResultSet rs) throws SQLException;
 
-	abstract protected String getFields(T entity, CommonActions action);
+	abstract protected String getFields(T entity, ActionType action);
 
 	abstract protected String getTableName();
 

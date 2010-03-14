@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.uagrm.addressbook.controller.actions.CommonActions;
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
@@ -63,7 +63,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	}
 
 	@Override
-	protected String getFields(Contact contact, CommonActions action) {
+	protected String getFields(Contact contact, ActionType action) {
 		String out = "";
 		switch (action) {
 		case CREATE:

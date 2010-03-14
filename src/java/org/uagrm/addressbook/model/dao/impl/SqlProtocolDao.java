@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.uagrm.addressbook.controller.actions.CommonActions;
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Protocol;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.DaoFactory;
@@ -29,7 +29,7 @@ public class SqlProtocolDao extends AbstractSqlDao<Protocol> implements
     }
 
     @Override
-    protected String getFields(Protocol entity, CommonActions action) {
+    protected String getFields(Protocol entity, ActionType action) {
 	String out = "";
 	final Protocol protocol = entity;
 

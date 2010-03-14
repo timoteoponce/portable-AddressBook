@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.uagrm.addressbook.controller.actions.CommonActions;
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.PhoneDao;
@@ -26,7 +26,7 @@ public class SqlPhoneDao extends AbstractSqlDao<Phone> implements PhoneDao {
     }
 
     @Override
-    protected String getFields(Phone entity, CommonActions action) {
+    protected String getFields(Phone entity, ActionType action) {
 	String out = "";
 	final Phone phone = entity;
 	switch (action) {

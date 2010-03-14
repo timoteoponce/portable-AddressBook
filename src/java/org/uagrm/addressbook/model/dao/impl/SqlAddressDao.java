@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.uagrm.addressbook.controller.actions.CommonActions;
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.ReferenceLink;
@@ -36,7 +36,7 @@ public class SqlAddressDao extends AbstractSqlDao<Address> implements
     }
 
     @Override
-    protected String getFields(Address entity, CommonActions action) {
+    protected String getFields(Address entity, ActionType action) {
 	// TODO implement
 	throw new NotImplementedException();	
     }

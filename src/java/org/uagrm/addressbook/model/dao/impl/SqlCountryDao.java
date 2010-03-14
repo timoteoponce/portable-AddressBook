@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.uagrm.addressbook.controller.actions.CommonActions;
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.CountryDao;
@@ -24,7 +24,7 @@ public class SqlCountryDao extends AbstractSqlDao<Country> implements
     }
 
     @Override
-    protected String getFields(Country entity, CommonActions action) {
+    protected String getFields(Country entity, ActionType action) {
 	String out = "";
 	final Country country = entity;
 
