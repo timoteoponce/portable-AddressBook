@@ -7,10 +7,12 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.apache.log4j.Logger;
+import org.uagrm.addressbook.model.Entity;
 import org.uagrm.addressbook.model.dao.GenericDao;
 
-public abstract class AbstractController<T> extends Observable implements Controller<T> {	
-	
+public abstract class AbstractController<T> extends Observable implements
+		Controller<T> {
+
 	private final List<T> cachedElementList = new ArrayList<T>();
 
 	private final Logger log;
@@ -22,12 +24,22 @@ public abstract class AbstractController<T> extends Observable implements Contro
 	}
 
 	@Override
-	abstract public void save(T element);
+	public void save(T element) {
+		Entity entity = (Entity) element;
+		// save or update the group
+		if (entity.getId() == null) {
+			log.debug("Creating " + entity.getClass().getSimpleName());
+			getDao().create(element);
+		} else {
+			log.debug("Updating " + entity.getClass().getSimpleName());
+			getDao().update(element);
+		}
+	}
 
 	abstract protected void saveReferences(T element, Class<?> target);
 
 	@Override
-	public void addView(Observer observer) {		
+	public void addView(Observer observer) {
 		log.debug("Adding view: " + observer.getClass().getName());
 		this.addObserver(observer);
 	}
@@ -40,7 +52,7 @@ public abstract class AbstractController<T> extends Observable implements Contro
 
 	@Override
 	public Collection<T> getElements() {
-		if(cachedElementList.isEmpty()){
+		if (cachedElementList.isEmpty()) {
 			refreshElementList();
 		}
 		return cachedElementList;
@@ -54,10 +66,10 @@ public abstract class AbstractController<T> extends Observable implements Contro
 
 	@Override
 	public void removeView(Observer observer) {
-		log.debug("Removing view: " + observer.getClass().getName());		
+		log.debug("Removing view: " + observer.getClass().getName());
 		this.deleteObserver(observer);
 	}
-	
+
 	public void updateAllViews(T model) {
 		refreshElementList();
 		setChanged();
