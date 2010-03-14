@@ -14,6 +14,8 @@ import org.uagrm.addressbook.util.Configuration;
  *
  */
 public interface DatabaseHandler {
+
+	String[] INVALID_STRINGS = new String[] { ";" };
     /**
      * Connects to the configured database.
      * The configuration is not handled here, that is the 

@@ -65,7 +65,8 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 	@Override
 	public ResultSet executeQuery(String query) {
 		try {
-			LOG.info("Query:" + query);
+			LOG.debug("Query : " + query);
+			validateQuery(query);
 			connection = getConnection();
 			final PreparedStatement pstat = connection.prepareStatement(query);
 			final ResultSet rs = pstat.executeQuery();
@@ -82,17 +83,27 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 		throw new RuntimeException();
 	}
 
+	private void validateQuery(final String query) throws SQLException {
+		for (String item : INVALID_STRINGS) {
+			if (query.contains(item)) {
+				throw new SQLException("Query contains an invalid string [ "
+						+ item + " ]");
+			}
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.uagrm.data.DatabaseHandler#executeUpdate(java.lang.String)
 	 */
 	@Override
-	public int executeUpdate(String sql) {
+	public int executeUpdate(String query) {
 		try {
-			LOG.info("update:" + sql);
+			LOG.debug("Update : " + query);
+			validateQuery(query);
 			connection = getConnection();
-			final PreparedStatement pstat = connection.prepareStatement(sql);
+			final PreparedStatement pstat = connection.prepareStatement(query);
 			final int result = pstat.executeUpdate();
 			return result;
 		} catch (SQLException e) {
