@@ -90,6 +90,18 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 						+ item + " ]");
 			}
 		}
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 
 	/*
@@ -132,6 +144,17 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 	 */
 	public void setConnection(Connection connection) {
 		this.connection = connection;
+
+
+
+
+
+
+
+
+
+
+
 	}
 
 	/*

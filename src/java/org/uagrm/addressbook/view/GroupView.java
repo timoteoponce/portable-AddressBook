@@ -6,6 +6,12 @@ package org.uagrm.addressbook.view;
 
 import java.util.Observable;
 
+
+
+
+
+
+
 import javax.swing.JPanel;
 
 import org.uagrm.addressbook.controller.Controller;
@@ -26,9 +32,20 @@ public class GroupView extends JPanel implements View<Group> {
 
 
 
+
+
+
+
+
 	public GroupView() {
 		initComponents();
 	}
+
+
+
+
+
+
 
 
 
@@ -165,6 +182,14 @@ public class GroupView extends JPanel implements View<Group> {
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
+
+
+
+
+
+
+
+
 
 
 }

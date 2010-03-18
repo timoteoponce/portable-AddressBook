@@ -373,6 +373,8 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 		listContacts.updateUI();
 
 
+
+
 	}
 
 	@Override
