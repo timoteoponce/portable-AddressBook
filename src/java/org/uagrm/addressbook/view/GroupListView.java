@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
@@ -50,6 +49,7 @@ public class GroupListView extends JPanel implements View<Group> {
 	}
 
 	private void init() {
+		ControllerFactory.getInstance(GroupController.class).addView(this);
 		groupList.setModel(listModel);
 		groupList.setCellRenderer(new CustomListCellRenderer());
 		//
@@ -58,11 +58,8 @@ public class GroupListView extends JPanel implements View<Group> {
 
 	public void updateList() {
 		listModel.clear();
-
-		Collection<Group> groups = controller.getElements();
-		for (Group group : groups) {
-			listModel.addElement(group);
-		}
+		listModel.addAllElements(controller.getElements());
+		groupList.updateUI();
 	}
 
 	private void groupListMouseClicked(MouseEvent e) {
@@ -105,7 +102,6 @@ public class GroupListView extends JPanel implements View<Group> {
 	public void showcreateDialog() {
 		GroupEditDialog dialog = new GroupEditDialog(mainWindow);
 		dialog.setIsCreation(true);
-		controller.addView(dialog);
 		dialog.setVisible(true);
 	}
 
@@ -124,7 +120,6 @@ public class GroupListView extends JPanel implements View<Group> {
 		if (index > 0) {
 			GroupEditDialog dialog = new GroupEditDialog(mainWindow);
 			dialog.setModel((Group) groupList.getSelectedValue());
-			controller.addView(dialog);
 			dialog.setVisible(true);
 		}
 	}

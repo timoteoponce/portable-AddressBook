@@ -4,7 +4,6 @@
 
 package org.uagrm.addressbook.view;
 
-import java.util.Collection;
 import java.util.Observable;
 
 import javax.swing.JFrame;
@@ -43,6 +42,7 @@ public class ContactListView extends JPanel implements View<Contact> {
 	}
 
 	private void init() {
+		ControllerFactory.getInstance(ContactController.class).addView(this);
 		contactList.setModel(listModel);
 		contactList.setCellRenderer(new CustomListCellRenderer());
 		updateList();
@@ -50,11 +50,7 @@ public class ContactListView extends JPanel implements View<Contact> {
 
 	private void updateList() {
 		listModel.clear();
-
-		Collection<Contact> contacts = controller.getElements();
-		for (Contact contact : contacts) {
-			listModel.addElement(contact);
-		}
+		listModel.addAllElements(controller.getElements());
 	}
 
 	private void initComponents() {

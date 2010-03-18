@@ -66,6 +66,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 	}
 
 	private void init() {
+		ControllerFactory.getInstance(GroupController.class).addView(this);
 		listModel.clear();
 		this.listContacts.setModel(listModel);
 	}
@@ -359,10 +360,8 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 		if (group.getContacts().isEmpty()) {
 			groupController.preloadEntity(group, Contact.class);
 		}
-
-		for (Contact contact : group.getContacts()) {
-			listModel.addElement(contact);
-		}
+		listModel.addAllElements(group.getContacts());
+		listContacts.updateUI();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package org.uagrm.addressbook.model.swing;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
@@ -27,6 +28,12 @@ public class ListModel<T> extends AbstractListModel {
 		elementList.add(element);
 		final int index = elementList.size();
 		fireIntervalAdded(this, index, index);		
+	}
+
+	public void addAllElements(Collection<T> list) {
+		elementList.addAll(list);
+		final int index = elementList.size();
+		fireIntervalAdded(this, index, index);
 	}
 
 	public void removeElement(T element) {

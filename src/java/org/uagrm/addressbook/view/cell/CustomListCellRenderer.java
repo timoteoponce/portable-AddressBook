@@ -6,7 +6,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
+import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.Group;
 
 /**
@@ -41,6 +43,12 @@ public class CustomListCellRenderer extends JLabel implements ListCellRenderer {
 			Contact contact = (Contact) value;
 			setText(contact.getFirstName() + " " + contact.getLastName());
 			setToolTipText(contact.getFirstName() + " " + contact.getLastName());
+		} else if (value instanceof Address) {
+			Address address = (Address) value;
+			setText(address.toString());
+		} else if (value instanceof Country) {
+			Country country = (Country) value;
+			setText(country.getName());
 		}
 		return this;
 	}

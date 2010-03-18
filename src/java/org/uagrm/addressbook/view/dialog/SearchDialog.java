@@ -67,9 +67,7 @@ public class SearchDialog extends JDialog {
 		elementList.setCellRenderer(new SearchListCellRenderer());
 		listModel.clear();
 		//
-		for (SelectableItem item : validElements) {
-			listModel.addElement(item);
-		}
+		listModel.addAllElements(validElements);
 	}
 
 	public SearchDialog(Dialog owner) {

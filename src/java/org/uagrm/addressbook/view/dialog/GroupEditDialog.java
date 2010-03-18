@@ -50,6 +50,11 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 	public GroupEditDialog(Dialog parent) {
 		super(parent);
 		initComponents();
+		init();
+	}
+
+	private void init() {
+		ControllerFactory.getInstance(GroupController.class).addView(this);
 	}
 
 	private void btnAcceptActionPerformed(ActionEvent e) {
@@ -74,7 +79,6 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 		EditGroupContactsDialog dialog = new EditGroupContactsDialog(this);
 		dialog.setModel(group);
 		dialog.setLocked(isCreation);
-		controller.addView(dialog);
 		dialog.setVisible(true);
 	}
 

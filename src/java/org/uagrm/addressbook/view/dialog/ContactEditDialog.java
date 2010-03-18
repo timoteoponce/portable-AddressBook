@@ -4,12 +4,23 @@
 
 package org.uagrm.addressbook.view.dialog;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Container;
+import java.awt.Dialog;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Observable;
+import java.util.ResourceBundle;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.ContactController;
@@ -24,9 +35,10 @@ import org.uagrm.addressbook.view.event.SearchEvent;
 import org.uagrm.addressbook.view.event.SearchEventListener;
 import org.uagrm.addressbook.view.event.SearchEventType;
 
-import com.jgoodies.forms.factories.*;
-import com.jgoodies.forms.layout.*;
-import com.jgoodies.uif_lite.panel.*;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 /**
  * @author Timoteo Ponce
@@ -58,8 +70,9 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void init() {
-		groupListModel.clear();
 		this.listGroups.setModel(groupListModel);
+		ControllerFactory.getInstance(ContactController.class).addView(this);
+		ControllerFactory.getInstance(GroupController.class).addView(this);
 	}
 
 	public Contact getContact() {
@@ -339,6 +352,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	@Override
 	public void close() {
 		getController().removeView(this);
+		ControllerFactory.getInstance(GroupController.class).removeView(this);
 		this.dispose();
 	}
 
@@ -360,11 +374,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		if (contact.getGroups().isEmpty()) {
 			controller.preloadEntity(contact, Group.class);
 		}
-
-		for (Group group : contact.getGroups()) {
-			groupListModel.addElement(group);
-		}
-		listGroups.updateUI();
+		updateGroupList();
 	}
 
 	private void updateValues() {
@@ -378,8 +388,15 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		// TODO phones,addresses,virtual_addresses.
 	}
 
+	private void updateGroupList() {
+		groupListModel.clear();
+		groupListModel.addAllElements(contact.getGroups());
+		listGroups.updateUI();
+	}
+
 	@Override
 	public void update(Observable source, Object model) {
+		// from contacts
 		if (source.equals(controller)) {
 			if (model == null) {// was deleted
 				this.close();
@@ -388,6 +405,9 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 						+ ", values: " + model.toString());
 				setModel((Contact) model);
 			}
+		}// from groups
+		else if (source.getClass().equals(GroupController.class)) {
+			updateGroupList();
 		}
 	}
 }

@@ -14,9 +14,6 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.uagrm.addressbook.controller.ContactController;
-import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.view.dialog.ContactEditDialog;
 
@@ -39,13 +36,10 @@ public class MainView extends JFrame {
 		// groupView
 		groupListView = new GroupListView();
 		groupListView.setMainView(this);
-		ControllerFactory.getInstance(GroupController.class).addView(groupListView);
 		panelGroups.add(groupListView, BorderLayout.CENTER);
 		// contactView
 		contactListView = new ContactListView();
 		contactListView.setMainView(this);
-		ControllerFactory.getInstance(ContactController.class).addView(
-				contactListView);
 		panelContacts.add(contactListView, BorderLayout.CENTER);
 		//
 		setTitle("MainView");
@@ -69,7 +63,6 @@ public class MainView extends JFrame {
 		//TODO put this is ContactView
 		ContactEditDialog dialog = new ContactEditDialog(this);
 		dialog.setContact(new Contact());
-		ControllerFactory.getInstance(ContactController.class).addView(dialog);
 		dialog.setVisible(true);
 	}
 
