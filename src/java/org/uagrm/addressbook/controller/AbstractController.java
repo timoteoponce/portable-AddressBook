@@ -42,6 +42,10 @@ public abstract class AbstractController<T> extends Observable implements
 	public void addView(Observer observer) {
 		log.debug("Adding view: " + observer.getClass().getName());
 		this.addObserver(observer);
+
+
+
+
 	}
 
 	@Override
@@ -74,6 +78,10 @@ public abstract class AbstractController<T> extends Observable implements
 		refreshElementList();
 		setChanged();
 		notifyObservers(model);
+
+
+
+
 	}
 
 	private void refreshElementList() {

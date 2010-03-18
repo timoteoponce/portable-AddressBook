@@ -154,6 +154,11 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 				null, "CONTACT_PHONES"));
 
 
+
+
+
+
+
 		for (Phone phone : contact.getPhones()) {
 			if (phone.getId() == null) {
 				throw new IllegalArgumentException("Unsaved phone");
