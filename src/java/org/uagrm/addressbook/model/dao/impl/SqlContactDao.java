@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.text.StrBuilder;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Address;
@@ -33,18 +32,15 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 
 	@Override
 	public Set<Contact> getByGroup(final Integer groupId) {
-		final StrBuilder buffer = new StrBuilder();
-		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
-				.trim());
-		buffer.replaceAll(VAR_COLUMNS, "c.*");
-		buffer.replaceAll(VAR_TABLE, TABLE_NAME);
-		buffer.append(" c INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS);
-		buffer.append(" gc ON c.ID = gc.ID_CONTACT WHERE gc.ID_GROUP = "
-				+ groupId);
-
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
+				.trim();
+		query = query.replace(VAR_COLUMNS, "c.*");
+		query = query.replace(VAR_TABLE, TABLE_NAME);
+		query = query + " c INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS
+				+ " gc ON c.ID = gc.ID_CONTACT WHERE gc.ID_GROUP = " + groupId;
 		Set<Contact> contacts = new HashSet<Contact>();
 
-		ResultSet rs = getDatabaseHandler().executeQuery(buffer.toString());
+		ResultSet rs = getDatabaseHandler().executeQuery(query);
 		try {
 			while (rs.next()) {
 				contacts.add(new Contact(Integer.valueOf(rs.getInt(1)), rs
@@ -68,19 +64,19 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 
 	@Override
 	protected String getFields(Contact contact, ActionType action) {
-		final StrBuilder buffer = new StrBuilder();
+		String out = "";
 		switch (action) {
 		case CREATE:
-			buffer.append("(null,'" + contact.getFirstName() + "',");
-			buffer.append("'" + contact.getLastName() + "')");
+			out = "(null,'" + contact.getFirstName() + "','"
+					+ contact.getLastName() + "');";
 			break;
 
 		case UPDATE:
-			buffer.append("FIRST_NAME='" + contact.getFirstName() + "',");
-			buffer.append("LAST_NAME='" + contact.getLastName() + "'");
+			out = "FIRST_NAME='" + contact.getFirstName() + "',LAST_NAME='"
+					+ contact.getLastName() + "'";
 			break;
 		}
-		return buffer.toString();
+		return out;
 	}
 
 	@Override

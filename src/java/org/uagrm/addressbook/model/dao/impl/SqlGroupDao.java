@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.text.StrBuilder;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Contact;
@@ -39,17 +38,15 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 
 	@Override
 	public Set<Group> getByContact(Integer contactId) {
-		final StrBuilder buffer = new StrBuilder();
-		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
-				.trim());
-		buffer.replaceAll(VAR_COLUMNS, "g.*");
-		buffer.replaceAll(VAR_TABLE, TABLE_NAME);
-		buffer.append(" g INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS);
-		buffer.append(" gc ON g.ID = gc.ID_GROUP WHERE gc.ID_CONTACT = "
-				+ contactId);
+		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
+				.trim();
+		query = query.replace(VAR_COLUMNS, "g.*");
+		query = query.replace(VAR_TABLE, TABLE_NAME);
+		query = query + " g INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS
+				+ " gc ON g.ID = gc.ID_GROUP WHERE gc.ID_CONTACT = " + contactId;
 		
 		final Set<Group> groups = new HashSet<Group>();
-		ResultSet rs = getDatabaseHandler().executeQuery(buffer.toString());
+		ResultSet rs = getDatabaseHandler().executeQuery(query);
 		try {
 			while (rs.next()) {
 				groups.add(new Group(Integer.valueOf(rs.getInt(1)), rs
@@ -99,19 +96,19 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 
 	@Override
 	protected String getFields(Group group, ActionType action) {
-		final StrBuilder buffer = new StrBuilder();
+		String out = "";		
 		switch (action) {
 		case CREATE:
-			buffer.append("(null,'" + group.getName() + "',");
-			buffer.append("'" + group.getDescription() + "')");
+			out = "(null,'" + group.getName() + "','" + group.getDescription()
+					+ "');";
 			break;
 
 		case UPDATE:
-			buffer.append("name='" + group.getName() + "',");
-			buffer.append("description='" + group.getDescription() + "'");
+			out = "name='" + group.getName() + "',description='"
+					+ group.getDescription() + "'";
 			break;
 		}
-		return buffer.toString();
+		return out;
 	}
 
 	@Override
@@ -125,6 +122,37 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 		fillValues(group, rs);
 
 		return group;
+	}
+
+	public static void main(String[] args) {
+		// GroupDao dao = new GroupDaoImpl();
+		//
+		// Group group1 = new Group();
+		// group1.setName("1stGroup");
+		//
+		// Group group2 = new Group();
+		// group2.setName("2stGroup");
+		//
+		// Group group3 = new Group();
+		// group3.setName("3stGroup");
+		//
+		// dao.create(group1);
+		// log.info("created group : " + group1.getId());
+		//
+		// dao.create(group2);
+		// log.info("created group : " + group2.getId());
+		//
+		// dao.create(group3);
+		// log.info("created group : " + group3.getId());
+		GroupDao groupDao = DaoFactory.getInstance(SqlGroupDao.class);
+
+		Group myGroup = groupDao.read(new Group(1, null, null));
+		LOG.info("group : " + myGroup.toString());
+
+		groupDao.loadReferences(myGroup, Contact.class);
+		for (Contact contact : myGroup.getContacts()) {
+			LOG.info("contact entry: " + contact.toString());
+		}
 	}
 
 	@Override
