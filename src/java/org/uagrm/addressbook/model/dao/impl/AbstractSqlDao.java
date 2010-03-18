@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.text.StrBuilder;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Entity;
@@ -37,17 +40,21 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	@Override
 	public void create(T entity) {
-
-		String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
-		query = query.replace(VAR_TABLE, getTableName());
-		query = query.replace(VAR_VALUES, getFields(entity,
+		final StrBuilder buffer = new StrBuilder();
+		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim());
+		buffer.replaceAll(VAR_TABLE, getTableName());
+		buffer.replaceAll(VAR_VALUES, getFields(entity,
 				ActionType.CREATE));
-		log.info("Query result: " + handler.executeUpdate(query));
-		// retrieve the generated ID
-		query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_LAST_ID);
-		query = query.replace(VAR_TABLE, getTableName());
 
-		ResultSet rs = handler.executeQuery(query);
+		log.info("Query result: " + handler.executeUpdate(buffer.toString()));
+		// retrieve the generated ID
+		buffer.clear();
+		buffer
+				.append(Configuration
+						.getConfigKey(ConfigKeys.SQL_SELECT_LAST_ID));
+		buffer.replaceAll(VAR_TABLE, getTableName());
+
+		ResultSet rs = handler.executeQuery(buffer.toString());
 		try {
 			rs.next();
 			((Entity) entity).setId(rs.getInt(1));
@@ -60,12 +67,12 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	@Override
 	public void delete(T entity) {
-		String query = Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim();
-		query = query.replace(VAR_TABLE, getTableName());
-		query = query.replace(VAR_CONDITION, "id = "
-				+ ((Entity) entity).getId());
+		final StrBuilder buffer = new StrBuilder();
+		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim());
+		buffer.replaceAll(VAR_TABLE, getTableName());
+		buffer.replaceAll(VAR_CONDITION, "id = " + ((Entity) entity).getId());
 
-		log.info("Query result: " + handler.executeUpdate(query));
+		log.info("Query result: " + handler.executeUpdate(buffer.toString()));
 		deleteReferences(entity);
 	}
 
@@ -80,36 +87,40 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	protected void deleteReference(ReferenceLink ref) {
 		log.info("Removing reference: " + ref.toString());
-		String query = Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim();
-		query = query.replace(VAR_TABLE, ref.getTableName());
+		final StrBuilder buffer = new StrBuilder();
+		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_DELETE).trim());
+		buffer.replaceAll(VAR_TABLE, ref.getTableName());
 
-		if (ref.getSourceColumn() != null) {
-			query = query.replace(VAR_CONDITION, ref.getSourceColumn() + "="
+		if (StringUtils.isNotEmpty(ref.getSourceColumn())) {
+			buffer.replaceAll(VAR_CONDITION, ref.getSourceColumn() + "="
 					+ ref.getSourceId());
 		} else {
-			query = query.replace(VAR_CONDITION, ref.getTargetColumn() + "="
+			buffer.replaceAll(VAR_CONDITION, ref.getTargetColumn() + "="
 					+ ref.getTargetId());
 		}
-		handler.executeUpdate(query);
+		handler.executeUpdate(buffer.toString());
 	}
 
 	protected void createReference(ReferenceLink ref) {
 		log.info("Adding reference: " + ref.toString());
-		String query = Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim();
-		query = query.replace(VAR_TABLE, ref.getTableName());
-		query = query.replace(VAR_VALUES, "(" + ref.getSourceId() + ","
-				+ ref.getTargetId() + ");");
-		getDatabaseHandler().executeUpdate(query);
+		final StrBuilder buffer = new StrBuilder();
+		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_INSERT).trim());
+		buffer.replaceAll(VAR_TABLE, ref.getTableName());
+		buffer.replaceAll(VAR_VALUES, "(" + ref.getSourceId() + ","
+				+ ref.getTargetId() + ")");
+
+		getDatabaseHandler().executeUpdate(buffer.toString());
 	}	
 
 	@Override
 	public T read(T entity) {
-		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT).trim();
-		query = query.replace(VAR_TABLE, getTableName());
-		query = query.replace(VAR_COLUMNS, "*");
-		query = query.replace(VAR_CONDITION, "id = "
-				+ ((Entity) entity).getId());
-		ResultSet rs = handler.executeQuery(query);
+		final StrBuilder buffer = new StrBuilder();
+		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_SELECT).trim());
+		buffer.replaceAll(VAR_TABLE, getTableName());
+		buffer.replaceAll(VAR_COLUMNS, "*");
+		buffer.replaceAll(VAR_CONDITION, "id = " + ((Entity) entity).getId());
+
+		ResultSet rs = handler.executeQuery(buffer.toString());
 		try {
 			if (rs.next()) {
 				fillValues(entity, rs);
@@ -129,16 +140,17 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	@Override
 	public Collection<T> selectAll() {
 		Collection<T> resultList = new ArrayList<T>();
+		final StrBuilder buffer = new StrBuilder();
 
-		String query = Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
-				.trim();
-		query = query.replace(VAR_TABLE, getTableName());
-		query = query.replace(VAR_COLUMNS, "*");
-		ResultSet rs = handler.executeQuery(query);
+		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
+				.trim());
+		buffer.replaceAll(VAR_TABLE, getTableName());
+		buffer.replaceAll(VAR_COLUMNS, "*");
+
+		ResultSet rs = handler.executeQuery(buffer.toString());
 		try {
 			while (rs.next()) {
 				T tempEntity = loadValues(rs);
-				//
 				resultList.add(tempEntity);
 			}
 		} catch (SQLException e) {
@@ -151,13 +163,13 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 
 	@Override
 	public void update(T entity) {
-		String query = Configuration.getConfigKey(ConfigKeys.SQL_UPDATE).trim();
-		query = query.replace(VAR_TABLE, getTableName());
-		query = query.replace(VAR_VALUES, getFields(entity,
-				ActionType.UPDATE));
-		query = query.replace(VAR_CONDITION, "id = "
-				+ ((Entity) entity).getId());
-		log.info("Query result: " + handler.executeUpdate(query));
+		final StrBuilder buffer = new StrBuilder();
+		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_UPDATE).trim());
+		buffer.replaceAll(VAR_TABLE, getTableName());
+		buffer.replaceAll(VAR_VALUES, getFields(entity, ActionType.UPDATE));
+		buffer.replaceAll(VAR_CONDITION, "id = " + ((Entity) entity).getId());
+
+		log.info("Query result: " + handler.executeUpdate(buffer.toString()));
 	}
 
 	protected DatabaseHandler getDatabaseHandler() {
