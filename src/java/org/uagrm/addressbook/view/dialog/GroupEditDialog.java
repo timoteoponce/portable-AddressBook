@@ -47,11 +47,6 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 		initComponents();
 	}
 
-	public GroupEdit(Dialog parent) {
-		super(parent);
-		initComponents();
-	}
-
 	public GroupEditDialog(Dialog parent) {
 		super(parent);
 		initComponents();
