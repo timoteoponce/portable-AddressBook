@@ -55,7 +55,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 	private final Controller<Contact> contactController = ControllerFactory
 			.getInstance(ContactController.class);
 
-	private final ListModel<Contact> listModel = new ListModel<Contact>();
+	private final ListModel<Contact> contactListModel = new ListModel<Contact>();
 
 	private Group group;
 
@@ -67,8 +67,8 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 
 	private void init() {
 		ControllerFactory.getInstance(GroupController.class).addView(this);
-		listModel.clear();
-		this.listContacts.setModel(listModel);
+		contactListModel.clear();
+		this.listContacts.setModel(contactListModel);
 	}
 
 	public EditGroupContactsDialog(Dialog owner) {
@@ -118,7 +118,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 				.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) contactController
 						.getElements()));
 		dialog
-				.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) listModel
+				.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) contactListModel
 						.getElements()));
 
 		dialog.showDialog();
@@ -154,7 +154,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 
 	private void addContact(Contact contact) {
 		if (contact != null) {
-			listModel.addElement(contact);
+			contactListModel.addElement(contact);
 			listContacts.updateUI();
 		}
 	}
@@ -167,7 +167,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 		int index = listContacts.getSelectedIndex();
 
 		if (index >= 0) {
-			listModel.removeElement(index);
+			contactListModel.removeElement(index);
 		}
 	}
 
@@ -181,10 +181,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 
 	private void okAction() {
 		group.getContacts().clear();
-		for (int i = 0; i < listModel.getSize(); i++) {
-			Contact contact = listModel.getElement(i);
-			group.getContacts().add(contact);
-		}
+		group.getContacts().addAll(contactListModel.getElements());
 		close();
 	}
 
@@ -352,11 +349,6 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	@Override
-	public Controller<Group> getController() {
-		return groupController;
-	}
-
-	@Override
 	public void setModel(Group model) {
 		this.group = model;
 		loadValues();
@@ -364,12 +356,12 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 
 	private void loadValues() {
 		this.txtGroup.setText(group.getName());
-		listModel.clear();
+		contactListModel.clear();
 
 		if (group.getContacts().isEmpty()) {
 			groupController.preloadEntity(group, Contact.class);
 		}
-		listModel.addAllElements(group.getContacts());
+		contactListModel.addAllElements(group.getContacts());
 		listContacts.updateUI();
 
 
@@ -379,7 +371,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 
 	@Override
 	public void close() {
-		getController().removeView(this);
+		groupController.removeView(this);
 		this.dispose();
 	}
 

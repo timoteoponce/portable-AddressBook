@@ -80,11 +80,6 @@ public class ContactListView extends JPanel implements View<Contact> {
 	}
 
 	@Override
-	public Controller<Contact> getController() {
-		return controller;
-	}
-
-	@Override
 	public void setModel(Contact model) {
 		// not needed in this view,
 	}

@@ -14,7 +14,6 @@ import java.util.Observable;
 
 import javax.swing.JPanel;
 
-import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.model.Group;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -160,12 +159,6 @@ public class GroupView extends JPanel implements View<Group> {
 	public void close() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public Controller<Group> getController() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

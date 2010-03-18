@@ -100,12 +100,6 @@ public class VirtualAddressEditDialog extends JDialog implements
 	}
 
 	@Override
-	public Controller<VirtualAddress> getController() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void setModel(VirtualAddress model) {
 		// TODO Auto-generated method stub
 

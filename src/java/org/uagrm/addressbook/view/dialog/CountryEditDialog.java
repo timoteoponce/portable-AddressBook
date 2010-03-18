@@ -97,12 +97,7 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 		// TODO Auto-generated method stub
 
 	}
-
-	@Override
-	public Controller<Country> getController() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	public void setModel(Country model) {

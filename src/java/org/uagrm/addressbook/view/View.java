@@ -2,8 +2,6 @@ package org.uagrm.addressbook.view;
 
 import java.util.Observer;
 
-import org.uagrm.addressbook.controller.Controller;
-
 /**
  * @author Timoteo Ponce
  *
@@ -11,9 +9,7 @@ import org.uagrm.addressbook.controller.Controller;
  */
 public interface View<T> extends Observer{
 
-    void setModel(T model);        
-
-    Controller<T> getController();
+    void setModel(T model);    
     
     /**
      * This operation removes the current view from the  

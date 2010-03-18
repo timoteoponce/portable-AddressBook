@@ -99,12 +99,6 @@ public class ProtocolEditDialog extends JDialog implements View<Protocol> {
 	}
 
 	@Override
-	public Controller<Protocol> getController() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void setModel(Protocol model) {
 		// TODO Auto-generated method stub
 

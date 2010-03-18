@@ -192,12 +192,7 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 	private void updateValues() {
 		group.setName(txtName.getText());
 		group.setDescription(txtDescription.getText());
-	}
-
-	@Override
-	public Controller<Group> getController() {
-		return controller;
-	}
+	}	
 
 	@Override
 	public void setModel(Group model) {
@@ -214,7 +209,7 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 
 	@Override
 	public void close() {
-		getController().removeView(this);
+		controller.removeView(this);
 		this.dispose();
 	}
 

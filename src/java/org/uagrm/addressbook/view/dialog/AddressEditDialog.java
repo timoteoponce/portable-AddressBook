@@ -8,6 +8,10 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Observable;
 
@@ -24,7 +28,6 @@ import javax.swing.JTextField;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.AddressController;
 import org.uagrm.addressbook.controller.ContactController;
-import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.CountryController;
 import org.uagrm.addressbook.model.Address;
@@ -52,11 +55,13 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 	private final ContactController contactController = ControllerFactory
 			.getInstance(ContactController.class);
 
-	private Address currentAddress;
+	private Address currentAddress ;
 
 	private Contact contact;
+	
+	private boolean isEditing;
 
-	private final ListModel<Address> listModel = new ListModel<Address>();
+	private final ListModel<Address> addressListModel = new ListModel<Address>();
 
 	public AddressEditDialog(Frame owner) {
 		super(owner);
@@ -74,7 +79,10 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 		addressController.addView(this);
 		contactController.addView(this);
 		//
-		listAddresses.setModel(listModel);
+		currentAddress = new Address();
+		isEditing = false;
+		//
+		listAddresses.setModel(addressListModel);
 		comboCountry.setRenderer(new CustomListCellRenderer());
 		updateCountryCombo();
 	}
@@ -90,11 +98,68 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 		comboCountry.updateUI();
 	}
 
+	private void listAddressesMouseClicked(MouseEvent e) {
+		e.consume();
+		selectAddress();
+	}
+
+	private void btnResetActionPerformed(ActionEvent e) {		
+		reset();
+	}
+
+	private void reset() {		
+		currentAddress = new Address();
+		isEditing = false;
+		loadAddressValues();
+	}
+
+	private void btnSaveActionPerformed(ActionEvent e) {
+		saveAddress();
+	}
+
+	private void saveAddress() {		
+		updateAddressValues();
+		if( !isEditing){			
+			addressListModel.addElement(currentAddress);
+		}
+		reset();
+	}
+
+	private void btnAddActionPerformed(ActionEvent e) {
+		reset();
+		txtStreet.requestFocus();
+	}
+
+	private void okButtonActionPerformed(ActionEvent e) {
+		okAction();
+	}
+
+	private void okAction() {
+		//we don't store anything here, we just add all addresses to the contact
+		updateValues();	
+		close();
+	}
+
+	private void cancelButtonActionPerformed(ActionEvent e) {
+		this.close();
+	}
+
+	private void btnRemoveActionPerformed(ActionEvent e) {
+		removeSelectedAddress();
+	}
+
+	private void removeSelectedAddress() {
+		final int index = listAddresses.getSelectedIndex();
+		if(index > -1){
+			addressListModel.removeElement(index);
+		}
+		listAddresses.updateUI();
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
-		DefaultComponentFactory compFactory = DefaultComponentFactory
-				.getInstance();
+		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
 		panelProperties = new SimpleInternalFrame();
@@ -122,134 +187,163 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 		cancelButton = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		// ======== this ========
+		//======== this ========
 		setTitle("Address Edit");
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
-		// ======== dialogPane ========
+		//======== dialogPane ========
 		{
 			dialogPane.setBorder(Borders.DIALOG_BORDER);
 			dialogPane.setLayout(new BorderLayout());
 
-			// ======== contentPanel ========
+			//======== contentPanel ========
 			{
-				contentPanel
-						.setLayout(new FormLayout(
-								"default, $lcgap, default:grow, $lcgap, default",
-								"default, $lgap, 119dlu, $lgap, default:grow, $lgap, default"));
+				contentPanel.setLayout(new FormLayout(
+					"default, $lcgap, default:grow, $lcgap, default",
+					"default, $lgap, 119dlu, $lgap, default:grow, $lgap, default"));
 
-				// ======== panelProperties ========
+				//======== panelProperties ========
 				{
 					panelProperties.setContentPaneBorder(null);
 					panelProperties.setTitle("Properties");
-					Container panelPropertiesContentPane = panelProperties
-							.getContentPane();
+					Container panelPropertiesContentPane = panelProperties.getContentPane();
 					panelPropertiesContentPane.setLayout(new FormLayout(
-							"39dlu, $lcgap, 114dlu, $lcgap, default",
-							"5*(default, $lgap), default"));
+						"39dlu, $lcgap, 114dlu, $lcgap, default",
+						"5*(default, $lgap), default"));
 
-					// ---- lblStreet ----
+					//---- lblStreet ----
 					lblStreet.setText("Street:");
-					panelPropertiesContentPane.add(lblStreet, cc.xywh(1, 3, 1,
-							1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
+					panelPropertiesContentPane.add(lblStreet, cc.xywh(1, 3, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
 					panelPropertiesContentPane.add(txtStreet, cc.xy(3, 3));
 
-					// ---- lblNumber ----
+					//---- lblNumber ----
 					lblNumber.setText("Number:");
-					panelPropertiesContentPane.add(lblNumber, cc.xywh(1, 5, 1,
-							1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
+					panelPropertiesContentPane.add(lblNumber, cc.xywh(1, 5, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
 					panelPropertiesContentPane.add(txtNumber, cc.xy(3, 5));
 
-					// ---- lblCity ----
+					//---- lblCity ----
 					lblCity.setText("City:");
-					panelPropertiesContentPane.add(lblCity, cc.xywh(1, 7, 1, 1,
-							CellConstraints.RIGHT, CellConstraints.DEFAULT));
+					panelPropertiesContentPane.add(lblCity, cc.xywh(1, 7, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
 					panelPropertiesContentPane.add(txtCity, cc.xy(3, 7));
 
-					// ---- lblCountry ----
+					//---- lblCountry ----
 					lblCountry.setText("Country:");
-					panelPropertiesContentPane.add(lblCountry, cc.xywh(1, 9, 1,
-							1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
+					panelPropertiesContentPane.add(lblCountry, cc.xywh(1, 9, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
 					panelPropertiesContentPane.add(comboCountry, cc.xy(3, 9));
 
-					// ======== panelActions1 ========
+					//======== panelActions1 ========
 					{
-						panelActions1
-								.setLayout(new FormLayout(
-										"default, $lcgap, right:47dlu, $lcgap, center:48dlu",
-										"default"));
+						panelActions1.setLayout(new FormLayout(
+							"default, $lcgap, right:47dlu, $lcgap, center:48dlu",
+							"default"));
 
-						// ---- btnSave ----
+						//---- btnSave ----
 						btnSave.setText("Save");
-						panelActions1.add(btnSave, cc.xywh(3, 1, 1, 1,
-								CellConstraints.FILL, CellConstraints.DEFAULT));
+						btnSave.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								btnSaveActionPerformed(e);
+							}
+						});
+						panelActions1.add(btnSave, cc.xywh(3, 1, 1, 1, CellConstraints.FILL, CellConstraints.DEFAULT));
 
-						// ---- btnReset ----
+						//---- btnReset ----
 						btnReset.setText("Reset");
-						panelActions1.add(btnReset, cc.xywh(4, 1, 2, 1,
-								CellConstraints.FILL, CellConstraints.DEFAULT));
+						btnReset.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								btnResetActionPerformed(e);
+							}
+						});
+						panelActions1.add(btnReset, cc.xywh(4, 1, 2, 1, CellConstraints.FILL, CellConstraints.DEFAULT));
 					}
 					panelPropertiesContentPane.add(panelActions1, cc.xy(3, 11));
 				}
-				contentPanel.add(panelProperties, cc.xywh(3, 3, 1, 1,
-						CellConstraints.FILL, CellConstraints.FILL));
+				contentPanel.add(panelProperties, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
-				// ======== panelList ========
+				//======== panelList ========
 				{
 					panelList.setTitle("Address List");
 					Container panelListContentPane = panelList.getContentPane();
-					panelListContentPane
-							.setLayout(new FormLayout(
-									"default, $lcgap, default:grow, $lcgap, default",
-									"2*(default, $lgap), default:grow, $lgap, default"));
+					panelListContentPane.setLayout(new FormLayout(
+						"default, $lcgap, default:grow, $lcgap, default",
+						"2*(default, $lgap), default:grow, $lgap, default"));
 
-					// ======== panelOperations ========
+					//======== panelOperations ========
 					{
 						panelOperations.setLayout(new FormLayout(
-								"116dlu:grow, $lcgap, default", "default"));
+							"116dlu:grow, $lcgap, default",
+							"default"));
 						panelOperations.add(sepOperations, cc.xy(1, 1));
 
-						// ======== panelActions2 ========
+						//======== panelActions2 ========
 						{
 							panelActions2.setLayout(new FormLayout(
-									"default, $lcgap, default", "default"));
+								"default, $lcgap, default",
+								"default"));
 
-							// ---- btnAdd ----
+							//---- btnAdd ----
 							btnAdd.setText("+");
+							btnAdd.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									btnAddActionPerformed(e);
+								}
+							});
 							panelActions2.add(btnAdd, cc.xy(1, 1));
 
-							// ---- btnRemove ----
+							//---- btnRemove ----
 							btnRemove.setText("-");
+							btnRemove.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									btnRemoveActionPerformed(e);
+								}
+							});
 							panelActions2.add(btnRemove, cc.xy(3, 1));
 						}
 						panelOperations.add(panelActions2, cc.xy(3, 1));
 					}
 					panelListContentPane.add(panelOperations, cc.xy(3, 3));
 
-					// ======== scrollPane1 ========
+					//======== scrollPane1 ========
 					{
+
+						//---- listAddresses ----
+						listAddresses.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								listAddressesMouseClicked(e);
+							}
+						});
 						scrollPane1.setViewportView(listAddresses);
 					}
 					panelListContentPane.add(scrollPane1, cc.xy(3, 5));
 				}
-				contentPanel.add(panelList, cc.xywh(3, 5, 1, 1,
-						CellConstraints.DEFAULT, CellConstraints.FILL));
+				contentPanel.add(panelList, cc.xywh(3, 5, 1, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-			// ======== panelMainActions ========
+			//======== panelMainActions ========
 			{
 				panelMainActions.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
 				panelMainActions.setLayout(new FormLayout(
-						"$glue, $button, $rgap, $button", "pref"));
+					"$glue, $button, $rgap, $button",
+					"pref"));
 
-				// ---- okButton ----
+				//---- okButton ----
 				okButton.setText("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						okButtonActionPerformed(e);
+					}
+				});
 				panelMainActions.add(okButton, cc.xy(2, 1));
 
-				// ---- cancelButton ----
+				//---- cancelButton ----
 				cancelButton.setText("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						cancelButtonActionPerformed(e);
+					}
+				});
 				panelMainActions.add(cancelButton, cc.xy(4, 1));
 			}
 			dialogPane.add(panelMainActions, BorderLayout.SOUTH);
@@ -287,31 +381,33 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 	private JPanel panelMainActions;
 	private JButton okButton;
 	private JButton cancelButton;
-
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 	@Override
 	public void close() {
 		addressController.removeView(this);
 		contactController.removeView(this);
 		this.dispose();
-	}
-
-	@Override
-	public Controller<Contact> getController() {
-		return null;
-	}
+	}	
 
 	private void selectAddress() {
 		currentAddress = (Address) listAddresses.getSelectedValue();
-		if (currentAddress != null) {
+		isEditing = (currentAddress != null); 
+		loadAddressValues();
+	}
+
+	private void loadAddressValues() {
+		if (currentAddress != null) {			
 			txtStreet.setText(currentAddress.getStreet());
 			txtCity.setText(currentAddress.getCity());
 			txtNumber.setText(currentAddress.getNumber());
-		}
+		}		
 	}
 
-	private void updateValues() {
-		// update properties
+	private void updateAddressValues() {
+		currentAddress.setCity(txtCity.getText());
+		currentAddress.setNumber(txtCity.getText());
+		currentAddress.setStreet(txtStreet.getText());
+		currentAddress.setCountry((Country) comboCountry.getSelectedItem());
 	}
 
 	@Override
@@ -321,12 +417,20 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void loadValues() {
+		if(contact.getAddresses().isEmpty()){
+			contact = contactController.preloadEntity(contact, Address.class);
+		}
 		updateAddressList();
 	}
 
 	private void updateAddressList() {
-		listModel.clear();
-		listModel.addAllElements(contact.getAddresses());
+		addressListModel.clear();
+		addressListModel.addAllElements(contact.getAddresses());
+	}
+	
+	private void updateValues() {
+		contact.getAddresses().clear();
+		contact.getAddresses().addAll(addressListModel.getElements());
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import java.util.Observable;
 
 import javax.swing.JPanel;
 
-import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.model.Contact;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -37,12 +36,6 @@ public class ContactView extends JPanel implements View<Contact> {
 	public void close() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public Controller<Contact> getController() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

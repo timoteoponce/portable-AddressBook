@@ -183,11 +183,6 @@ public class GroupListView extends JPanel implements View<Group> {
 	}
 
 	@Override
-	public Controller<Group> getController() {
-		return controller;
-	}
-
-	@Override
 	public void close() {
 		controller.removeView(this);
 		this.setVisible(false);

@@ -99,12 +99,6 @@ public class PhoneEditDialog extends JDialog implements View<Phone> {
 	}
 
 	@Override
-	public Controller<Phone> getController() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void setModel(Phone model) {
 		// TODO Auto-generated method stub
 
