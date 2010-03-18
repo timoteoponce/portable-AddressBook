@@ -164,7 +164,9 @@
 	</target>
 
 	<target name="run" description="Run the app" depends="build">
-		<java classname="${main.class}" fork="true" classpathref="run.classpath" />
+		<java classname="${main.class}" fork="true" classpathref="run.classpath" >			
+			<jvmarg value="-Dcurrent.env=${current.env}"/>		
+		</java>
 	</target>
 
 	<target name="copy-libs" description="Copy repo libs to lib folder">
@@ -175,11 +177,12 @@
 
 	<!-- Tests -->
 
-	<target name="test" depends="compile-test">
+	<target name="test" depends="compile-test">		
 		<property name="junit.dest" value="${project.build.report}/junit" />
 		<mkdir dir="${junit.dest}" />
 
 		<junit fork="yes" forkmode="once" printsummary="yes" haltonfailure="yes">
+			<jvmarg value="-Dcurrent.env=test"/>
 			<classpath>
 				<path refid="test.classpath" />
 			</classpath>
@@ -189,7 +192,7 @@
 				<fileset dir="${project.test}">
 					<include name="**/*Test.java" />
 				</fileset>
-			</batchtest>
+			</batchtest>			
 		</junit>
 		<junitreport todir="${junit.dest}">
 			<fileset dir="${junit.dest}" includes="TEST-*.xml" />

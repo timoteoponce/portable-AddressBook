@@ -22,7 +22,8 @@ public final class Configuration {
 	private static Properties appProperties;
 
 	/** The Constant SETTINGS_FILE. */
-	private static final String SETTINGS_FILE = "/application.properties";
+	private static final String SETTINGS_FILE = "/application-"
+			+ System.getProperty("current.env") + ".properties";
 
 	private static final Logger LOG = Logger.getLogger(Configuration.class);
 
@@ -55,11 +56,17 @@ public final class Configuration {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private static void loadAppPropertyFile() throws IOException {
+		LOG.info("Loading application properties : " + SETTINGS_FILE);
 		appProperties = new Properties();
-		final InputStream fis = Configuration.class
-				.getResourceAsStream(SETTINGS_FILE);
-		appProperties.load(fis);
-		fis.close();
+		InputStream fis = null;
+		try {
+			fis = Configuration.class.getResourceAsStream(SETTINGS_FILE);
+			appProperties.load(fis);
+		} finally {
+			if (fis != null) {
+				fis.close();
+			}
+		}
 	}
 
 	/**
@@ -96,7 +103,8 @@ public final class Configuration {
 					SETTINGS_FILE).toURI().getPath());
 			appProperties.store(fos, null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error writing changes into [ " + SETTINGS_FILE
+					+ " ] file", e);
 		} finally {
 			try {
 				if (fos != null)
@@ -121,11 +129,17 @@ public final class Configuration {
 	public static Properties loadProperties(final String path)
 			throws IOException {
 		final File file = new File(path);
-		final BufferedReader reader = new BufferedReader(new FileReader(file));
 		final Properties out = new Properties();
-		out.load(reader);
-		reader.close();
-
+		BufferedReader reader = null;
+		
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			out.load(reader);
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
 		return out;
 	}
 
@@ -143,13 +157,14 @@ public final class Configuration {
 			fos = new FileOutputStream(path);
 			props.store(fos, null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error saving properties into [ " + path
+					+ " ] file", e);
 		} finally {
 			try {
 				if (fos != null)
 					fos.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOG.error(e.getMessage(), e);
 			}
 		}
 	}

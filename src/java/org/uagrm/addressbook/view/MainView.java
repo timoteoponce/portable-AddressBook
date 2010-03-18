@@ -14,6 +14,7 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.apache.commons.lang.StringUtils;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.view.dialog.ContactEditDialog;
 
@@ -49,6 +50,9 @@ public class MainView extends JFrame {
 	public static void main(String[] args) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {
+		if(StringUtils.isEmpty(System.getProperty("current.env"))){
+			System.setProperty("current.env","prod");//by default, prod is used
+		}
 		UIManager
 				.setLookAndFeel(com.jgoodies.looks.plastic.PlasticXPLookAndFeel.class
 						.getName());
