@@ -109,6 +109,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 		buffer.replaceAll(VAR_VALUES, "(" + ref.getSourceId() + ","
 				+ ref.getTargetId() + ")");
 
+
 		getDatabaseHandler().executeUpdate(buffer.toString());
 	}	
 
@@ -169,8 +170,12 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 		buffer.replaceAll(VAR_VALUES, getFields(entity, ActionType.UPDATE));
 		buffer.replaceAll(VAR_CONDITION, "id = " + ((Entity) entity).getId());
 
+
+
+
 		log.info("Query result: " + handler.executeUpdate(buffer.toString()));
 	}
+
 
 	protected DatabaseHandler getDatabaseHandler() {
 		return handler;

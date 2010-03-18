@@ -17,6 +17,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.view.dialog.ContactEditDialog;
 
+
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
@@ -65,6 +66,7 @@ public class MainView extends JFrame {
 		dialog.setContact(new Contact());
 		dialog.setVisible(true);
 	}
+
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY

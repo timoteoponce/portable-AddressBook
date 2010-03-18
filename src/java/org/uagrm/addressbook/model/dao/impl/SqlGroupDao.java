@@ -125,6 +125,37 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 		fillValues(group, rs);
 
 		return group;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 
 	@Override

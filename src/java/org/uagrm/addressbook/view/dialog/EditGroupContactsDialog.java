@@ -125,6 +125,15 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 		dialog.addSearchEventListener(getSearchContactListener());
 	}
 
+
+
+
+
+
+
+
+
+
 	private SearchEventListener getSearchContactListener() {
 		SearchEventListener listener = new SearchEventListener() {
 
@@ -362,6 +371,8 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 		}
 		listModel.addAllElements(group.getContacts());
 		listContacts.updateUI();
+
+
 	}
 
 	@Override

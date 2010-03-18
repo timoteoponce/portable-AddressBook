@@ -34,6 +34,8 @@ public class ListModel<T> extends AbstractListModel {
 		elementList.addAll(list);
 		final int index = elementList.size();
 		fireIntervalAdded(this, index, index);
+
+
 	}
 
 	public void removeElement(T element) {

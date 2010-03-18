@@ -103,12 +103,27 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 		final Contact contact = new Contact();
 		fillValues(contact, rs);
 		return contact;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 
 	@Override
 	public void saveGroups(Contact contact) {
 		deleteReference(new ReferenceLink(null, contact.getId(), null,
 				"ID_CONTACT", "GROUP_CONTACTS"));
+
 
 		for (Group group : contact.getGroups()) {
 			createReference(new ReferenceLink(group.getId(), contact.getId(),
@@ -137,6 +152,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	public void savePhones(Contact contact) {
 		deleteReference(new ReferenceLink(contact.getId(), null, "ID_CONTACT",
 				null, "CONTACT_PHONES"));
+
 
 		for (Phone phone : contact.getPhones()) {
 			if (phone.getId() == null) {
