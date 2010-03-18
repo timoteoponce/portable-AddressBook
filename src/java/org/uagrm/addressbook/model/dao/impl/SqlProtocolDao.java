@@ -5,11 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang.text.StrBuilder;
 import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Protocol;
 import org.uagrm.addressbook.model.ReferenceLink;
-import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.model.dao.ProtocolDao;
 
 /**
@@ -17,79 +16,54 @@ import org.uagrm.addressbook.model.dao.ProtocolDao;
  * 
  */
 public class SqlProtocolDao extends AbstractSqlDao<Protocol> implements
-	ProtocolDao {
-    
-    @Override
-    protected void fillValues(Protocol entity, ResultSet rs)
-	    throws SQLException {
-	final Protocol protocol = entity;
-	protocol.setId(rs.getInt(1));
-	protocol.setName(rs.getString(2));
-	protocol.setPort(rs.getInt(3));
-    }
+		ProtocolDao {
 
-    @Override
-    protected String getFields(Protocol entity, ActionType action) {
-	String out = "";
-	final Protocol protocol = entity;
-
-	switch (action) {
-	case CREATE:
-	    out = "(null,'" + protocol.getName() + "'," + protocol.getPort()
-		    + ");";
-	    break;
-
-	case UPDATE:
-	    out = "name='" + protocol.getName() + "',port="
-		    + protocol.getPort() + "";
-	    break;
+	@Override
+	protected void fillValues(Protocol entity, ResultSet rs)
+			throws SQLException {
+		final Protocol protocol = entity;
+		protocol.setId(rs.getInt(1));
+		protocol.setName(rs.getString(2));
+		protocol.setPort(rs.getInt(3));
 	}
-	return out;
-    }
 
-    @Override
-    protected String getTableName() {
-	return TABLE_NAME;
-    }
+	@Override
+	protected String getFields(Protocol protocol, ActionType action) {
+		final StrBuilder buffer = new StrBuilder();
 
-    @Override
-    public void loadReferences(Protocol entity, Class<?> clazz) {
-	// not used
-    }
-
-    @Override
-    protected Protocol loadValues(ResultSet rs) throws SQLException {
-	Protocol protocol = new Protocol();
-	fillValues(protocol, rs);
-
-	return protocol;
-    }
-
-    public static void main(String[] args) {
-	GenericDao<Protocol> dao = DaoFactory.getInstance(ProtocolDao.class);
-	Protocol p1 = new Protocol();
-	p1.setName("HTTP");
-	p1.setPort(80);
-
-	dao.create(p1);
-
-	p1 = new Protocol();
-	p1.setName("FTP");
-	p1.setPort(20);
-
-	dao.create(p1);
-
-	Collection<Protocol> list = dao.selectAll();
-
-	for (Protocol protocol : list) {
-	    System.out.println("Id: " + protocol.getId());
-	    System.out.println("name: " + protocol.getName());
-	    System.out.println("port: " + protocol.getPort());
+		switch (action) {
+		case CREATE:
+			buffer.append("(null,'" + protocol.getName() + "',");
+			buffer.append(protocol.getPort() + ")");
+			break;
+		case UPDATE:
+			buffer.append("name='" + protocol.getName() + "',");
+			buffer.append("port=" + protocol.getPort());
+			break;
+		}
+		return buffer.toString();
 	}
-    }
 
-    @Override
-    protected Collection<ReferenceLink> getReferences(Protocol entity) {
-	return new ArrayList<ReferenceLink>();
-    }
+	@Override
+	protected String getTableName() {
+		return TABLE_NAME;
+	}
+
+	@Override
+	public void loadReferences(Protocol entity, Class<?> clazz) {
+		// not used
+	}
+
+	@Override
+	protected Protocol loadValues(ResultSet rs) throws SQLException {
+		Protocol protocol = new Protocol();
+		fillValues(protocol, rs);
+
+		return protocol;
+	}
+
+	@Override
+	protected Collection<ReferenceLink> getReferences(Protocol entity) {
+		return new ArrayList<ReferenceLink>();
+	}
 }
