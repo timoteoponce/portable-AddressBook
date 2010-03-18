@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang.text.StrBuilder;
 import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.ReferenceLink;
@@ -16,51 +15,52 @@ import org.uagrm.addressbook.model.dao.CountryDao;
  * 
  */
 public class SqlCountryDao extends AbstractSqlDao<Country> implements
-		CountryDao {
-	@Override
-	protected void fillValues(Country entity, ResultSet rs) throws SQLException {
-		final Country country = entity;
-		country.setId(rs.getInt(1));
-		country.setName(rs.getString(2));
+	CountryDao {
+    @Override
+    protected void fillValues(Country entity, ResultSet rs) throws SQLException {
+	final Country country = entity;
+	country.setId(rs.getInt(1));
+	country.setName(rs.getString(2));
+    }
+
+    @Override
+    protected String getFields(Country entity, ActionType action) {
+	String out = "";
+	final Country country = entity;
+
+	switch (action) {
+	case CREATE:
+	    out = "(null,'" + country.getName() + "');";
+	    break;
+
+	case UPDATE:
+	    out = "name='" + country.getName() + "'";
+	    break;
 	}
+	return out;
+    }
 
-	@Override
-	protected String getFields(Country country, ActionType action) {
-		final StrBuilder buffer = new StrBuilder();
+    @Override
+    protected String getTableName() {
+	return TABLE_NAME;
+    }
 
-		switch (action) {
-		case CREATE:
-			buffer.append("(null,'" + country.getName() + "')");
-			break;
+    @Override
+    public void loadReferences(Country entity, Class<?> clazz) {
+	// not used
 
-		case UPDATE:
-			buffer.append("name='" + country.getName() + "'");
-			break;
-		}
-		return buffer.toString();
-	}
+    }
 
-	@Override
-	protected String getTableName() {
-		return TABLE_NAME;
-	}
+    @Override
+    protected Country loadValues(ResultSet rs) throws SQLException {
+	final Country country = new Country();
+	fillValues(country, rs);
+	return country;
+    }
 
-	@Override
-	public void loadReferences(Country entity, Class<?> clazz) {
-		// not used
-
-	}
-
-	@Override
-	protected Country loadValues(ResultSet rs) throws SQLException {
-		final Country country = new Country();
-		fillValues(country, rs);
-		return country;
-	}
-
-	@Override
-	protected Collection<ReferenceLink> getReferences(Country entity) {
-		return new ArrayList<ReferenceLink>();
-	}
+    @Override
+    protected Collection<ReferenceLink> getReferences(Country entity) {
+	return new ArrayList<ReferenceLink>();
+    }
 
 }
