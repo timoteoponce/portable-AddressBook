@@ -152,13 +152,6 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	public void savePhones(Contact contact) {
 		deleteReference(new ReferenceLink(contact.getId(), null, "ID_CONTACT",
 				null, "CONTACT_PHONES"));
-
-
-
-
-
-
-
 		for (Phone phone : contact.getPhones()) {
 			if (phone.getId() == null) {
 				throw new IllegalArgumentException("Unsaved phone");

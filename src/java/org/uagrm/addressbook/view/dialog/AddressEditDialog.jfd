@@ -53,7 +53,7 @@
              <class>com.jgoodies.forms.layout.FormLayout</class> 
              <void method="setProperty"> 
               <string>$columnSpecs</string> 
-              <string>39dlu, labelcompgap, 114dlu, labelcompgap, default</string> 
+              <string>39dlu, labelcompgap, 114dlu, labelcompgap, 27dlu</string> 
              </void> 
              <void method="setProperty"> 
               <string>$rowSpecs</string> 
@@ -232,6 +232,29 @@
               <void method="setProperty"> 
                <string>gridX</string> 
                <int>3</int> 
+              </void> 
+              <void method="setProperty"> 
+               <string>gridY</string> 
+               <int>9</int> 
+              </void> 
+             </object> 
+            </void> 
+            <void method="add"> 
+             <object class="com.jformdesigner.model.FormComponent"> 
+              <string>javax.swing.JButton</string> 
+              <void method="setProperty"> 
+               <string>text</string> 
+               <string>+</string> 
+              </void> 
+              <void property="name"> 
+               <string>btnAddCountry</string> 
+              </void> 
+             </object> 
+             <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+              <class>com.jgoodies.forms.layout.CellConstraints</class> 
+              <void method="setProperty"> 
+               <string>gridX</string> 
+               <int>5</int> 
               </void> 
               <void method="setProperty"> 
                <string>gridY</string> 

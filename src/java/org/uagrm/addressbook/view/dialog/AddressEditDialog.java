@@ -78,6 +78,7 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 	private void init() {
 		addressController.addView(this);
 		contactController.addView(this);
+		ControllerFactory.getInstance(CountryController.class).addView(this);
 		//
 		currentAddress = new Address();
 		isEditing = false;
@@ -171,6 +172,7 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 		txtCity = new JTextField();
 		lblCountry = new JLabel();
 		comboCountry = new JComboBox();
+		btnAddCountry = new JButton();
 		panelActions1 = new JPanel();
 		btnSave = new JButton();
 		btnReset = new JButton();
@@ -209,7 +211,7 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 					panelProperties.setTitle("Properties");
 					Container panelPropertiesContentPane = panelProperties.getContentPane();
 					panelPropertiesContentPane.setLayout(new FormLayout(
-						"39dlu, $lcgap, 114dlu, $lcgap, default",
+						"39dlu, $lcgap, 114dlu, $lcgap, 27dlu",
 						"5*(default, $lgap), default"));
 
 					//---- lblStreet ----
@@ -231,6 +233,10 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 					lblCountry.setText("Country:");
 					panelPropertiesContentPane.add(lblCountry, cc.xywh(1, 9, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
 					panelPropertiesContentPane.add(comboCountry, cc.xy(3, 9));
+
+					//---- btnAddCountry ----
+					btnAddCountry.setText("+");
+					panelPropertiesContentPane.add(btnAddCountry, cc.xy(5, 9));
 
 					//======== panelActions1 ========
 					{
@@ -367,6 +373,7 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 	private JTextField txtCity;
 	private JLabel lblCountry;
 	private JComboBox comboCountry;
+	private JButton btnAddCountry;
 	private JPanel panelActions1;
 	private JButton btnSave;
 	private JButton btnReset;
@@ -386,6 +393,7 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 	public void close() {
 		addressController.removeView(this);
 		contactController.removeView(this);
+		ControllerFactory.getInstance(CountryController.class).removeView(this);
 		this.dispose();
 	}	
 
@@ -445,6 +453,8 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 			}
 		} else if (source.equals(addressController)) {
 			// ?
+		}else if(source.getClass().equals(CountryController.class)){
+			updateCountryCombo();
 		}
 	}
 }

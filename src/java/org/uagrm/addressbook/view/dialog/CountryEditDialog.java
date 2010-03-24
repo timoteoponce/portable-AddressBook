@@ -9,12 +9,16 @@ import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.util.Observable;
+import javax.swing.*;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import com.jgoodies.forms.factories.*;
 
-import org.uagrm.addressbook.controller.Controller;
+import org.apache.log4j.Logger;
+import org.uagrm.addressbook.controller.ControllerFactory;
+import org.uagrm.addressbook.controller.CountryController;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.view.View;
 
@@ -26,20 +30,38 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author Timoteo Ponce
  */
 public class CountryEditDialog extends JDialog implements View<Country> {
+	private static final Logger LOG = Logger.getLogger(CountryEditDialog.class);
+
+	private final CountryController countryController = ControllerFactory
+			.getInstance(CountryController.class);
+	private Country country;
+
 	public CountryEditDialog(Frame owner) {
 		super(owner);
 		initComponents();
+		init();
 	}
 
 	public CountryEditDialog(Dialog owner) {
 		super(owner);
 		initComponents();
+		init();
+	}
+
+	private void init() {
+		countryController.addView(this);		
 	}
 
 	private void initComponents() {
-		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		// JFormDesigner - Component initialization - DO NOT MODIFY
+		// //GEN-BEGIN:initComponents
+		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
+		separator1 = compFactory.createSeparator("Country properties");
+		panel1 = new JPanel();
+		label1 = new JLabel();
+		textField1 = new JTextField();
 		buttonBar = new JPanel();
 		okButton = new JButton();
 		cancelButton = new JButton();
@@ -57,8 +79,22 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 			//======== contentPanel ========
 			{
 				contentPanel.setLayout(new FormLayout(
-					"default, $lcgap, default",
+					"17dlu, $lcgap, 160dlu:grow, $lcgap, 17dlu",
 					"2*(default, $lgap), default"));
+				contentPanel.add(separator1, cc.xy(3, 1));
+
+				//======== panel1 ========
+				{
+					panel1.setLayout(new FormLayout(
+						"25dlu, $lcgap, 18dlu, $lcgap, default:grow",
+						"default"));
+
+					//---- label1 ----
+					label1.setText("Name:");
+					panel1.add(label1, cc.xy(1, 1));
+					panel1.add(textField1, cc.xy(5, 1));
+				}
+				contentPanel.add(panel1, cc.xy(3, 5));
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -70,7 +106,7 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 					"pref"));
 
 				//---- okButton ----
-				okButton.setText("OK");
+				okButton.setText("Save");
 				buttonBar.add(okButton, cc.xy(2, 1));
 
 				//---- cancelButton ----
@@ -82,32 +118,40 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 		contentPane.add(dialogPane, BorderLayout.CENTER);
 		pack();
 		setLocationRelativeTo(getOwner());
-		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+		// //GEN-END:initComponents
 	}
 
-	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	// JFormDesigner - Variables declaration - DO NOT MODIFY
+	// //GEN-BEGIN:variables
 	private JPanel dialogPane;
 	private JPanel contentPanel;
+	private JComponent separator1;
+	private JPanel panel1;
+	private JLabel label1;
+	private JTextField textField1;
 	private JPanel buttonBar;
 	private JButton okButton;
 	private JButton cancelButton;
-	// JFormDesigner - End of variables declaration  //GEN-END:variables
+	// JFormDesigner - End of variables declaration //GEN-END:variables
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-
+		countryController.removeView(this);
+		this.dispose();
 	}
-	
 
 	@Override
 	public void setModel(Country model) {
-		// TODO Auto-generated method stub
+		this.country=model;
+		loadValues();
+	}
 
+	private void loadValues() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(Observable source, Object model) {
 		// TODO Auto-generated method stub
-
 	}
 }

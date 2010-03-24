@@ -78,10 +78,6 @@ public abstract class AbstractController<T> extends Observable implements
 		refreshElementList();
 		setChanged();
 		notifyObservers(model);
-
-
-
-
 	}
 
 	private void refreshElementList() {
