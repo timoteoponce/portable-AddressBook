@@ -157,6 +157,16 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 		listAddresses.updateUI();
 	}
 
+	private void btnAddCountryActionPerformed(ActionEvent e) {
+		addCountry();
+	}
+
+	private void addCountry() {
+		CountryEditDialog dialog = new CountryEditDialog(this);
+		dialog.setModel(new Country());
+		dialog.setVisible(true);
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
@@ -236,6 +246,11 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 
 					//---- btnAddCountry ----
 					btnAddCountry.setText("+");
+					btnAddCountry.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							btnAddCountryActionPerformed(e);
+						}
+					});
 					panelPropertiesContentPane.add(btnAddCountry, cc.xy(5, 9));
 
 					//======== panelActions1 ========

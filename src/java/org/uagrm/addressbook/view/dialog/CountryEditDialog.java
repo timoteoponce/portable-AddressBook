@@ -8,14 +8,18 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
-import javax.swing.*;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import com.jgoodies.forms.factories.*;
+import javax.swing.JTextField;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.CountryController;
@@ -23,6 +27,7 @@ import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.view.View;
 
 import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -39,17 +44,25 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 	public CountryEditDialog(Frame owner) {
 		super(owner);
 		initComponents();
-		init();
 	}
 
 	public CountryEditDialog(Dialog owner) {
 		super(owner);
 		initComponents();
-		init();
 	}
 
-	private void init() {
-		countryController.addView(this);		
+	private void okButtonActionPerformed(ActionEvent e) {
+		okAction();
+	}
+
+	private void okAction() {
+		updateValues();
+		countryController.save(country);
+		this.close();
+	}
+
+	private void cancelButtonActionPerformed(ActionEvent e) {
+		this.close();
 	}
 
 	private void initComponents() {
@@ -59,9 +72,9 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
 		separator1 = compFactory.createSeparator("Country properties");
-		panel1 = new JPanel();
-		label1 = new JLabel();
-		textField1 = new JTextField();
+		panelProperties = new JPanel();
+		lblName = new JLabel();
+		txtName = new JTextField();
 		buttonBar = new JPanel();
 		okButton = new JButton();
 		cancelButton = new JButton();
@@ -83,18 +96,19 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 					"2*(default, $lgap), default"));
 				contentPanel.add(separator1, cc.xy(3, 1));
 
-				//======== panel1 ========
+				// ======== panelProperties ========
 				{
-					panel1.setLayout(new FormLayout(
+					panelProperties.setLayout(new FormLayout(
 						"25dlu, $lcgap, 18dlu, $lcgap, default:grow",
 						"default"));
 
-					//---- label1 ----
-					label1.setText("Name:");
-					panel1.add(label1, cc.xy(1, 1));
-					panel1.add(textField1, cc.xy(5, 1));
+					// ---- lblName ----
+					lblName.setText("Name:");
+					lblName.setLabelFor(txtName);
+					panelProperties.add(lblName, cc.xy(1, 1));
+					panelProperties.add(txtName, cc.xy(5, 1));
 				}
-				contentPanel.add(panel1, cc.xy(3, 5));
+				contentPanel.add(panelProperties, cc.xy(3, 5));
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -107,10 +121,20 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 
 				//---- okButton ----
 				okButton.setText("Save");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						okButtonActionPerformed(e);
+					}
+				});
 				buttonBar.add(okButton, cc.xy(2, 1));
 
 				//---- cancelButton ----
 				cancelButton.setText("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						cancelButtonActionPerformed(e);
+					}
+				});
 				buttonBar.add(cancelButton, cc.xy(4, 1));
 			}
 			dialogPane.add(buttonBar, BorderLayout.SOUTH);
@@ -126,16 +150,15 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 	private JPanel dialogPane;
 	private JPanel contentPanel;
 	private JComponent separator1;
-	private JPanel panel1;
-	private JLabel label1;
-	private JTextField textField1;
+	private JPanel panelProperties;
+	private JLabel lblName;
+	private JTextField txtName;
 	private JPanel buttonBar;
 	private JButton okButton;
 	private JButton cancelButton;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 	@Override
 	public void close() {
-		countryController.removeView(this);
 		this.dispose();
 	}
 
@@ -146,12 +169,16 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 	}
 
 	private void loadValues() {
-		// TODO Auto-generated method stub
-		
+		txtName.setText(country.getName());
+	}
+
+	private void updateValues() {
+		country.setName(txtName.getText());
 	}
 
 	@Override
 	public void update(Observable source, Object model) {
-		// TODO Auto-generated method stub
+		throw new NotImplementedException();
 	}
+
 }

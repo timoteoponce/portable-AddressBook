@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.rowset.CachedRowSet;
 
@@ -64,12 +65,14 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 	 */
 	@Override
 	public ResultSet executeQuery(String query) {
+		PreparedStatement pstat = null;
+		ResultSet rs = null;
 		try {
 			LOG.debug("Query : " + query);
 			validateQuery(query);
 			connection = getConnection();
-			final PreparedStatement pstat = connection.prepareStatement(query);
-			final ResultSet rs = pstat.executeQuery();
+			pstat = connection.prepareStatement(query);
+			rs = pstat.executeQuery();
 
 			final CachedRowSet rowSet = new CachedRowSetImpl();
 			rowSet.populate(rs);
@@ -79,6 +82,8 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 			LOG.error("Database error", e);
 		} finally {
 			closeQuietly(connection);
+			closeQuietly(rs);
+			closeQuietly(pstat);
 		}
 		throw new RuntimeException();
 	}
@@ -90,18 +95,6 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 						+ item + " ]");
 			}
 		}
-
-
-
-
-
-
-
-
-
-
-
-
 	}
 
 	/*
@@ -111,17 +104,19 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 	 */
 	@Override
 	public int executeUpdate(String query) {
+		PreparedStatement pstat = null;
 		try {
 			LOG.debug("Update : " + query);
 			validateQuery(query);
 			connection = getConnection();
-			final PreparedStatement pstat = connection.prepareStatement(query);
+			pstat = connection.prepareStatement(query);
 			final int result = pstat.executeUpdate();
 			return result;
 		} catch (SQLException e) {
 			LOG.error("Database error", e);
 		} finally {
 			closeQuietly(connection);
+			closeQuietly(pstat);
 		}
 		throw new RuntimeException();
 	}
@@ -144,17 +139,6 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 	 */
 	public void setConnection(Connection connection) {
 		this.connection = connection;
-
-
-
-
-
-
-
-
-
-
-
 	}
 
 	/*
@@ -165,10 +149,14 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
 	@Override
 	public void closeQuietly(Object obj) {
 		try {
-			if (obj instanceof ResultSet) {
-				((ResultSet) obj).close();
-			} else if (obj instanceof Connection) {
-				((Connection) obj).close();
+			if (obj != null) {
+				if (obj instanceof ResultSet) {
+					((ResultSet) obj).close();
+				} else if (obj instanceof Connection) {
+					((Connection) obj).close();
+				} else if (obj instanceof Statement) {
+					((Statement) obj).close();
+				}
 			}
 		} catch (SQLException e) {
 			LOG.error("Database error", e);

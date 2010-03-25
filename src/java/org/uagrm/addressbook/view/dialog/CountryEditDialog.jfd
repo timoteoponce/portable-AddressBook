@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_12" class="java.beans.XMLDecoder"> 
+<java version="1.6.0_16" class="java.beans.XMLDecoder"> 
  <object class="com.jformdesigner.model.FormModel"> 
   <void property="contentType"> 
    <string>form/swing</string> 
@@ -80,7 +80,7 @@
              </void> 
             </object> 
             <void property="name"> 
-             <string>panel1</string> 
+             <string>panelProperties</string> 
             </void> 
             <void method="add"> 
              <object class="com.jformdesigner.model.FormComponent"> 
@@ -89,8 +89,14 @@
                <string>text</string> 
                <string>Name:</string> 
               </void> 
+              <void method="setProperty"> 
+               <string>labelFor</string> 
+               <object class="com.jformdesigner.model.FormReference"> 
+                <string>txtName</string> 
+               </object> 
+              </void> 
               <void property="name"> 
-               <string>label1</string> 
+               <string>lblName</string> 
               </void> 
              </object> 
              <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -109,7 +115,7 @@
              <object class="com.jformdesigner.model.FormComponent"> 
               <string>javax.swing.JTextField</string> 
               <void property="name"> 
-               <string>textField1</string> 
+               <string>txtName</string> 
               </void> 
              </object> 
              <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -177,6 +183,14 @@
             <void property="name"> 
              <string>okButton</string> 
             </void> 
+            <void method="addEvent"> 
+             <object class="com.jformdesigner.model.FormEvent"> 
+              <string>java.awt.event.ActionListener</string> 
+              <string>actionPerformed</string> 
+              <string>okButtonActionPerformed</string> 
+              <boolean>true</boolean> 
+             </object> 
+            </void> 
            </object> 
            <object class="com.jformdesigner.model.FormLayoutConstraints"> 
             <class>com.jgoodies.forms.layout.CellConstraints</class> 
@@ -199,6 +213,14 @@
             </void> 
             <void property="name"> 
              <string>cancelButton</string> 
+            </void> 
+            <void method="addEvent"> 
+             <object class="com.jformdesigner.model.FormEvent"> 
+              <string>java.awt.event.ActionListener</string> 
+              <string>actionPerformed</string> 
+              <string>cancelButtonActionPerformed</string> 
+              <boolean>true</boolean> 
+             </object> 
             </void> 
            </object> 
            <object class="com.jformdesigner.model.FormLayoutConstraints"> 

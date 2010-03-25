@@ -18,7 +18,6 @@ import org.apache.commons.lang.StringUtils;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.view.dialog.ContactEditDialog;
 
-
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
@@ -51,7 +50,7 @@ public class MainView extends JFrame {
 			InstantiationException, IllegalAccessException,
 			UnsupportedLookAndFeelException {
 		if(StringUtils.isEmpty(System.getProperty("current.env"))){
-			System.setProperty("current.env","prod");//by default, prod is used
+			System.setProperty("current.env", "dev");// by default, dev is used
 		}
 		UIManager
 				.setLookAndFeel(com.jgoodies.looks.plastic.PlasticXPLookAndFeel.class

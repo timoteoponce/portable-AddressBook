@@ -34,6 +34,7 @@ public abstract class AbstractController<T> extends Observable implements
 			log.debug("Updating " + entity.getClass().getSimpleName());
 			getDao().update(element);
 		}
+		updateAllViews(element);
 	}
 
 	abstract protected void saveReferences(T element, Class<?> target);
@@ -42,10 +43,6 @@ public abstract class AbstractController<T> extends Observable implements
 	public void addView(Observer observer) {
 		log.debug("Adding view: " + observer.getClass().getName());
 		this.addObserver(observer);
-
-
-
-
 	}
 
 	@Override
