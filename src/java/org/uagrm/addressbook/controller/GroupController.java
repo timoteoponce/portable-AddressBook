@@ -31,7 +31,7 @@ public class GroupController extends AbstractController<Group> implements
 	}
 
 	@Override
-	public void save(Group group) {
+	public void save(Group group, boolean updateViews) {
 		LOG.debug("Saving group");
 		// save or update the group
 		if (group.getId() == null) {
@@ -42,7 +42,9 @@ public class GroupController extends AbstractController<Group> implements
 			dao.update(group);
 		}
 		saveReferences(group, Contact.class);
-		updateAllViews(group);
+		if (updateViews) {
+			updateAllViews(group);
+		}
 	}
 
 	@Override

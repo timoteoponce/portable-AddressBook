@@ -24,7 +24,7 @@ public abstract class AbstractController<T> extends Observable implements
 	}
 
 	@Override
-	public void save(T element) {
+	public void save(T element, boolean updateViews) {
 		Entity entity = (Entity) element;
 		// save or update the group
 		if (entity.getId() == null) {
@@ -34,7 +34,9 @@ public abstract class AbstractController<T> extends Observable implements
 			log.debug("Updating " + entity.getClass().getSimpleName());
 			getDao().update(element);
 		}
-		updateAllViews(element);
+		if (updateViews) {
+			updateAllViews(element);
+		}
 	}
 
 	abstract protected void saveReferences(T element, Class<?> target);
@@ -46,9 +48,11 @@ public abstract class AbstractController<T> extends Observable implements
 	}
 
 	@Override
-	public void delete(T element) {
+	public void delete(T element, boolean updateViews) {
 		getDao().delete(element);
-		updateAllViews(null);
+		if (updateViews) {
+			updateAllViews(null);
+		}
 	}
 
 	@Override

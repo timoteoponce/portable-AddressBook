@@ -1,19 +1,16 @@
 package org.uagrm.addressbook.controller;
 
-import java.util.Collection;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
-import org.uagrm.addressbook.model.Entity;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GenericDao;
-import org.uagrm.addressbook.model.dao.GroupDao;
 
 /**
  * @author Timoteo Ponce
@@ -44,7 +41,7 @@ public class ContactController extends AbstractController<Contact> implements
 	}
 
 	@Override
-	public void save(Contact contact) {
+	public void save(Contact contact, boolean updateViews) {
 		LOG.debug("Saving contact");
 		// save or update the group
 		if (contact.getId() == null) {
@@ -58,7 +55,9 @@ public class ContactController extends AbstractController<Contact> implements
 		saveReferences(contact, Phone.class);
 		saveReferences(contact, VirtualAddress.class);
 		saveReferences(contact, Group.class);
-		updateAllViews(contact);
+		if (updateViews) {
+			updateAllViews(contact);
+		}
 	}
 
 	@Override
@@ -83,7 +82,7 @@ public class ContactController extends AbstractController<Contact> implements
 		Controller<Address> controller = ControllerFactory
 				.getInstance(AddressController.class);
 		for (Address address : addresses) {
-			controller.save(address);
+			controller.save(address, false);
 		}
 	}
 
@@ -91,7 +90,7 @@ public class ContactController extends AbstractController<Contact> implements
 		Controller<Phone> controller = ControllerFactory
 				.getInstance(PhoneController.class);
 		for (Phone phone : phones) {
-			controller.save(phone);
+			controller.save(phone, false);
 		}
 	}
 
@@ -99,7 +98,7 @@ public class ContactController extends AbstractController<Contact> implements
 		Controller<VirtualAddress> controller = ControllerFactory
 				.getInstance(VirtualAddressController.class);
 		for (VirtualAddress vAddress : vAddresses) {
-			controller.save(vAddress);
+			controller.save(vAddress, false);
 		}
 	}
 

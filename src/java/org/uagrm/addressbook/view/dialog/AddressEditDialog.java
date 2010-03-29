@@ -94,7 +94,7 @@ public class AddressEditDialog extends JDialog implements View<Address>, Generic
 	private void saveAddress() {
 		updateValues();
 		if (canSave) {
-			addressController.save(address);
+			addressController.save(address, true);
 		}
 		close();
 		fireEvent(GenericEventType.DIALOG_SAVE);

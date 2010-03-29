@@ -125,7 +125,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 
 	private void okAction() {
 		updateValues();
-		contactController.save(contact);
+		contactController.save(contact, true);
 		close();
 	}
 

@@ -136,7 +136,7 @@ public class GroupListView extends JPanel implements View<Group> {
 	public void deleteGroup() {
 		final int index = groupList.getSelectedIndex();
 		if (index > 0) {
-			controller.delete((Group) groupList.getSelectedValue());
+			controller.delete((Group) groupList.getSelectedValue(), true);
 		}
 	}
 

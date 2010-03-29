@@ -19,9 +19,9 @@ public interface Controller<T> {
     
     Collection<T> getElements();
     
-	void save(T element);
+	void save(T element, boolean updateViews);
 
-    void delete(T element);
+    void delete(T element, boolean updateViews);
     
     /**
      * Returns the given entity with related references of the given target.

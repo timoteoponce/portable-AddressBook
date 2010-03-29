@@ -59,7 +59,7 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 
 	private void btnAcceptActionPerformed(ActionEvent e) {
 		updateValues();
-		controller.save(group);
+		controller.save(group, true);
 		close();
 	}
 

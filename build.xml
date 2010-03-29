@@ -7,8 +7,7 @@
 
 	<path id="compile.classpath">
 		<fileset dir="lib" includes="*.jar" />
-		<!--<path refid="log4j.classpath"/> -->
-		<!--<path refid="jdbc-sqlite.classpath"/>-->
+		<path refid="l2fprod.classpath"/>		
 	</path>
 
 	<path id="src.path">

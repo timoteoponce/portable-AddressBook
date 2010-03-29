@@ -54,7 +54,7 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 
 	private void okAction() {
 		updateValues();
-		countryController.save(country);
+		countryController.save(country, true);
 		this.close();
 	}
 
