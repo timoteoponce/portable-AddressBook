@@ -32,7 +32,7 @@
            <class>com.jgoodies.forms.layout.FormLayout</class> 
            <void method="setProperty"> 
             <string>$columnSpecs</string> 
-            <string>17dlu, labelcompgap, 160dlu:grow, labelcompgap, 17dlu</string> 
+            <string>17dlu, labelcompgap, 106dlu:grow, labelcompgap, 17dlu</string> 
            </void> 
            <void method="setProperty"> 
             <string>$rowSpecs</string> 
@@ -50,7 +50,7 @@
              <string>Country properties</string> 
             </void> 
             <void property="name"> 
-             <string>separator1</string> 
+             <string>sepProperties</string> 
             </void> 
            </object> 
            <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -72,7 +72,7 @@
              <class>com.jgoodies.forms.layout.FormLayout</class> 
              <void method="setProperty"> 
               <string>$columnSpecs</string> 
-              <string>25dlu, labelcompgap, 18dlu, labelcompgap, default:grow</string> 
+              <string>25dlu, labelcompgap, 8dlu, labelcompgap, default:grow</string> 
              </void> 
              <void method="setProperty"> 
               <string>$rowSpecs</string> 
@@ -183,14 +183,6 @@
             <void property="name"> 
              <string>okButton</string> 
             </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>okButtonActionPerformed</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
            </object> 
            <object class="com.jformdesigner.model.FormLayoutConstraints"> 
             <class>com.jgoodies.forms.layout.CellConstraints</class> 
@@ -213,14 +205,6 @@
             </void> 
             <void property="name"> 
              <string>cancelButton</string> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>cancelButtonActionPerformed</string> 
-              <boolean>true</boolean> 
-             </object> 
             </void> 
            </object> 
            <object class="com.jformdesigner.model.FormLayoutConstraints"> 

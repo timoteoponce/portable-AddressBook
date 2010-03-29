@@ -30,6 +30,7 @@ import org.uagrm.addressbook.controller.AddressController;
 import org.uagrm.addressbook.controller.ContactController;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.CountryController;
+import org.uagrm.addressbook.controller.listener.CountryEditListener;
 import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Country;
@@ -162,9 +163,9 @@ public class AddressEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void addCountry() {
-		CountryEditDialog dialog = new CountryEditDialog(this);
-		dialog.setModel(new Country());
-		dialog.setVisible(true);
+		CountryEditListener dialogListener = new CountryEditListener(null, this);
+		dialogListener.setModel(new Country());
+		dialogListener.show();
 	}
 
 	private void initComponents() {
