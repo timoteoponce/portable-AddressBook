@@ -1,6 +1,5 @@
 package org.uagrm.addressbook.controller;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.dao.CountryDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
@@ -12,7 +11,7 @@ import org.uagrm.addressbook.model.dao.GenericDao;
  * 
  */
 public class CountryController extends AbstractController<Country> implements
- Controller<Country> {
+		Controller<Country> {
 
 
 	private static Controller<Country> instance;
@@ -36,7 +35,7 @@ public class CountryController extends AbstractController<Country> implements
 
 	@Override
 	protected void saveReferences(Country element, Class<?> target) {
-		throw new NotImplementedException();
+		// not needed
 	}
 
 }
