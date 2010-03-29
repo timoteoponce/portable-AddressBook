@@ -29,8 +29,7 @@ public class ContactListView extends JPanel implements View<Contact> {
 
 	private static final Logger LOG = Logger.getLogger(ContactListView.class);
 
-	private final Controller<Contact> controller = ControllerFactory
-			.getInstance(ContactController.class);
+	private final Controller<Contact> controller = ControllerFactory.getInstance(ContactController.class);
 
 	private final ListModel<Contact> listModel = new ListModel<Contact>();
 
@@ -61,15 +60,13 @@ public class ContactListView extends JPanel implements View<Contact> {
 		CellConstraints cc = new CellConstraints();
 
 		// ======== this ========
-		setLayout(new FormLayout("16dlu, $lcgap, default:grow, $lcgap, 16dlu",
-				"15dlu, $lgap, default:grow, $lgap, 15dlu"));
+		setLayout(new FormLayout("16dlu, $lcgap, default:grow, $lcgap, 16dlu", "15dlu, $lgap, default:grow, $lgap, 15dlu"));
 
 		// ======== scrollContactList ========
 		{
 			scrollContactList.setViewportView(contactList);
 		}
-		add(scrollContactList, cc.xywh(3, 3, 1, 1, CellConstraints.FILL,
-				CellConstraints.FILL));
+		add(scrollContactList, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 		// //GEN-END:initComponents
 	}
 
@@ -100,5 +97,12 @@ public class ContactListView extends JPanel implements View<Contact> {
 	// //GEN-BEGIN:variables
 	private JScrollPane scrollContactList;
 	private JList contactList;
+
 	// JFormDesigner - End of variables declaration //GEN-END:variables
+
+	@Override
+	public Contact getModel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

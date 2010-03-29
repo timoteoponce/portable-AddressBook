@@ -20,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.CountryController;
 import org.uagrm.addressbook.model.Country;
@@ -35,10 +34,8 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author Timoteo Ponce
  */
 public class CountryEditDialog extends JDialog implements View<Country> {
-	private static final Logger LOG = Logger.getLogger(CountryEditDialog.class);
 
-	private final CountryController countryController = ControllerFactory
-			.getInstance(CountryController.class);
+	private final CountryController countryController = ControllerFactory.getInstance(CountryController.class);
 	private Country country;
 
 	public CountryEditDialog(Frame owner) {
@@ -80,27 +77,23 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 		cancelButton = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		//======== this ========
+		// ======== this ========
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
-		//======== dialogPane ========
+		// ======== dialogPane ========
 		{
 			dialogPane.setBorder(Borders.DIALOG_BORDER);
 			dialogPane.setLayout(new BorderLayout());
 
-			//======== contentPanel ========
+			// ======== contentPanel ========
 			{
-				contentPanel.setLayout(new FormLayout(
-					"17dlu, $lcgap, 160dlu:grow, $lcgap, 17dlu",
-					"2*(default, $lgap), default"));
+				contentPanel.setLayout(new FormLayout("17dlu, $lcgap, 160dlu:grow, $lcgap, 17dlu", "2*(default, $lgap), default"));
 				contentPanel.add(separator1, cc.xy(3, 1));
 
 				// ======== panelProperties ========
 				{
-					panelProperties.setLayout(new FormLayout(
-						"25dlu, $lcgap, 18dlu, $lcgap, default:grow",
-						"default"));
+					panelProperties.setLayout(new FormLayout("25dlu, $lcgap, 18dlu, $lcgap, default:grow", "default"));
 
 					// ---- lblName ----
 					lblName.setText("Name:");
@@ -112,14 +105,12 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-			//======== buttonBar ========
+			// ======== buttonBar ========
 			{
 				buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
-				buttonBar.setLayout(new FormLayout(
-					"$glue, $button, $rgap, $button",
-					"pref"));
+				buttonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "pref"));
 
-				//---- okButton ----
+				// ---- okButton ----
 				okButton.setText("Save");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -128,7 +119,7 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 				});
 				buttonBar.add(okButton, cc.xy(2, 1));
 
-				//---- cancelButton ----
+				// ---- cancelButton ----
 				cancelButton.setText("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -156,6 +147,7 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 	private JPanel buttonBar;
 	private JButton okButton;
 	private JButton cancelButton;
+
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 	@Override
 	public void close() {
@@ -164,7 +156,7 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 
 	@Override
 	public void setModel(Country model) {
-		this.country=model;
+		this.country = model;
 		loadValues();
 	}
 
@@ -179,6 +171,11 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 	@Override
 	public void update(Observable source, Object model) {
 		throw new NotImplementedException();
+	}
+
+	@Override
+	public Country getModel() {
+		return country;
 	}
 
 }

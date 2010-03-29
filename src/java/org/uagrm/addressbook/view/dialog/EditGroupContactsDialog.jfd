@@ -20,6 +20,14 @@
       <object class="com.jformdesigner.model.FormLayoutManager"> 
        <class>java.awt.BorderLayout</class> 
       </object> 
+      <void method="setProperty"> 
+       <string>$sizePolicy</string> 
+       <int>1</int> 
+      </void> 
+      <void method="setProperty"> 
+       <string>resizable</string> 
+       <boolean>false</boolean> 
+      </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormContainer"> 
         <string>javax.swing.JPanel</string> 
@@ -44,7 +52,7 @@
            </void> 
            <void method="setProperty"> 
             <string>$columnSpecs</string> 
-            <string>181dlu</string> 
+            <string>181dlu:grow</string> 
            </void> 
           </object> 
           <void property="name"> 
@@ -57,7 +65,7 @@
              <class>com.jgoodies.forms.layout.FormLayout</class> 
              <void method="setProperty"> 
               <string>$columnSpecs</string> 
-              <string>33dlu, labelcompgap, 99dlu, labelcompgap, 42dlu</string> 
+              <string>33dlu, labelcompgap, 113dlu, labelcompgap, 43dlu</string> 
              </void> 
              <void method="setProperty"> 
               <string>$rowSpecs</string> 
@@ -166,7 +174,7 @@
              <class>com.jgoodies.forms.layout.FormLayout</class> 
              <void method="setProperty"> 
               <string>$columnSpecs</string> 
-              <string>default:grow, labelcompgap, default</string> 
+              <string>default:grow, labelcompgap, 33dlu</string> 
              </void> 
              <void method="setProperty"> 
               <string>$rowSpecs</string> 
@@ -463,7 +471,7 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>410</int> 
+        <int>330</int> 
         <int>300</int> 
        </object> 
       </void> 

@@ -14,7 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.view.View;
 
@@ -108,5 +107,10 @@ public class PhoneEditDialog extends JDialog implements View<Phone> {
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Phone getModel() {
+		return null;
 	}
 }

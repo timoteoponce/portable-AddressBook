@@ -9,7 +9,9 @@ import java.util.Observer;
  */
 public interface View<T> extends Observer{
 
-    void setModel(T model);    
+	void setModel(T model);
+
+	T getModel();
     
     /**
      * This operation removes the current view from the  

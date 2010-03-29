@@ -4,12 +4,12 @@
 
 package org.uagrm.addressbook.view.dialog;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
@@ -29,16 +29,14 @@ import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
-import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.View;
-import org.uagrm.addressbook.view.event.SearchEvent;
-import org.uagrm.addressbook.view.event.SearchEventListener;
-import org.uagrm.addressbook.view.event.SearchEventType;
+import org.uagrm.addressbook.view.component.ActionPanel;
+import org.uagrm.addressbook.view.component.AddressActionPanelList;
+import org.uagrm.addressbook.view.component.GroupActionPanelList;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 
 /**
  * @author Timoteo Ponce
@@ -52,10 +50,12 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 
 	private final Controller<Group> groupController = ControllerFactory
 			.getInstance(GroupController.class);
+
+	private final GroupActionPanelList groupPanelList = new GroupActionPanelList(false);
+	private final AddressActionPanelList addressPanelList = new AddressActionPanelList(true);
 	private Contact contact;
 	private boolean isCreation;
 
-	private final ListModel<Group> groupListModel = new ListModel<Group>();
 
 	public ContactEditDialog(Frame owner) {
 		super(owner);
@@ -70,10 +70,12 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void init() {
-		this.listGroups.setModel(groupListModel);
+		panelGroups.add(groupPanelList, BorderLayout.CENTER);
+		panelAddress.add(addressPanelList, BorderLayout.CENTER);
 		ControllerFactory.getInstance(ContactController.class).addView(this);
 		ControllerFactory.getInstance(GroupController.class).addView(this);
 	}
+
 
 	public Contact getContact() {
 		return contact;
@@ -109,92 +111,29 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		close();
 	}
 
-	private void btnAddGroupActionPerformed(ActionEvent e) {
-		searchGroup();
-	}
-
-	private void searchGroup() {
-		SearchDialog dialog = new SearchDialog(this);
-		dialog
-				.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) groupController
-						.getElements()));
-		dialog
-				.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) groupListModel
-						.getElements()));
-		dialog.showDialog();
-		dialog.addSearchEventListener(getSearchGroupListener());
-	}
-
-	private SearchEventListener getSearchGroupListener() {
-		SearchEventListener listener = new SearchEventListener() {
-
-			@Override
-			public void eventFired(SearchEvent event) {
-				SearchDialog dialog = (SearchDialog) event.getSource();
-
-				if (event.getType() == SearchEventType.SELECTED) {
-					LOG.debug("Selected group: " + dialog.getSelected());
-					addGroup((Group) dialog.getSelected());
-				} else {
-					LOG.debug("Group search cancelled");
-				}
-			}
-		};
-		return listener;
-	}
-
-	private void addGroup(Group group) {
-		if (group != null) {
-			groupListModel.addElement(group);
-		}
-	}
-
-	private void btnRemoveGroupActionPerformed(ActionEvent e) {
-		removeGroup();
-	}
-
-	private void removeGroup() {
-		int index = listGroups.getSelectedIndex();
-
-		if (index >= 0) {
-			groupListModel.removeElement(index);
-			listGroups.updateUI();
-		}
-	}
-
-	private void btnMngAddressesActionPerformed(ActionEvent e) {
-		showAddressEditDialog();
-	}
-
-	private void showAddressEditDialog() {
-		AddressEditDialog dialog = new AddressEditDialog((Frame) this.getOwner());//careful
-		dialog.setModel(this.contact);
-		dialog.setVisible(true);
-	}
-
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("messages");
 		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
-		simpleInternalFrame1 = new SimpleInternalFrame();
+		separator1 = compFactory.createSeparator("Contact");
 		panelMain = new JPanel();
 		lblFirstName = new JLabel();
 		txtFirstName = new JTextField();
 		lblLastName = new JLabel();
 		txtLastName = new JTextField();
-		sepRef = compFactory.createSeparator("text");
-		btnMngPhones = new JButton();
-		btnMngAddresses = new JButton();
-		btnMngVAddresses = new JButton();
-		simpleInternalFrame2 = new SimpleInternalFrame();
+		sepRef = compFactory.createSeparator("Related elements");
+		panelRelated = new JPanel();
+		panelAddress = new JPanel();
+		panelPhones = new JPanel();
+		actionPhone = new ActionPanel();
+		scrollPanePhone = new JScrollPane();
+		list2 = new JList();
+		panelVAddresses = new JPanel();
+		actionVAddress = new ActionPanel();
+		scrollPaneVAddress = new JScrollPane();
+		listVAddresses = new JList();
 		panelGroups = new JPanel();
-		sepOperations = compFactory.createSeparator("Operations");
-		panelOpBtns = new JPanel();
-		btnAddGroup = new JButton();
-		btnRemoveGroup = new JButton();
-		scrollPaneGroups = new JScrollPane();
-		listGroups = new JList();
 		panelActions = new JPanel();
 		btnAccept = new JButton();
 		btnCancel = new JButton();
@@ -204,107 +143,80 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		setTitle("Dialog Contact");
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"27dlu, $lcgap, 329dlu:grow, $lcgap, 25dlu",
-			"16dlu, $lgap, 147dlu, $lgap, 35dlu:grow, 2*($lgap, default)"));
+"27dlu, $lcgap, 263dlu:grow, $lcgap, 25dlu",
+			"2*(default, $lgap), 82dlu, $lgap, default, $lgap, 35dlu:grow, 2*($lgap, default)"));
+		contentPane.add(separator1, cc.xy(3, 3));
 
-		//======== simpleInternalFrame1 ========
+		//======== panelMain ========
 		{
-			simpleInternalFrame1.setTitle("Contact");
-			Container simpleInternalFrame1ContentPane = simpleInternalFrame1.getContentPane();
-			simpleInternalFrame1ContentPane.setLayout(new FormLayout(
-				"default, $lcgap, default:grow, $lcgap, default",
-				"default, $lgap, 163dlu, $lgap, default"));
+			panelMain.setLayout(new FormLayout(
+"121dlu, $lcgap, 140dlu",
+				"3*(default, $lgap), 36dlu"));
 
-			//======== panelMain ========
+			//---- lblFirstName ----
+			lblFirstName.setText("First name:");
+			lblFirstName.setLabelFor(txtFirstName);
+			panelMain.add(lblFirstName, cc.xy(1, 1));
+			panelMain.add(txtFirstName, cc.xy(3, 1));
+
+			//---- lblLastName ----
+			lblLastName.setText("Last name:");
+			lblLastName.setLabelFor(txtLastName);
+			panelMain.add(lblLastName, cc.xy(1, 3));
+			panelMain.add(txtLastName, cc.xy(3, 3));
+			panelMain.add(sepRef, cc.xywh(1, 5, 3, 1));
+
+			//======== panelRelated ========
 			{
-				panelMain.setLayout(new FormLayout(
-					"78dlu, 241dlu",
-					"5*(default, $lgap), default"));
-
-				//---- lblFirstName ----
-				lblFirstName.setText("First name:");
-				lblFirstName.setLabelFor(txtFirstName);
-				panelMain.add(lblFirstName, cc.xy(1, 1));
-				panelMain.add(txtFirstName, cc.xy(2, 1));
-
-				//---- lblLastName ----
-				lblLastName.setText("Last name:");
-				lblLastName.setLabelFor(txtLastName);
-				panelMain.add(lblLastName, cc.xy(1, 3));
-				panelMain.add(txtLastName, cc.xy(2, 3));
-				panelMain.add(sepRef, cc.xywh(1, 5, 2, 1));
-
-				//---- btnMngPhones ----
-				btnMngPhones.setText("Manage phones");
-				panelMain.add(btnMngPhones, cc.xy(2, 7));
-
-				//---- btnMngAddresses ----
-				btnMngAddresses.setText("Manage Addresses");
-				btnMngAddresses.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						btnMngAddressesActionPerformed(e);
-					}
-				});
-				panelMain.add(btnMngAddresses, cc.xy(2, 9));
-
-				//---- btnMngVAddresses ----
-				btnMngVAddresses.setText("Manage virtual addresses");
-				panelMain.add(btnMngVAddresses, cc.xy(2, 11));
-			}
-			simpleInternalFrame1ContentPane.add(panelMain, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.TOP));
-		}
-		contentPane.add(simpleInternalFrame1, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.TOP));
-
-		//======== simpleInternalFrame2 ========
-		{
-			simpleInternalFrame2.setTitle("Groups");
-			Container simpleInternalFrame2ContentPane = simpleInternalFrame2.getContentPane();
-			simpleInternalFrame2ContentPane.setLayout(new FormLayout(
-				"21dlu, $lcgap, 262dlu:grow, $lcgap, 23dlu",
-				"2*(default, $lgap), default:grow, $lgap, default"));
-
-			//======== panelGroups ========
-			{
-				panelGroups.setLayout(new FormLayout(
-					"201dlu:grow, $lcgap, 45dlu:grow",
+				panelRelated.setLayout(new FormLayout(
+					"109dlu, $lcgap, 97dlu, $lcgap, default",
 					"default"));
-				panelGroups.add(sepOperations, cc.xy(1, 1));
 
-				//======== panelOpBtns ========
+				// ======== panelAddress ========
 				{
-					panelOpBtns.setLayout(new FormLayout(
-						"default, $lcgap, default",
-						"default"));
-
-					//---- btnAddGroup ----
-					btnAddGroup.setText("+");
-					btnAddGroup.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							btnAddGroupActionPerformed(e);
-						}
-					});
-					panelOpBtns.add(btnAddGroup, cc.xy(1, 1));
-
-					//---- btnRemoveGroup ----
-					btnRemoveGroup.setText("-");
-					btnRemoveGroup.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							btnRemoveGroupActionPerformed(e);
-						}
-					});
-					panelOpBtns.add(btnRemoveGroup, cc.xy(3, 1));
+					panelAddress.setLayout(new BorderLayout());
 				}
-				panelGroups.add(panelOpBtns, cc.xy(3, 1));
-			}
-			simpleInternalFrame2ContentPane.add(panelGroups, cc.xy(3, 3));
+				panelRelated.add(panelAddress, cc.xywh(1, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
-			//======== scrollPaneGroups ========
-			{
-				scrollPaneGroups.setViewportView(listGroups);
+				//======== panelPhones ========
+				{
+					panelPhones.setLayout(new FormLayout(
+"71dlu",
+						"default, $lgap, default"));
+					panelPhones.add(actionPhone, cc.xy(1, 1));
+
+					//======== scrollPanePhone ========
+					{
+						scrollPanePhone.setViewportView(list2);
+					}
+					panelPhones.add(scrollPanePhone, cc.xy(1, 3));
+				}
+				panelRelated.add(panelPhones, cc.xy(3, 1));
+
+				//======== panelVAddresses ========
+				{
+					panelVAddresses.setLayout(new FormLayout(
+"51dlu",
+						"default, $lgap, default"));
+					panelVAddresses.add(actionVAddress, cc.xy(1, 1));
+
+					//======== scrollPaneVAddress ========
+					{
+						scrollPaneVAddress.setViewportView(listVAddresses);
+					}
+					panelVAddresses.add(scrollPaneVAddress, cc.xy(1, 3));
+				}
+				panelRelated.add(panelVAddresses, cc.xy(5, 1));
 			}
-			simpleInternalFrame2ContentPane.add(scrollPaneGroups, cc.xy(3, 5));
+			panelMain.add(panelRelated, cc.xywh(1, 7, 3, 1));
 		}
-		contentPane.add(simpleInternalFrame2, cc.xywh(3, 5, 1, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
+		contentPane.add(panelMain, cc.xy(3, 5));
+
+		// ======== panelGroups ========
+		{
+			panelGroups.setLayout(new BorderLayout());
+		}
+		contentPane.add(panelGroups, cc.xywh(3, 9, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
 		//======== panelActions ========
 		{
@@ -330,32 +242,32 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 			});
 			panelActions.add(btnCancel, cc.xy(5, 1));
 		}
-		contentPane.add(panelActions, cc.xy(3, 7));
-		setSize(600, 570);
+		contentPane.add(panelActions, cc.xy(3, 11));
+		setSize(645, 455);
 		setLocationRelativeTo(getOwner());
 		// //GEN-END:initComponents
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY
 	// //GEN-BEGIN:variables
-	private SimpleInternalFrame simpleInternalFrame1;
+	private JComponent separator1;
 	private JPanel panelMain;
 	private JLabel lblFirstName;
 	private JTextField txtFirstName;
 	private JLabel lblLastName;
 	private JTextField txtLastName;
 	private JComponent sepRef;
-	private JButton btnMngPhones;
-	private JButton btnMngAddresses;
-	private JButton btnMngVAddresses;
-	private SimpleInternalFrame simpleInternalFrame2;
+	private JPanel panelRelated;
+	private JPanel panelAddress;
+	private JPanel panelPhones;
+	private ActionPanel actionPhone;
+	private JScrollPane scrollPanePhone;
+	private JList list2;
+	private JPanel panelVAddresses;
+	private ActionPanel actionVAddress;
+	private JScrollPane scrollPaneVAddress;
+	private JList listVAddresses;
 	private JPanel panelGroups;
-	private JComponent sepOperations;
-	private JPanel panelOpBtns;
-	private JButton btnAddGroup;
-	private JButton btnRemoveGroup;
-	private JScrollPane scrollPaneGroups;
-	private JList listGroups;
 	private JPanel panelActions;
 	private JButton btnAccept;
 	private JButton btnCancel;
@@ -389,14 +301,14 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		contact.setLastName(txtLastName.getText());
 		//
 		contact.getGroups().clear();
-		contact.getGroups().addAll(groupListModel.getElements());
+		contact.getGroups().addAll(groupPanelList.getListModel().getElements());
 		// TODO phones,virtual_addresses.
 	}
 
 	private void updateGroupList() {
-		groupListModel.clear();
-		groupListModel.addAllElements(contact.getGroups());
-		listGroups.updateUI();
+		groupPanelList.getListModel().clear();
+		groupPanelList.getListModel().addAllElements(contact.getGroups());
+		groupPanelList.updateUI();
 	}
 
 	@Override
@@ -414,5 +326,10 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		else if (source.getClass().equals(GroupController.class)) {
 			updateGroupList();
 		}
+	}
+
+	@Override
+	public Contact getModel() {
+		return contact;
 	}
 }

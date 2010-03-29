@@ -37,8 +37,7 @@ import com.jgoodies.forms.layout.FormLayout;
 public class GroupListView extends JPanel implements View<Group> {
 	private static final Logger LOG = Logger.getLogger(GroupListView.class);
 
-	private final Controller<Group> controller = ControllerFactory
-			.getInstance(GroupController.class);
+	private final Controller<Group> controller = ControllerFactory.getInstance(GroupController.class);
 	private final ListModel<Group> listModel = new ListModel<Group>();
 
 	private JFrame mainWindow;
@@ -149,16 +148,13 @@ public class GroupListView extends JPanel implements View<Group> {
 		CellConstraints cc = new CellConstraints();
 
 		// ======== this ========
-		setLayout(new FormLayout(
-"14dlu, $lcgap, 82dlu:grow, $lcgap, 15dlu",
-				"15dlu, $lgap, 190dlu:grow, $lgap, 15dlu"));
+		setLayout(new FormLayout("14dlu, $lcgap, 82dlu:grow, $lcgap, 15dlu", "15dlu, $lgap, 190dlu:grow, $lgap, 15dlu"));
 
 		// ======== groupsPanel ========
 		{
 
 			// ---- groupList ----
-			groupList
-					.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+			groupList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 			groupList.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -167,8 +163,7 @@ public class GroupListView extends JPanel implements View<Group> {
 			});
 			groupsPanel.setViewportView(groupList);
 		}
-		add(groupsPanel, cc.xywh(3, 3, 1, 1, CellConstraints.FILL,
-				CellConstraints.FILL));
+		add(groupsPanel, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 		// //GEN-END:initComponents
 	}
 
@@ -176,6 +171,7 @@ public class GroupListView extends JPanel implements View<Group> {
 	// //GEN-BEGIN:variables
 	private JScrollPane groupsPanel;
 	private JList groupList;
+
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 	@Override
 	public void setModel(Group model) {
@@ -197,6 +193,12 @@ public class GroupListView extends JPanel implements View<Group> {
 		if (source.equals(controller)) {
 			updateList();
 		}
+	}
+
+	@Override
+	public Group getModel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -29,7 +29,7 @@
        </void> 
        <void method="setProperty"> 
         <string>$rowSpecs</string> 
-        <string>default:grow, default, default, default, default, default:grow, default, fill:16dlu</string> 
+        <string>default, default:grow, default, default, default, default, default, default:grow, default, fill:16dlu</string> 
        </void> 
       </object> 
       <void method="setProperty"> 
@@ -71,6 +71,10 @@
          <string>gridWidth</string> 
          <int>2</int> 
         </void> 
+        <void method="setProperty"> 
+         <string>gridY</string> 
+         <int>2</int> 
+        </void> 
        </object> 
       </void> 
       <void method="add"> 
@@ -105,7 +109,7 @@
         </void> 
         <void method="setProperty"> 
          <string>gridY</string> 
-         <int>2</int> 
+         <int>3</int> 
         </void> 
        </object> 
       </void> 
@@ -124,7 +128,7 @@
         </void> 
         <void method="setProperty"> 
          <string>gridY</string> 
-         <int>2</int> 
+         <int>3</int> 
         </void> 
        </object> 
       </void> 
@@ -160,7 +164,7 @@
         </void> 
         <void method="setProperty"> 
          <string>gridY</string> 
-         <int>3</int> 
+         <int>4</int> 
         </void> 
        </object> 
       </void> 
@@ -179,7 +183,7 @@
         </void> 
         <void method="setProperty"> 
          <string>gridY</string> 
-         <int>3</int> 
+         <int>4</int> 
         </void> 
        </object> 
       </void> 
@@ -205,7 +209,7 @@
         </void> 
         <void method="setProperty"> 
          <string>gridY</string> 
-         <int>4</int> 
+         <int>6</int> 
         </void> 
         <void method="setProperty"> 
          <string>gridWidth</string> 
@@ -247,7 +251,7 @@
         </void> 
         <void method="setProperty"> 
          <string>gridY</string> 
-         <int>5</int> 
+         <int>7</int> 
         </void> 
        </object> 
       </void> 
@@ -345,7 +349,7 @@
         </void> 
         <void method="setProperty"> 
          <string>gridY</string> 
-         <int>7</int> 
+         <int>9</int> 
         </void> 
         <void method="setProperty"> 
          <string>gridWidth</string> 
@@ -369,8 +373,8 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>410</int> 
-        <int>195</int> 
+        <int>405</int> 
+        <int>235</int> 
        </object> 
       </void> 
      </object> 

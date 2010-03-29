@@ -6,12 +6,6 @@ package org.uagrm.addressbook.view;
 
 import java.util.Observable;
 
-
-
-
-
-
-
 import javax.swing.JPanel;
 
 import org.uagrm.addressbook.model.Group;
@@ -24,135 +18,19 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class GroupView extends JPanel implements View<Group> {
 
-
-
-
-
-
-
-
-
-
-
-
-
 	public GroupView() {
 		initComponents();
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	private void initComponents() {
-		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		// JFormDesigner - Component initialization - DO NOT MODIFY
+		// //GEN-BEGIN:initComponents
 		CellConstraints cc = new CellConstraints();
 
-		//======== this ========
-		setLayout(new FormLayout(
-			"default, $lcgap, default",
-			"2*(default, $lgap), default"));
-		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+		// ======== this ========
+		setLayout(new FormLayout("default, $lcgap, default", "2*(default, $lgap), default"));
+		// JFormDesigner - End of component initialization
+		// //GEN-END:initComponents
 	}
 
 	@Override
@@ -173,16 +51,14 @@ public class GroupView extends JPanel implements View<Group> {
 
 	}
 
-	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-	// JFormDesigner - End of variables declaration  //GEN-END:variables
+	@Override
+	public Group getModel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-
-
-
-
-
-
-
-
+	// JFormDesigner - Variables declaration - DO NOT MODIFY
+	// //GEN-BEGIN:variables
+	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 }

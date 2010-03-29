@@ -193,8 +193,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("messages");
-		DefaultComponentFactory compFactory = DefaultComponentFactory
-				.getInstance();
+		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
 		panel1 = new JPanel();
@@ -202,8 +201,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 		txtGroup = new JTextField();
 		btnSearchGroup = new JButton();
 		panel2 = new JPanel();
-		membersSep = compFactory.createSeparator(bundle
-				.getString("GroupEdit.members"));
+		membersSep = compFactory.createSeparator(bundle.getString("GroupEdit.members"));
 		panel3 = new JPanel();
 		btnAdd = new JButton();
 		btnRemove = new JButton();
@@ -214,37 +212,38 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 		cancelButton = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		// ======== this ========
+		//======== this ========
+		setResizable(false);
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
-		// ======== dialogPane ========
+		//======== dialogPane ========
 		{
 			dialogPane.setBorder(Borders.DIALOG_BORDER);
 			dialogPane.setLayout(new BorderLayout());
 
-			// ======== contentPanel ========
+			//======== contentPanel ========
 			{
-				contentPanel.setLayout(new FormLayout("181dlu",
-						"2*(default, $lgap), default:grow"));
+				contentPanel.setLayout(new FormLayout(
+					"181dlu:grow",
+					"2*(default, $lgap), default:grow"));
 
-				// ======== panel1 ========
+				//======== panel1 ========
 				{
 					panel1.setLayout(new FormLayout(
-							"33dlu, $lcgap, 99dlu, $lcgap, 42dlu", "default"));
+						"33dlu, $lcgap, 113dlu, $lcgap, 43dlu",
+						"default"));
 
-					// ---- lblGroup ----
-					lblGroup.setText(bundle
-							.getString("EditContactsDialog.group"));
+					//---- lblGroup ----
+					lblGroup.setText(bundle.getString("EditContactsDialog.group"));
 					panel1.add(lblGroup, cc.xy(1, 1));
 
-					// ---- txtGroup ----
+					//---- txtGroup ----
 					txtGroup.setEditable(false);
 					panel1.add(txtGroup, cc.xy(3, 1));
 
-					// ---- btnSearchGroup ----
-					btnSearchGroup.setText(bundle
-							.getString("SearchDialog.search"));
+					//---- btnSearchGroup ----
+					btnSearchGroup.setText(bundle.getString("SearchDialog.search"));
 					btnSearchGroup.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							btnSearchGroupActionPerformed(e);
@@ -254,18 +253,20 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 				}
 				contentPanel.add(panel1, cc.xy(1, 1));
 
-				// ======== panel2 ========
+				//======== panel2 ========
 				{
 					panel2.setLayout(new FormLayout(
-							"default:grow, $lcgap, default", "default"));
+						"default:grow, $lcgap, 33dlu",
+						"default"));
 					panel2.add(membersSep, cc.xy(1, 1));
 
-					// ======== panel3 ========
+					//======== panel3 ========
 					{
 						panel3.setLayout(new FormLayout(
-								"default, $lcgap, default", "default"));
+							"default, $lcgap, default",
+							"default"));
 
-						// ---- btnAdd ----
+						//---- btnAdd ----
 						btnAdd.setText("+");
 						btnAdd.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
@@ -274,7 +275,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 						});
 						panel3.add(btnAdd, cc.xy(1, 1));
 
-						// ---- btnRemove ----
+						//---- btnRemove ----
 						btnRemove.setText("-");
 						btnRemove.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
@@ -287,7 +288,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 				}
 				contentPanel.add(panel2, cc.xy(1, 3));
 
-				// ======== scrollPaneContacts ========
+				//======== scrollPaneContacts ========
 				{
 					scrollPaneContacts.setViewportView(listContacts);
 				}
@@ -295,13 +296,14 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-			// ======== buttonBar ========
+			//======== buttonBar ========
 			{
 				buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
 				buttonBar.setLayout(new FormLayout(
-						"$glue, $button, $rgap, $button", "pref"));
+					"$glue, $button, $rgap, $button",
+					"pref"));
 
-				// ---- okButton ----
+				//---- okButton ----
 				okButton.setText("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -310,7 +312,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 				});
 				buttonBar.add(okButton, cc.xy(2, 1));
 
-				// ---- cancelButton ----
+				//---- cancelButton ----
 				cancelButton.setText("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -322,7 +324,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 			dialogPane.add(buttonBar, BorderLayout.SOUTH);
 		}
 		contentPane.add(dialogPane, BorderLayout.CENTER);
-		pack();
+		setSize(330, 300);
 		setLocationRelativeTo(getOwner());
 		// //GEN-END:initComponents
 	}
@@ -345,7 +347,6 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 	private JPanel buttonBar;
 	private JButton okButton;
 	private JButton cancelButton;
-
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	@Override
@@ -384,5 +385,10 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 				setModel((Group) model);
 			}
 		}
+	}
+
+	@Override
+	public Group getModel() {
+		return group;
 	}
 }

@@ -14,7 +14,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.model.Protocol;
 import org.uagrm.addressbook.view.View;
 
@@ -108,5 +107,11 @@ public class ProtocolEditDialog extends JDialog implements View<Protocol> {
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Protocol getModel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
