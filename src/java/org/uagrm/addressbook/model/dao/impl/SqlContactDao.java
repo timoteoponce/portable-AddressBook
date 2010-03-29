@@ -61,9 +61,9 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	@Override
 	protected void fillValues(Contact contact, ResultSet rs)
 			throws SQLException {
-		contact.setId(rs.getInt(1));
-		contact.setFirstName(rs.getString(2));
-		contact.setLastName(rs.getString(3));
+		contact.setId(rs.getInt("ID"));
+		contact.setFirstName(rs.getString("FIRST_NAME"));
+		contact.setLastName(rs.getString("LAST_NAME"));
 	}
 
 	@Override

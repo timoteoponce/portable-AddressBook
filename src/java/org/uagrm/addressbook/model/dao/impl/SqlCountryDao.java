@@ -20,8 +20,8 @@ public class SqlCountryDao extends AbstractSqlDao<Country> implements
 	@Override
 	protected void fillValues(Country entity, ResultSet rs) throws SQLException {
 		final Country country = entity;
-		country.setId(rs.getInt(1)); 
-		country.setName(rs.getString(2));
+		country.setId(rs.getInt("ID"));
+		country.setName(rs.getString("NAME"));
 	}
 
 	@Override

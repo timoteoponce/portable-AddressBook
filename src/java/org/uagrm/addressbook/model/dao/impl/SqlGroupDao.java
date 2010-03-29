@@ -92,9 +92,9 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 
 	@Override
 	protected void fillValues(Group group, ResultSet rs) throws SQLException {		
-		group.setId(rs.getInt(1));
-		group.setName(rs.getString(2));
-		group.setDescription(rs.getString(3));
+		group.setId(rs.getInt("ID"));
+		group.setName(rs.getString("NAME"));
+		group.setDescription(rs.getString("DESCRIPTION"));
 	}
 
 	@Override

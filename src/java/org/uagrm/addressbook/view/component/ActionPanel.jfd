@@ -13,7 +13,7 @@
        <class>com.jgoodies.forms.layout.FormLayout</class> 
        <void method="setProperty"> 
         <string>$columnSpecs</string> 
-        <string>42dlu:grow, labelcompgap, default:grow, labelcompgap, default</string> 
+        <string>42dlu, labelcompgap, default:grow, labelcompgap, default</string> 
        </void> 
        <void method="setProperty"> 
         <string>$rowSpecs</string> 

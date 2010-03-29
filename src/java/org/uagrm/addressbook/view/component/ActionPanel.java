@@ -99,24 +99,28 @@ public class ActionPanel extends JPanel {
 		removeButton = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		// ======== this ========
-		setLayout(new FormLayout("42dlu:grow, $lcgap, default:grow, $lcgap, default", "default"));
+		//======== this ========
+		setLayout(new FormLayout(
+			"42dlu, $lcgap, default:grow, $lcgap, default",
+			"default"));
 		add(label, cc.xy(1, 1));
 		add(separator, cc.xy(3, 1));
 
-		// ======== actionPanel ========
+		//======== actionPanel ========
 		{
-			actionPanel.setLayout(new FormLayout("2*(default, $lcgap), default", "default"));
+			actionPanel.setLayout(new FormLayout(
+				"2*(default, $lcgap), default",
+				"default"));
 
-			// ---- addButton ----
+			//---- addButton ----
 			addButton.setText("+");
 			actionPanel.add(addButton, cc.xy(1, 1));
 
-			// ---- editButton ----
+			//---- editButton ----
 			editButton.setText("*");
 			actionPanel.add(editButton, cc.xy(3, 1));
 
-			// ---- removeButton ----
+			//---- removeButton ----
 			removeButton.setText("-");
 			actionPanel.add(removeButton, cc.xy(5, 1));
 		}

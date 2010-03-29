@@ -118,7 +118,7 @@ public class MainView extends JFrame {
 		//======== mainPanel ========
 		{
 			mainPanel.setLayout(new FormLayout(
-					"63dlu:grow, $lcgap, 75dlu:grow, $lcgap, default:grow",
+				"87dlu:grow, $lcgap, 86dlu:grow, $lcgap, default:grow",
 				"default:grow"));
 
 			//======== panelGroups ========
@@ -129,16 +129,13 @@ public class MainView extends JFrame {
 			}
 			mainPanel.add(panelGroups, cc.xywh(1, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
-			// ======== panelContacts ========
+			//======== panelContacts ========
 			{
-				panelContacts.setTitle(bundle
-						.getString("MainView.panelContacts.title"));
-				Container panelContactsContentPane = panelContacts
-						.getContentPane();
+				panelContacts.setTitle(bundle.getString("MainView.panelContacts.title"));
+				Container panelContactsContentPane = panelContacts.getContentPane();
 				panelContactsContentPane.setLayout(new BorderLayout());
 			}
-			mainPanel.add(panelContacts, cc.xywh(3, 1, 1, 1,
-					CellConstraints.FILL, CellConstraints.FILL));
+			mainPanel.add(panelContacts, cc.xywh(3, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 		}
 		contentPane.add(mainPanel, cc.xywh(3, 3, 1, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
 		setSize(485, 415);

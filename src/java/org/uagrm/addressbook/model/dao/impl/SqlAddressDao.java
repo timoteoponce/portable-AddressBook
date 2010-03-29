@@ -24,11 +24,11 @@ public class SqlAddressDao extends AbstractSqlDao<Address> implements
 	@Override
 	protected void fillValues(Address entity, ResultSet rs) throws SQLException {
 		final Address address = entity;
-		address.setId(rs.getInt(1));
-		address.setCity(rs.getString(2));
-		address.setCountry(getCountry(rs.getInt(3)));
-		address.setNumber(rs.getString(4));
-		address.setStreet(rs.getString(5));
+		address.setId(rs.getInt("ID"));
+		address.setCity(rs.getString("CITY"));
+		address.setCountry(getCountry(rs.getInt("ID_COUNTRY")));
+		address.setNumber(rs.getString("NUMBER"));
+		address.setStreet(rs.getString("STREET"));
 	}
 
 	private Country getCountry(int countryId) {

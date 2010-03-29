@@ -3,9 +3,9 @@ package org.uagrm.addressbook.view.component;
 import java.awt.Frame;
 import java.util.List;
 
+import org.uagrm.addressbook.controller.ContactController;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.controller.GroupController;
-import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.view.dialog.SearchDialog;
 import org.uagrm.addressbook.view.dialog.SelectableItem;
 import org.uagrm.addressbook.view.event.SearchEvent;
@@ -16,18 +16,18 @@ import org.uagrm.addressbook.view.event.SearchEventType;
  * @author Timoteo Ponce
  * 
  */
-public class GroupActionPanelList extends ActionPanelList<Group> {
+public class ContactActionPanelList extends ActionPanelList<Contact> {
 
-	private GroupController groupController = ControllerFactory.getInstance(GroupController.class);
+	private ContactController contactController = ControllerFactory.getInstance(ContactController.class);
 
-	public GroupActionPanelList(boolean editionEnabled) {
+	public ContactActionPanelList(boolean editionEnabled) {
 		super(editionEnabled);
 	}
 
 	@Override
 	public void addNewElement() {
 		SearchDialog dialog = new SearchDialog((Frame) null);
-		dialog.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) groupController.getElements()));
+		dialog.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) contactController.getElements()));
 		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) getListModel().getElements()));
 		dialog.showDialog();
 		dialog.addSearchEventListener(getSearchListener());
@@ -41,9 +41,9 @@ public class GroupActionPanelList extends ActionPanelList<Group> {
 				SearchDialog dialog = (SearchDialog) event.getSource();
 
 				if (event.getType() == SearchEventType.SELECTED) {
-					Group group = (Group) dialog.getSelected();
-					if (group != null) {
-						getListModel().addElement(group);
+					Contact contact = (Contact) dialog.getSelected();
+					if (contact != null) {
+						getListModel().addElement(contact);
 					}
 				}
 			}

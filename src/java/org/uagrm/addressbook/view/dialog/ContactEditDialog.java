@@ -17,9 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
@@ -27,16 +25,17 @@ import org.uagrm.addressbook.controller.ContactController;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.GroupController;
+import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.view.View;
-import org.uagrm.addressbook.view.component.ActionPanel;
 import org.uagrm.addressbook.view.component.AddressActionPanelList;
 import org.uagrm.addressbook.view.component.GroupActionPanelList;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.l2fprod.common.swing.JButtonBar;
 
 /**
  * @author Timoteo Ponce
@@ -45,7 +44,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 
 	private static final Logger LOG = Logger.getLogger(ContactEditDialog.class);
 
-	private final Controller<Contact> controller = ControllerFactory
+	private final Controller<Contact> contactController = ControllerFactory
 			.getInstance(ContactController.class);
 
 	private final Controller<Group> groupController = ControllerFactory
@@ -70,12 +69,39 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void init() {
-		panelGroups.add(groupPanelList, BorderLayout.CENTER);
-		panelAddress.add(addressPanelList, BorderLayout.CENTER);
-		ControllerFactory.getInstance(ContactController.class).addView(this);
-		ControllerFactory.getInstance(GroupController.class).addView(this);
+		initToolbar();
+		groupPanelList.getActionPanel().setTitle("Groups");
+		addressPanelList.getActionPanel().setTitle("Addresses");
+		contactController.addView(this);
+		groupController.addView(this);
 	}
 
+
+	private void initToolbar() {
+		buttonBar.setOrientation(JButtonBar.VERTICAL);
+		JButton btnGroup = new JButton("Groups");
+		btnGroup.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pluggablePanel.removeAll();
+				pluggablePanel.add(groupPanelList, BorderLayout.CENTER);
+				pluggablePanel.updateUI();
+			}
+		});
+
+		JButton btnAddress = new JButton("Addresses");
+		btnAddress.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pluggablePanel.removeAll();
+				pluggablePanel.add(addressPanelList, BorderLayout.CENTER);
+				pluggablePanel.updateUI();
+			}
+		});
+
+		buttonBar.add(btnGroup);
+		buttonBar.add(btnAddress);
+	}
 
 	public Contact getContact() {
 		return contact;
@@ -99,7 +125,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 
 	private void okAction() {
 		updateValues();
-		controller.save(contact);
+		contactController.save(contact);
 		close();
 	}
 
@@ -117,23 +143,13 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		ResourceBundle bundle = ResourceBundle.getBundle("messages");
 		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		separator1 = compFactory.createSeparator("Contact");
+		buttonBar = new JButtonBar();
 		panelMain = new JPanel();
 		lblFirstName = new JLabel();
 		txtFirstName = new JTextField();
 		lblLastName = new JLabel();
 		txtLastName = new JTextField();
-		sepRef = compFactory.createSeparator("Related elements");
-		panelRelated = new JPanel();
-		panelAddress = new JPanel();
-		panelPhones = new JPanel();
-		actionPhone = new ActionPanel();
-		scrollPanePhone = new JScrollPane();
-		list2 = new JList();
-		panelVAddresses = new JPanel();
-		actionVAddress = new ActionPanel();
-		scrollPaneVAddress = new JScrollPane();
-		listVAddresses = new JList();
-		panelGroups = new JPanel();
+		pluggablePanel = new JPanel();
 		panelActions = new JPanel();
 		btnAccept = new JButton();
 		btnCancel = new JButton();
@@ -143,15 +159,16 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		setTitle("Dialog Contact");
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-"27dlu, $lcgap, 263dlu:grow, $lcgap, 25dlu",
-			"2*(default, $lgap), 82dlu, $lgap, default, $lgap, 35dlu:grow, 2*($lgap, default)"));
-		contentPane.add(separator1, cc.xy(3, 3));
+"11dlu, $lcgap, 52dlu, $lcgap, 170dlu:grow, $lcgap, 25dlu",
+			"2*(default, $lgap), 47dlu, $lgap, default, $lgap, 79dlu:grow, 2*($lgap, default)"));
+		contentPane.add(separator1, cc.xy(5, 3));
+		contentPane.add(buttonBar, cc.xywh(3, 5, 1, 5));
 
 		//======== panelMain ========
 		{
 			panelMain.setLayout(new FormLayout(
-"121dlu, $lcgap, 140dlu",
-				"3*(default, $lgap), 36dlu"));
+"73dlu, $lcgap, 111dlu",
+				"2*(default, $lgap), default"));
 
 			//---- lblFirstName ----
 			lblFirstName.setText("First name:");
@@ -164,59 +181,14 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 			lblLastName.setLabelFor(txtLastName);
 			panelMain.add(lblLastName, cc.xy(1, 3));
 			panelMain.add(txtLastName, cc.xy(3, 3));
-			panelMain.add(sepRef, cc.xywh(1, 5, 3, 1));
-
-			//======== panelRelated ========
-			{
-				panelRelated.setLayout(new FormLayout(
-					"109dlu, $lcgap, 97dlu, $lcgap, default",
-					"default"));
-
-				// ======== panelAddress ========
-				{
-					panelAddress.setLayout(new BorderLayout());
-				}
-				panelRelated.add(panelAddress, cc.xywh(1, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
-
-				//======== panelPhones ========
-				{
-					panelPhones.setLayout(new FormLayout(
-"71dlu",
-						"default, $lgap, default"));
-					panelPhones.add(actionPhone, cc.xy(1, 1));
-
-					//======== scrollPanePhone ========
-					{
-						scrollPanePhone.setViewportView(list2);
-					}
-					panelPhones.add(scrollPanePhone, cc.xy(1, 3));
-				}
-				panelRelated.add(panelPhones, cc.xy(3, 1));
-
-				//======== panelVAddresses ========
-				{
-					panelVAddresses.setLayout(new FormLayout(
-"51dlu",
-						"default, $lgap, default"));
-					panelVAddresses.add(actionVAddress, cc.xy(1, 1));
-
-					//======== scrollPaneVAddress ========
-					{
-						scrollPaneVAddress.setViewportView(listVAddresses);
-					}
-					panelVAddresses.add(scrollPaneVAddress, cc.xy(1, 3));
-				}
-				panelRelated.add(panelVAddresses, cc.xy(5, 1));
-			}
-			panelMain.add(panelRelated, cc.xywh(1, 7, 3, 1));
 		}
-		contentPane.add(panelMain, cc.xy(3, 5));
+		contentPane.add(panelMain, cc.xy(5, 5));
 
-		// ======== panelGroups ========
+		// ======== pluggablePanel ========
 		{
-			panelGroups.setLayout(new BorderLayout());
+			pluggablePanel.setLayout(new BorderLayout());
 		}
-		contentPane.add(panelGroups, cc.xywh(3, 9, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+		contentPane.add(pluggablePanel, cc.xywh(5, 9, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
 		//======== panelActions ========
 		{
@@ -242,8 +214,8 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 			});
 			panelActions.add(btnCancel, cc.xy(5, 1));
 		}
-		contentPane.add(panelActions, cc.xy(3, 11));
-		setSize(645, 455);
+		contentPane.add(panelActions, cc.xy(5, 11));
+		setSize(600, 365);
 		setLocationRelativeTo(getOwner());
 		// //GEN-END:initComponents
 	}
@@ -251,23 +223,13 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY
 	// //GEN-BEGIN:variables
 	private JComponent separator1;
+	private JButtonBar buttonBar;
 	private JPanel panelMain;
 	private JLabel lblFirstName;
 	private JTextField txtFirstName;
 	private JLabel lblLastName;
 	private JTextField txtLastName;
-	private JComponent sepRef;
-	private JPanel panelRelated;
-	private JPanel panelAddress;
-	private JPanel panelPhones;
-	private ActionPanel actionPhone;
-	private JScrollPane scrollPanePhone;
-	private JList list2;
-	private JPanel panelVAddresses;
-	private ActionPanel actionVAddress;
-	private JScrollPane scrollPaneVAddress;
-	private JList listVAddresses;
-	private JPanel panelGroups;
+	private JPanel pluggablePanel;
 	private JPanel panelActions;
 	private JButton btnAccept;
 	private JButton btnCancel;
@@ -275,7 +237,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 
 	@Override
 	public void close() {
-		controller.removeView(this);
+		contactController.removeView(this);
 		ControllerFactory.getInstance(GroupController.class).removeView(this);
 		this.dispose();
 	}	
@@ -289,11 +251,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	private void loadValues() {
 		txtFirstName.setText(contact.getFirstName());
 		txtLastName.setText(contact.getLastName());
-		//
-		if (contact.getGroups().isEmpty()) {
-			controller.preloadEntity(contact, Group.class);
-		}
-		updateGroupList();
+		updateLists();
 	}
 
 	private void updateValues() {
@@ -302,19 +260,51 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		//
 		contact.getGroups().clear();
 		contact.getGroups().addAll(groupPanelList.getListModel().getElements());
+		//
+		contact.getAddresses().clear();
+		contact.getAddresses().addAll(addressPanelList.getListModel().getElements());
 		// TODO phones,virtual_addresses.
 	}
 
+	private void updateLists() {
+		updateGroupList();
+		updateAddressList();
+		updatePhoneList();
+		updateVAddressList();
+	}
+
 	private void updateGroupList() {
+		if (contact.getGroups().isEmpty()) {
+			contactController.preloadEntity(contact, Group.class);
+		}
 		groupPanelList.getListModel().clear();
 		groupPanelList.getListModel().addAllElements(contact.getGroups());
 		groupPanelList.updateUI();
 	}
 
+	private void updateAddressList() {
+		if (contact.getAddresses().isEmpty()) {
+			contactController.preloadEntity(contact, Address.class);
+		}
+		addressPanelList.getListModel().clear();
+		addressPanelList.getListModel().addAllElements(contact.getAddresses());
+		addressPanelList.updateUI();
+	}
+
+	private void updatePhoneList() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void updateVAddressList() {
+		// TODO Auto-generated method stub
+
+	}
+
 	@Override
 	public void update(Observable source, Object model) {
 		// from contacts
-		if (source.equals(controller)) {
+		if (source.equals(contactController)) {
 			if (model == null) {// was deleted
 				this.close();
 			} else if (this.contact.equals((Contact) model)) {
@@ -324,7 +314,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 			}
 		}// from groups
 		else if (source.getClass().equals(GroupController.class)) {
-			updateGroupList();
+			updateLists();
 		}
 	}
 

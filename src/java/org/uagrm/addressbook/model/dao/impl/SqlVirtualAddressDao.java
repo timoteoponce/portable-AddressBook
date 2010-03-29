@@ -26,7 +26,7 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
 	protected void fillValues(VirtualAddress entity, ResultSet rs)
 			throws SQLException {
 		final VirtualAddress vAddress = entity;
-		vAddress.setId(rs.getInt(1));
+		vAddress.setId(rs.getInt("ID"));
 		vAddress.setIdentifier(rs.getString("IDENTIFIER"));
 		vAddress.setProtocol(getProtocol(rs.getInt("ID_PROTOCOL")));
 		vAddress.setWebsite(rs.getString("WEBSITE")); 

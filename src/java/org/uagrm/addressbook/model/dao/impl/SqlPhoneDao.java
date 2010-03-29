@@ -20,10 +20,10 @@ public class SqlPhoneDao extends AbstractSqlDao<Phone> implements PhoneDao {
 	@Override
 	protected void fillValues(Phone entity, ResultSet rs) throws SQLException {
 		final Phone phone = entity;
-		phone.setId(rs.getInt(1));
-		phone.setHousePhone(rs.getString(2));
-		phone.setMobilePhone(rs.getString(3));
-		phone.setWorkPhone(rs.getString(4)); 
+		phone.setId(rs.getInt("ID"));
+		phone.setHousePhone(rs.getString("HOUSE_PHONE"));
+		phone.setMobilePhone(rs.getString("MOBILE_PHONE"));
+		phone.setWorkPhone(rs.getString("WORK_PHONE"));
 	}
 
 	@Override

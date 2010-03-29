@@ -22,9 +22,9 @@ public class SqlProtocolDao extends AbstractSqlDao<Protocol> implements
 	protected void fillValues(Protocol entity, ResultSet rs)
 			throws SQLException {
 		final Protocol protocol = entity;
-		protocol.setId(rs.getInt(1));
-		protocol.setName(rs.getString(2)); 
-		protocol.setPort(rs.getInt(3));
+		protocol.setId(rs.getInt("ID"));
+		protocol.setName(rs.getString("NAME"));
+		protocol.setPort(rs.getInt("PORT"));
 	}
 
 	@Override

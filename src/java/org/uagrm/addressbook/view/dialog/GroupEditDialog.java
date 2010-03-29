@@ -157,7 +157,7 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 			panelOperations.add(btnCancel, cc.xy(5, 1));
 		}
 		contentPane.add(panelOperations, cc.xywh(2, 9, 2, 1));
-		setSize(405, 235);
+		setSize(425, 235);
 		setLocationRelativeTo(getOwner());
 		// //GEN-END:initComponents
 	}
