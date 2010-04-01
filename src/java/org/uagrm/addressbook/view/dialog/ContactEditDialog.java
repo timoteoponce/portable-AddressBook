@@ -5,6 +5,7 @@
 package org.uagrm.addressbook.view.dialog;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -28,9 +29,12 @@ import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.view.View;
+import org.uagrm.addressbook.view.component.ActionPanelList;
 import org.uagrm.addressbook.view.component.AddressActionPanelList;
 import org.uagrm.addressbook.view.component.GroupActionPanelList;
+import org.uagrm.addressbook.view.component.PhoneActionPanelList;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -50,11 +54,14 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	private final Controller<Group> groupController = ControllerFactory
 			.getInstance(GroupController.class);
 
-	private final GroupActionPanelList groupPanelList = new GroupActionPanelList(false);
-	private final AddressActionPanelList addressPanelList = new AddressActionPanelList(true);
+	private final ActionPanelList<Group> groupPanelList = new GroupActionPanelList(
+			false);
+	private final ActionPanelList<Address> addressPanelList = new AddressActionPanelList(
+			true);
+	private final ActionPanelList<Phone> phonePanelList = new PhoneActionPanelList(
+			true);
 	private Contact contact;
 	private boolean isCreation;
-
 
 	public ContactEditDialog(Frame owner) {
 		super(owner);
@@ -72,10 +79,11 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		initToolbar();
 		groupPanelList.getActionPanel().setTitle("Groups");
 		addressPanelList.getActionPanel().setTitle("Addresses");
+		phonePanelList.getActionPanel().setTitle("Phones");
 		contactController.addView(this);
 		groupController.addView(this);
+		setPluggablePanel(groupPanelList);
 	}
-
 
 	private void initToolbar() {
 		buttonBar.setOrientation(JButtonBar.VERTICAL);
@@ -83,9 +91,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		btnGroup.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				pluggablePanel.removeAll();
-				pluggablePanel.add(groupPanelList, BorderLayout.CENTER);
-				pluggablePanel.updateUI();
+				setPluggablePanel(groupPanelList);
 			}
 		});
 
@@ -93,14 +99,29 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		btnAddress.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				pluggablePanel.removeAll();
-				pluggablePanel.add(addressPanelList, BorderLayout.CENTER);
-				pluggablePanel.updateUI();
+				setPluggablePanel(addressPanelList);
+			}
+		});
+		
+		JButton btnPhone = new JButton("Phone");
+		btnPhone .addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setPluggablePanel(phonePanelList);
 			}
 		});
 
 		buttonBar.add(btnGroup);
 		buttonBar.add(btnAddress);
+		buttonBar.add(btnPhone);
+	}
+
+	private void setPluggablePanel(Component component) {
+		if (pluggablePanel.getComponentCount() == 0 || !pluggablePanel.getComponent(0).equals(component)) {
+			pluggablePanel.removeAll();
+			pluggablePanel.add(component, BorderLayout.CENTER);
+			pluggablePanel.updateUI();
+		}
 	}
 
 	public Contact getContact() {
@@ -141,7 +162,8 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("messages");
-		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
+		DefaultComponentFactory compFactory = DefaultComponentFactory
+				.getInstance();
 		separator1 = compFactory.createSeparator("Contact");
 		buttonBar = new JButtonBar();
 		panelMain = new JPanel();
@@ -155,28 +177,28 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		btnCancel = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		//======== this ========
+		// ======== this ========
 		setTitle("Dialog Contact");
 		Container contentPane = getContentPane();
-		contentPane.setLayout(new FormLayout(
-"11dlu, $lcgap, 52dlu, $lcgap, 170dlu:grow, $lcgap, 25dlu",
-			"2*(default, $lgap), 47dlu, $lgap, default, $lgap, 79dlu:grow, 2*($lgap, default)"));
+		contentPane
+				.setLayout(new FormLayout(
+						"11dlu, $lcgap, 52dlu, $lcgap, 170dlu:grow, $lcgap, 25dlu",
+						"2*(default, $lgap), 47dlu, $lgap, default, $lgap, 79dlu:grow, 2*($lgap, default)"));
 		contentPane.add(separator1, cc.xy(5, 3));
 		contentPane.add(buttonBar, cc.xywh(3, 5, 1, 5));
 
-		//======== panelMain ========
+		// ======== panelMain ========
 		{
-			panelMain.setLayout(new FormLayout(
-"73dlu, $lcgap, 111dlu",
-				"2*(default, $lgap), default"));
+			panelMain.setLayout(new FormLayout("73dlu, $lcgap, 111dlu",
+					"2*(default, $lgap), default"));
 
-			//---- lblFirstName ----
+			// ---- lblFirstName ----
 			lblFirstName.setText("First name:");
 			lblFirstName.setLabelFor(txtFirstName);
 			panelMain.add(lblFirstName, cc.xy(1, 1));
 			panelMain.add(txtFirstName, cc.xy(3, 1));
 
-			//---- lblLastName ----
+			// ---- lblLastName ----
 			lblLastName.setText("Last name:");
 			lblLastName.setLabelFor(txtLastName);
 			panelMain.add(lblLastName, cc.xy(1, 3));
@@ -188,15 +210,15 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		{
 			pluggablePanel.setLayout(new BorderLayout());
 		}
-		contentPane.add(pluggablePanel, cc.xywh(5, 9, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+		contentPane.add(pluggablePanel, cc.xywh(5, 9, 1, 1,
+				CellConstraints.FILL, CellConstraints.FILL));
 
-		//======== panelActions ========
+		// ======== panelActions ========
 		{
 			panelActions.setLayout(new FormLayout(
-				"default:grow, 2*($lcgap, default)",
-				"default"));
+					"default:grow, 2*($lcgap, default)", "default"));
 
-			//---- btnAccept ----
+			// ---- btnAccept ----
 			btnAccept.setText(bundle.getString("common.accept"));
 			btnAccept.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -205,7 +227,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 			});
 			panelActions.add(btnAccept, cc.xy(3, 1));
 
-			//---- btnCancel ----
+			// ---- btnCancel ----
 			btnCancel.setText(bundle.getString("common.cancel"));
 			btnCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -233,6 +255,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	private JPanel panelActions;
 	private JButton btnAccept;
 	private JButton btnCancel;
+
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	@Override
@@ -240,7 +263,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		contactController.removeView(this);
 		ControllerFactory.getInstance(GroupController.class).removeView(this);
 		this.dispose();
-	}	
+	}
 
 	@Override
 	public void setModel(Contact model) {
@@ -262,8 +285,13 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		contact.getGroups().addAll(groupPanelList.getListModel().getElements());
 		//
 		contact.getAddresses().clear();
-		contact.getAddresses().addAll(addressPanelList.getListModel().getElements());
-		// TODO phones,virtual_addresses.
+		contact.getAddresses().addAll(
+				addressPanelList.getListModel().getElements());
+		//
+		contact.getPhones().clear();
+		contact.getPhones().addAll(
+				phonePanelList.getListModel().getElements());
+		// TODO virtual_addresses.
 	}
 
 	private void updateLists() {
@@ -283,7 +311,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void updateAddressList() {
-		if (contact.getAddresses().isEmpty()) {
+		if (!contact.hasAddresses()) {
 			contactController.preloadEntity(contact, Address.class);
 		}
 		addressPanelList.getListModel().clear();
@@ -292,8 +320,12 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void updatePhoneList() {
-		// TODO Auto-generated method stub
-
+		if (contact.getPhones().isEmpty()) {
+			contactController.preloadEntity(contact, Phone.class);
+		}
+		phonePanelList.getListModel().clear();
+		phonePanelList.getListModel().addAllElements(contact.getPhones());
+		phonePanelList.updateUI();
 	}
 
 	private void updateVAddressList() {

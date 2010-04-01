@@ -25,6 +25,7 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.AddressController;
+import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.CountryController;
 import org.uagrm.addressbook.model.Address;
@@ -44,19 +45,12 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 /**
  * @author Timoteo Ponce
  */
-public class AddressEditDialog extends JDialog implements View<Address>, GenericEventTrigger {
+public class AddressEditDialog extends AbstractDialogView<Address>{
 
 	private static final Logger LOG = Logger.getLogger(AddressEditDialog.class);
 
 	private final AddressController addressController = ControllerFactory.getInstance(AddressController.class);
-	private final EventListenerList listenerList = new EventListenerList();
-
-	private Address address;
-
-	private boolean isEditing;
-
-	private boolean canSave;
-
+	
 	public AddressEditDialog(Frame owner) {
 		super(owner);
 		initComponents();
@@ -73,11 +67,27 @@ public class AddressEditDialog extends JDialog implements View<Address>, Generic
 		addressController.addView(this);
 		ControllerFactory.getInstance(CountryController.class).addView(this);
 		//
-		address = new Address();
-		isEditing = false;
+		setModel(new Address());
+		setEditable( false );
 		//		
 		comboCountry.setRenderer(new CustomListCellRenderer());
 		updateCountryCombo();
+		//listeners
+		btnAddCountry.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addCountry();				
+			}});
+		okButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveModel();		
+			}});
+		cancelButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				close();				
+			}});
 	}
 
 	private void updateCountryCombo() {
@@ -90,57 +100,12 @@ public class AddressEditDialog extends JDialog implements View<Address>, Generic
 		}
 		comboCountry.updateUI();
 	}
-
-	private void saveAddress() {
-		updateValues();
-		if (canSave) {
-			addressController.save(address, true);
-		}
-		close();
-		fireEvent(GenericEventType.DIALOG_SAVE);
-	}
-
-	public boolean isEditing() {
-		return isEditing;
-	}
-
-	public void setEditing(boolean isEditing) {
-		this.isEditing = isEditing;
-	}
-
-	public boolean isCanSave() {
-		return canSave;
-	}
-
-	public void setCanSave(boolean canSave) {
-		this.canSave = canSave;
-	}
-
-	private void okButtonActionPerformed(ActionEvent e) {
-		okAction();
-	}
-
-	private void okAction() {
-		saveAddress();
-	}
-
-	private void cancelButtonActionPerformed(ActionEvent e) {
-		this.close();
-		fireEvent(GenericEventType.DIALOG_CANCEL);
-	}
-
-	private void btnAddCountryActionPerformed(ActionEvent e) {
-		addCountry();
-	}
-
+	
+	
 	private void addCountry() {
 		CountryEditDialog dialog = new CountryEditDialog(this);
 		dialog.setModel(new Country());
 		dialog.setVisible(true);
-	}
-
-	private void thisWindowClosed(WindowEvent e) {
-		fireEvent(GenericEventType.DIALOG_CANCEL);
 	}
 
 	private void initComponents() {
@@ -163,87 +128,72 @@ public class AddressEditDialog extends JDialog implements View<Address>, Generic
 		cancelButton = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		// ======== this ========
+		//======== this ========
 		setTitle("Address Edit");
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent e) {
-				thisWindowClosed(e);
-			}
-		});
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
-		// ======== dialogPane ========
+		//======== dialogPane ========
 		{
 			dialogPane.setBorder(Borders.DIALOG_BORDER);
 			dialogPane.setLayout(new BorderLayout());
 
-			// ======== contentPanel ========
+			//======== contentPanel ========
 			{
-				contentPanel.setLayout(new FormLayout("default, $lcgap, default:grow, $lcgap, default", "default, $lgap, 119dlu, $lgap, default"));
+				contentPanel.setLayout(new FormLayout(
+					"default, $lcgap, default:grow, $lcgap, default",
+					"default, $lgap, 119dlu, $lgap, default"));
 
-				// ======== panelProperties ========
+				//======== panelProperties ========
 				{
 					panelProperties.setContentPaneBorder(null);
 					panelProperties.setTitle("Properties");
 					Container panelPropertiesContentPane = panelProperties.getContentPane();
-					panelPropertiesContentPane.setLayout(new FormLayout("39dlu, $lcgap, 126dlu, $lcgap, 27dlu", "5*(default, $lgap), default"));
+					panelPropertiesContentPane.setLayout(new FormLayout(
+						"39dlu, $lcgap, 126dlu, $lcgap, 27dlu",
+						"5*(default, $lgap), default"));
 
-					// ---- lblStreet ----
+					//---- lblStreet ----
 					lblStreet.setText("Street:");
 					panelPropertiesContentPane.add(lblStreet, cc.xywh(1, 3, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
 					panelPropertiesContentPane.add(txtStreet, cc.xy(3, 3));
 
-					// ---- lblNumber ----
+					//---- lblNumber ----
 					lblNumber.setText("Number:");
 					panelPropertiesContentPane.add(lblNumber, cc.xywh(1, 5, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
 					panelPropertiesContentPane.add(txtNumber, cc.xy(3, 5));
 
-					// ---- lblCity ----
+					//---- lblCity ----
 					lblCity.setText("City:");
 					panelPropertiesContentPane.add(lblCity, cc.xywh(1, 7, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
 					panelPropertiesContentPane.add(txtCity, cc.xy(3, 7));
 
-					// ---- lblCountry ----
+					//---- lblCountry ----
 					lblCountry.setText("Country:");
 					panelPropertiesContentPane.add(lblCountry, cc.xywh(1, 9, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
 					panelPropertiesContentPane.add(comboCountry, cc.xy(3, 9));
 
-					// ---- btnAddCountry ----
+					//---- btnAddCountry ----
 					btnAddCountry.setText("+");
-					btnAddCountry.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							btnAddCountryActionPerformed(e);
-						}
-					});
 					panelPropertiesContentPane.add(btnAddCountry, cc.xy(5, 9));
 				}
 				contentPanel.add(panelProperties, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-			// ======== panelMainActions ========
+			//======== panelMainActions ========
 			{
 				panelMainActions.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
-				panelMainActions.setLayout(new FormLayout("$glue, $button, $rgap, $button", "pref"));
+				panelMainActions.setLayout(new FormLayout(
+					"$glue, $button, $rgap, $button",
+					"pref"));
 
-				// ---- okButton ----
+				//---- okButton ----
 				okButton.setText("OK");
-				okButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						okButtonActionPerformed(e);
-					}
-				});
 				panelMainActions.add(okButton, cc.xy(2, 1));
 
-				// ---- cancelButton ----
+				//---- cancelButton ----
 				cancelButton.setText("Cancel");
-				cancelButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						cancelButtonActionPerformed(e);
-					}
-				});
 				panelMainActions.add(cancelButton, cc.xy(4, 1));
 			}
 			dialogPane.add(panelMainActions, BorderLayout.SOUTH);
@@ -271,7 +221,6 @@ public class AddressEditDialog extends JDialog implements View<Address>, Generic
 	private JPanel panelMainActions;
 	private JButton okButton;
 	private JButton cancelButton;
-
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 	@Override
 	public void close() {
@@ -283,33 +232,33 @@ public class AddressEditDialog extends JDialog implements View<Address>, Generic
 
 	@Override
 	public void setModel(Address model) {
-		this.address = model;
+		super.setModel( model );
 		loadValues();
 	}
 
-	private void loadValues() {
-		txtCity.setText(address.getCity());
-		txtNumber.setText(address.getNumber());
-		txtStreet.setText(address.getStreet());
+	@Override
+	public void loadValues() {
+		txtCity.setText(getModel().getCity());
+		txtNumber.setText(getModel().getNumber());
+		txtStreet.setText(getModel().getStreet());
 
-		if (address.getCountry() != null) {
-			comboCountry.setSelectedItem(address.getCountry());
+		if (getModel().getCountry() != null) {
+			comboCountry.setSelectedItem(getModel().getCountry());
 		}
 	}
 
-	private void updateValues() {
-		address.setCity(txtCity.getText());
-		address.setNumber(txtCity.getText());
-		address.setStreet(txtStreet.getText());
-		address.setCountry((Country) comboCountry.getSelectedItem());
+	@Override
+	public void updateValues() {
+		getModel().setCity(txtCity.getText());
+		getModel().setNumber(txtCity.getText());
+		getModel().setStreet(txtStreet.getText());
+		getModel().setCountry((Country) comboCountry.getSelectedItem());
 	}
 
 	@Override
 	public void update(Observable source, Object model) {
 		if (source.equals(addressController)) {
-			if (model == null) {// was deleted
-				this.close();
-			} else if (this.address.equals((Address) model)) {
+			if (model != null && this.getModel().equals((Address) model)) {
 				LOG.info("Updating model : " + this.getClass().getName() + ", values: " + model.toString());
 				setModel((Address) model);
 			}
@@ -319,23 +268,8 @@ public class AddressEditDialog extends JDialog implements View<Address>, Generic
 	}
 
 	@Override
-	public Address getModel() {
-		return address;
-	}
-
-	@Override
-	public void addEventListener(GenericEventListener listener) {
-		listenerList.add(GenericEventListener.class, listener);
-	}
-
-	@Override
-	public void fireEvent(GenericEventType type) {
-		GenericEvent event = new GenericEvent(this, type);
-		GenericEventListener[] listeners = listenerList.getListeners(GenericEventListener.class);
-
-		for (GenericEventListener item : listeners) {
-			item.eventFired(event);
-		}
+	Controller<Address> getController() {
+		return addressController;
 	}
 
 }

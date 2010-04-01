@@ -17,6 +17,6 @@ public interface View<T> extends Observer{
      * This operation removes the current view from the  
      * controller view list and close/hide the view.
      */
-    void close();    
+    void close();
 
 }

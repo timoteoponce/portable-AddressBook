@@ -62,13 +62,25 @@ public class Contact implements SelectableItem {
 	public Set<Address> getAddresses() {
 		return addresses;
 	}
+	
+	public boolean hasAddresses(){
+		return !addresses.isEmpty();
+	}
 
 	public Set<VirtualAddress> getVirtualAddresses() {
 		return virtualAddresses;
 	}
+	
+	public boolean hasVirtualAddresses(){
+		return !virtualAddresses.isEmpty();
+	}
 
 	public Set<Phone> getPhones() {
 		return phones;
+	}
+	
+	public boolean hasPhones(){
+		return !phones.isEmpty();
 	}
 
 	public void setFirstName(String firstName) {

@@ -18,6 +18,7 @@ import org.uagrm.addressbook.model.Group;
 public class CustomListCellRenderer extends JLabel implements ListCellRenderer {
 
 	public CustomListCellRenderer() {
+		super();
 		setOpaque(true);
 		setHorizontalAlignment(CENTER);
 		setVerticalAlignment(CENTER);
@@ -36,18 +37,18 @@ public class CustomListCellRenderer extends JLabel implements ListCellRenderer {
 		}
 
 		if (value instanceof Group) {
-			Group group = (Group) value;
+			final Group group = (Group) value;
 			setText(group.getName());
 			setToolTipText(group.getDescription());
 		} else if (value instanceof Contact) {
-			Contact contact = (Contact) value;
+			final Contact contact = (Contact) value;
 			setText(contact.getFirstName() + " " + contact.getLastName());
 			setToolTipText(contact.getFirstName() + " " + contact.getLastName());
 		} else if (value instanceof Address) {
-			Address address = (Address) value;
+			final Address address = (Address) value;
 			setText(address.toString());
 		} else if (value instanceof Country) {
-			Country country = (Country) value;
+			final Country country = (Country) value;
 			setText(country.getName());
 		}
 		return this;

@@ -41,24 +41,31 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 	public CountryEditDialog(Frame owner) {
 		super(owner);
 		initComponents();
+		init();
 	}
 
 	public CountryEditDialog(Dialog owner) {
 		super(owner);
 		initComponents();
+		init();
 	}
 
-	private void okButtonActionPerformed(ActionEvent e) {
-		okAction();
+	private void init() {
+		okButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				okAction();
+			}});
+		cancelButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				close();
+			}});
 	}
 
 	private void okAction() {
 		updateValues();
 		countryController.save(country, true);
-		this.close();
-	}
-
-	private void cancelButtonActionPerformed(ActionEvent e) {
 		this.close();
 	}
 
@@ -77,25 +84,29 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 		cancelButton = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		// ======== this ========
+		//======== this ========
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
-		// ======== dialogPane ========
+		//======== dialogPane ========
 		{
 			dialogPane.setBorder(Borders.DIALOG_BORDER);
 			dialogPane.setLayout(new BorderLayout());
 
-			// ======== contentPanel ========
+			//======== contentPanel ========
 			{
-				contentPanel.setLayout(new FormLayout("17dlu, $lcgap, 160dlu:grow, $lcgap, 17dlu", "2*(default, $lgap), default"));
+				contentPanel.setLayout(new FormLayout(
+					"17dlu, $lcgap, 160dlu:grow, $lcgap, 17dlu",
+					"2*(default, $lgap), default"));
 				contentPanel.add(separator1, cc.xy(3, 1));
 
-				// ======== panelProperties ========
+				//======== panelProperties ========
 				{
-					panelProperties.setLayout(new FormLayout("25dlu, $lcgap, 18dlu, $lcgap, default:grow", "default"));
+					panelProperties.setLayout(new FormLayout(
+						"25dlu, $lcgap, 18dlu, $lcgap, default:grow",
+						"default"));
 
-					// ---- lblName ----
+					//---- lblName ----
 					lblName.setText("Name:");
 					lblName.setLabelFor(txtName);
 					panelProperties.add(lblName, cc.xy(1, 1));
@@ -105,27 +116,19 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-			// ======== buttonBar ========
+			//======== buttonBar ========
 			{
 				buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
-				buttonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "pref"));
+				buttonBar.setLayout(new FormLayout(
+					"$glue, $button, $rgap, $button",
+					"pref"));
 
-				// ---- okButton ----
+				//---- okButton ----
 				okButton.setText("Save");
-				okButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						okButtonActionPerformed(e);
-					}
-				});
 				buttonBar.add(okButton, cc.xy(2, 1));
 
-				// ---- cancelButton ----
+				//---- cancelButton ----
 				cancelButton.setText("Cancel");
-				cancelButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						cancelButtonActionPerformed(e);
-					}
-				});
 				buttonBar.add(cancelButton, cc.xy(4, 1));
 			}
 			dialogPane.add(buttonBar, BorderLayout.SOUTH);
@@ -147,7 +150,6 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 	private JPanel buttonBar;
 	private JButton okButton;
 	private JButton cancelButton;
-
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 	@Override
 	public void close() {

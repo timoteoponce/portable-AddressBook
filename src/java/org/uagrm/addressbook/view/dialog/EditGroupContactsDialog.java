@@ -32,6 +32,7 @@ import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.View;
+import org.uagrm.addressbook.view.component.ContactActionPanelList;
 import org.uagrm.addressbook.view.event.SearchEvent;
 import org.uagrm.addressbook.view.event.SearchEventListener;
 import org.uagrm.addressbook.view.event.SearchEventType;
@@ -43,6 +44,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * @author Timoteo Ponce
+ * @deprecated Use {@link ContactActionPanelList} instead.
  */
 public class EditGroupContactsDialog extends JDialog implements View<Group> {
 

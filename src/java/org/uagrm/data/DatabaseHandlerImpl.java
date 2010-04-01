@@ -19,8 +19,8 @@ import com.sun.rowset.CachedRowSetImpl;
  * @author Timoteo Ponce
  * 
  */
-public class DatabaseHandlerImpl implements DatabaseHandler {
-
+public final class DatabaseHandlerImpl implements DatabaseHandler {
+	private static final String[] INVALID_STRINGS = new String[] { ";" };
 	private static final Logger LOG = Logger
 			.getLogger(DatabaseHandlerImpl.class.getSimpleName());
 

@@ -8,14 +8,29 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.event.*;
 import java.util.Observable;
+import javax.swing.*;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.event.EventListenerList;
+import com.jgoodies.forms.factories.*;
 
+import org.apache.log4j.Logger;
+import org.uagrm.addressbook.controller.AddressController;
+import org.uagrm.addressbook.controller.Controller;
+import org.uagrm.addressbook.controller.ControllerFactory;
+import org.uagrm.addressbook.controller.CountryController;
+import org.uagrm.addressbook.controller.PhoneController;
+import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.view.View;
+import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
+import org.uagrm.addressbook.view.event.GenericEvent;
+import org.uagrm.addressbook.view.event.GenericEventListener;
+import org.uagrm.addressbook.view.event.GenericEventType;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -24,22 +39,56 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class PhoneEditDialog extends JDialog implements View<Phone> {
+public class PhoneEditDialog extends AbstractDialogView<Phone>{
+	private static final Logger LOG = Logger.getLogger(PhoneEditDialog.class);
+
+	private final PhoneController phoneController = ControllerFactory
+			.getInstance(PhoneController.class);
+	
+
 	public PhoneEditDialog(Frame owner) {
 		super(owner);
 		initComponents();
+		init();
 	}
 
 	public PhoneEditDialog(Dialog owner) {
 		super(owner);
 		initComponents();
+		init();
 	}
 
+	private void init() {
+		phoneController.addView(this);
+		setModel( new Phone());
+		setEditable(false);	
+		//listeners
+		okButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveModel();				
+			}});
+		cancelButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				close();				
+			}});
+	}	
+
 	private void initComponents() {
-		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		// JFormDesigner - Component initialization - DO NOT MODIFY
+		// //GEN-BEGIN:initComponents
+		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
-		buttonBar = new JPanel();
+		separator = compFactory.createSeparator("text");
+		lblHousePhone = new JLabel();
+		txtHousePhone = new JTextField();
+		lblMobilePhone = new JLabel();
+		txtMobilePhone = new JTextField();
+		lblWorkPhone = new JLabel();
+		txtWorkPhone = new JTextField();
+		actionButtonBar = new JPanel();
 		okButton = new JButton();
 		cancelButton = new JButton();
 		CellConstraints cc = new CellConstraints();
@@ -56,61 +105,94 @@ public class PhoneEditDialog extends JDialog implements View<Phone> {
 			//======== contentPanel ========
 			{
 				contentPanel.setLayout(new FormLayout(
-					"default, $lcgap, default",
-					"2*(default, $lgap), default"));
+					"20dlu, $lcgap, 65dlu, $lcgap, default:grow, $lcgap, 17dlu",
+					"4*(default, $lgap), default"));
+				contentPanel.add(separator, cc.xywh(3, 3, 3, 1));
+
+				//---- lblHousePhone ----
+				lblHousePhone.setText("House phone:");
+				contentPanel.add(lblHousePhone, cc.xy(3, 5));
+				contentPanel.add(txtHousePhone, cc.xy(5, 5));
+
+				//---- lblMobilePhone ----
+				lblMobilePhone.setText("Mobile phone:");
+				contentPanel.add(lblMobilePhone, cc.xy(3, 7));
+				contentPanel.add(txtMobilePhone, cc.xy(5, 7));
+
+				//---- lblWorkPhone ----
+				lblWorkPhone.setText("Work phone:");
+				contentPanel.add(lblWorkPhone, cc.xy(3, 9));
+				contentPanel.add(txtWorkPhone, cc.xy(5, 9));
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-			//======== buttonBar ========
+			//======== actionButtonBar ========
 			{
-				buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
-				buttonBar.setLayout(new FormLayout(
+				actionButtonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
+				actionButtonBar.setLayout(new FormLayout(
 					"$glue, $button, $rgap, $button",
 					"pref"));
 
 				//---- okButton ----
 				okButton.setText("OK");
-				buttonBar.add(okButton, cc.xy(2, 1));
+				actionButtonBar.add(okButton, cc.xy(2, 1));
 
 				//---- cancelButton ----
 				cancelButton.setText("Cancel");
-				buttonBar.add(cancelButton, cc.xy(4, 1));
+				actionButtonBar.add(cancelButton, cc.xy(4, 1));
 			}
-			dialogPane.add(buttonBar, BorderLayout.SOUTH);
+			dialogPane.add(actionButtonBar, BorderLayout.SOUTH);
 		}
 		contentPane.add(dialogPane, BorderLayout.CENTER);
-		pack();
+		setSize(405, 235);
 		setLocationRelativeTo(getOwner());
-		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+		// //GEN-END:initComponents
 	}
 
-	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	// JFormDesigner - Variables declaration - DO NOT MODIFY
+	// //GEN-BEGIN:variables
 	private JPanel dialogPane;
 	private JPanel contentPanel;
-	private JPanel buttonBar;
+	private JComponent separator;
+	private JLabel lblHousePhone;
+	private JTextField txtHousePhone;
+	private JLabel lblMobilePhone;
+	private JTextField txtMobilePhone;
+	private JLabel lblWorkPhone;
+	private JTextField txtWorkPhone;
+	private JPanel actionButtonBar;
 	private JButton okButton;
 	private JButton cancelButton;
-	// JFormDesigner - End of variables declaration  //GEN-END:variables
+	// JFormDesigner - End of variables declaration //GEN-END:variables
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-
+		phoneController.removeView(this);
+		this.dispose();
 	}
 
 	@Override
 	public void setModel(Phone model) {
-		// TODO Auto-generated method stub
-
+		super.setModel(model);
+		loadValues();
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
+	public void loadValues() {
+		txtHousePhone.setText(getModel().getHousePhone());
+		txtMobilePhone.setText(getModel().getMobilePhone());
+		txtWorkPhone.setText(getModel().getWorkPhone());
 	}
+	
+	@Override
+	public void updateValues(){
+		getModel().setHousePhone(txtHousePhone.getText());
+		getModel().setMobilePhone(txtMobilePhone.getText());
+		getModel().setWorkPhone(txtWorkPhone.getText());
+	}	
 
 	@Override
-	public Phone getModel() {
-		return null;
-	}
+	Controller<Phone> getController() {		
+		return phoneController;
+	}	
+
 }
