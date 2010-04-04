@@ -28,7 +28,7 @@ public class ContactActionPanelList extends ActionPanelList<Contact> {
 	public void addNewElement() {
 		SearchDialog dialog = new SearchDialog((Frame) null);
 		dialog.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) contactController.getElements()));
-		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) getListModel().getElements()));
+		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) getElements()));
 		dialog.showDialog();
 		dialog.addSearchEventListener(getSearchListener());
 	}
@@ -43,7 +43,7 @@ public class ContactActionPanelList extends ActionPanelList<Contact> {
 				if (event.getType() == SearchEventType.SELECTED) {
 					Contact contact = (Contact) dialog.getSelected();
 					if (contact != null) {
-						getListModel().addElement(contact);
+						addElement(contact);
 					}
 				}
 			}

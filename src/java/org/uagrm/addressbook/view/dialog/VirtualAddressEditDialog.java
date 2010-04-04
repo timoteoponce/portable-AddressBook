@@ -96,6 +96,7 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 	private void addProtocol() {
 		ProtocolEditDialog dialog = new ProtocolEditDialog(this);
 		dialog.setModel(new Protocol());
+		dialog.setSaveable(true);
 		dialog.setVisible(true);
 	}
 

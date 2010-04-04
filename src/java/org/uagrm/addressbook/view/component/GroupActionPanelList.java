@@ -28,7 +28,7 @@ public class GroupActionPanelList extends ActionPanelList<Group> {
 	public void addNewElement() {
 		SearchDialog dialog = new SearchDialog((Frame) null);
 		dialog.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) groupController.getElements()));
-		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) getListModel().getElements()));
+		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) getElements()));
 		dialog.showDialog();
 		dialog.addSearchEventListener(getSearchListener());
 	}
@@ -43,7 +43,7 @@ public class GroupActionPanelList extends ActionPanelList<Group> {
 				if (event.getType() == SearchEventType.SELECTED) {
 					Group group = (Group) dialog.getSelected();
 					if (group != null) {
-						getListModel().addElement(group);
+						addElement(group);
 					}
 				}
 			}

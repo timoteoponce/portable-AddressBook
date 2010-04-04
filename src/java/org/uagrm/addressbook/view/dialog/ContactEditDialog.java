@@ -78,10 +78,10 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 
 	private void init() {
 		initToolbar();
-		groupPanelList.getActionPanel().setTitle("Groups");
-		addressPanelList.getActionPanel().setTitle("Addresses");
-		phonePanelList.getActionPanel().setTitle("Phones");
-		vAddressPanelList.getActionPanel().setTitle("Virtual Address");
+		groupPanelList.setTitle("Groups");
+		addressPanelList.setTitle("Addresses");
+		phonePanelList.setTitle("Phones");
+		vAddressPanelList.setTitle("Virtual Address");
 		contactController.addView(this);
 		groupController.addView(this);
 		setPluggablePanel(groupPanelList);
@@ -287,16 +287,16 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		contact.setLastName(txtLastName.getText());
 		//
 		contact.getGroups().clear();
-		contact.getGroups().addAll(groupPanelList.getListModel().getElements());
+		contact.getGroups().addAll(groupPanelList.getElements());
 		//
 		contact.getAddresses().clear();
-		contact.getAddresses().addAll(addressPanelList.getListModel().getElements());
+		contact.getAddresses().addAll(addressPanelList.getElements());
 		//
 		contact.getPhones().clear();
-		contact.getPhones().addAll(phonePanelList.getListModel().getElements());
+		contact.getPhones().addAll(phonePanelList.getElements());
 		// 
 		contact.getVirtualAddresses().clear();
-		contact.getVirtualAddresses().addAll(vAddressPanelList.getListModel().getElements());
+		contact.getVirtualAddresses().addAll(vAddressPanelList.getElements());
 	}
 
 	private void updateLists() {
@@ -310,8 +310,8 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		if (contact.getGroups().isEmpty()) {
 			contactController.preloadEntity(contact, Group.class);
 		}
-		groupPanelList.getListModel().clear();
-		groupPanelList.getListModel().addAllElements(contact.getGroups());
+		groupPanelList.clear();
+		groupPanelList.addAllElements(contact.getGroups());
 		groupPanelList.updateUI();
 	}
 
@@ -319,8 +319,8 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		if (!contact.hasAddresses()) {
 			contactController.preloadEntity(contact, Address.class);
 		}
-		addressPanelList.getListModel().clear();
-		addressPanelList.getListModel().addAllElements(contact.getAddresses());
+		addressPanelList.clear();
+		addressPanelList.addAllElements(contact.getAddresses());
 		addressPanelList.updateUI();
 	}
 
@@ -328,8 +328,8 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		if (contact.getPhones().isEmpty()) {
 			contactController.preloadEntity(contact, Phone.class);
 		}
-		phonePanelList.getListModel().clear();
-		phonePanelList.getListModel().addAllElements(contact.getPhones());
+		phonePanelList.clear();
+		phonePanelList.addAllElements(contact.getPhones());
 		phonePanelList.updateUI();
 	}
 
@@ -337,8 +337,8 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		if (contact.getVirtualAddresses().isEmpty()) {
 			contactController.preloadEntity(contact, VirtualAddress.class);
 		}
-		vAddressPanelList.getListModel().clear();
-		vAddressPanelList.getListModel().addAllElements(contact.getVirtualAddresses());
+		vAddressPanelList.clear();
+		vAddressPanelList.addAllElements(contact.getVirtualAddresses());
 		vAddressPanelList.updateUI();
 	}
 

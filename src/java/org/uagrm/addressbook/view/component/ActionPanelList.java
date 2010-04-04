@@ -6,6 +6,7 @@ package org.uagrm.addressbook.view.component;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -58,6 +59,10 @@ public class ActionPanelList<T> extends JPanel {
 		listModel.addElement(element);
 	}
 
+	public void addAllElements(Collection<T> elements) {
+		listModel.addAllElements(elements);
+	}
+
 	public T getSelected() {
 		final int index = list.getSelectedIndex();
 
@@ -76,16 +81,16 @@ public class ActionPanelList<T> extends JPanel {
 		}
 	}
 
-	public ActionPanel getActionPanel() {
-		return actionPanel;
+	public void setTitle(String title) {
+		actionPanel.setTitle(title);
 	}
 
-	public void setActionPanel(ActionPanel actionPanel) {
-		this.actionPanel = actionPanel;
+	public Collection<T> getElements() {
+		return listModel.getElements();
 	}
 
-	public ListModel<T> getListModel() {
-		return listModel;
+	public void clear() {
+		listModel.clear();
 	}
 
 	private void initComponents() {
