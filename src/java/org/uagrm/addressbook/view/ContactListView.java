@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
-import org.uagrm.addressbook.controller.ContactController;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Contact;
@@ -29,7 +28,7 @@ public class ContactListView extends JPanel implements View<Contact> {
 
 	private static final Logger LOG = Logger.getLogger(ContactListView.class);
 
-	private final Controller<Contact> controller = ControllerFactory.getInstance(ContactController.class);
+	private final Controller<Contact> controller = ControllerFactory.getInstanceFor(Contact.class);
 
 	private final ListModel<Contact> listModel = new ListModel<Contact>();
 
@@ -41,7 +40,7 @@ public class ContactListView extends JPanel implements View<Contact> {
 	}
 
 	private void init() {
-		ControllerFactory.getInstance(ContactController.class).addView(this);
+		controller.addView(this);
 		contactList.setModel(listModel);
 		contactList.setCellRenderer(new CustomListCellRenderer());
 		updateList();

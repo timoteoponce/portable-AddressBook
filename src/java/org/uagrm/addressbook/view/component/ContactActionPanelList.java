@@ -3,7 +3,7 @@ package org.uagrm.addressbook.view.component;
 import java.awt.Frame;
 import java.util.List;
 
-import org.uagrm.addressbook.controller.ContactController;
+import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.view.dialog.SearchDialog;
@@ -18,7 +18,7 @@ import org.uagrm.addressbook.view.event.SearchEventType;
  */
 public class ContactActionPanelList extends ActionPanelList<Contact> {
 
-	private ContactController contactController = ControllerFactory.getInstance(ContactController.class);
+	private Controller<Contact> contactController = ControllerFactory.getInstanceFor(Contact.class);
 
 	public ContactActionPanelList(boolean editionEnabled) {
 		super(editionEnabled);

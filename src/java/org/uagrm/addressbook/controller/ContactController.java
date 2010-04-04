@@ -80,7 +80,7 @@ public class ContactController extends AbstractController<Contact> implements
 
 	private void updateAddresses(Set<Address> addresses) {
 		Controller<Address> controller = ControllerFactory
-				.getInstance(AddressController.class);
+.getInstanceFor(Address.class);
 		for (Address address : addresses) {
 			controller.save(address, false);
 		}
@@ -88,7 +88,7 @@ public class ContactController extends AbstractController<Contact> implements
 
 	private void updatePhones(Set<Phone> phones) {
 		Controller<Phone> controller = ControllerFactory
-				.getInstance(PhoneController.class);
+.getInstanceFor(Phone.class);
 		for (Phone phone : phones) {
 			controller.save(phone, false);
 		}
@@ -96,7 +96,7 @@ public class ContactController extends AbstractController<Contact> implements
 
 	private void updateVirtualAddresses(Set<VirtualAddress> vAddresses) {
 		Controller<VirtualAddress> controller = ControllerFactory
-				.getInstance(VirtualAddressController.class);
+.getInstanceFor(VirtualAddress.class);
 		for (VirtualAddress vAddress : vAddresses) {
 			controller.save(vAddress, false);
 		}

@@ -10,13 +10,14 @@ import javax.swing.JDialog;
 import javax.swing.event.EventListenerList;
 
 import org.uagrm.addressbook.controller.Controller;
-import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.view.event.GenericEvent;
 import org.uagrm.addressbook.view.event.GenericEventListener;
 import org.uagrm.addressbook.view.event.GenericEventType;
 
 public abstract class AbstractDialogView<T> extends JDialog implements DialogView<T>{
-	
+
+	private static final long serialVersionUID = 6615071574637939335L;
+
 	private final EventListenerList listenerList = new EventListenerList();
 	
 	private boolean isEditable;
@@ -87,6 +88,7 @@ public abstract class AbstractDialogView<T> extends JDialog implements DialogVie
 	@Override
 	public void setModel(T model) {
 		this.model = model;
+		loadValues();
 	}
 	
 	@Override
@@ -98,6 +100,11 @@ public abstract class AbstractDialogView<T> extends JDialog implements DialogVie
 		}
 	}
 	
+	@Override
+	public void close() {
+		this.dispose();
+	}
+
 	protected void saveModel(){
 		updateValues();
 		if (isSaveable()) {

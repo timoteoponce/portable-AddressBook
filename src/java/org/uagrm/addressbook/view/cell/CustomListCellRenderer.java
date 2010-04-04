@@ -10,6 +10,7 @@ import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.model.Protocol;
 
 /**
  * @author Timoteo Ponce
@@ -50,6 +51,9 @@ public class CustomListCellRenderer extends JLabel implements ListCellRenderer {
 		} else if (value instanceof Country) {
 			final Country country = (Country) value;
 			setText(country.getName());
+		} else if (value instanceof Protocol) {
+			final Protocol protocol = (Protocol) value;
+			setText(protocol.getName());
 		}
 		return this;
 	}

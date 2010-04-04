@@ -8,43 +8,32 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Frame;
-import java.awt.event.*;
-import java.util.Observable;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.event.EventListenerList;
-import com.jgoodies.forms.factories.*;
+import javax.swing.JTextField;
 
-import org.apache.log4j.Logger;
-import org.uagrm.addressbook.controller.AddressController;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.controller.CountryController;
-import org.uagrm.addressbook.controller.PhoneController;
-import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Phone;
-import org.uagrm.addressbook.view.View;
-import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
-import org.uagrm.addressbook.view.event.GenericEvent;
-import org.uagrm.addressbook.view.event.GenericEventListener;
-import org.uagrm.addressbook.view.event.GenericEventType;
 
 import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * @author Timoteo Ponce
  */
-public class PhoneEditDialog extends AbstractDialogView<Phone>{
-	private static final Logger LOG = Logger.getLogger(PhoneEditDialog.class);
+public class PhoneEditDialog extends AbstractDialogView<Phone> {
 
-	private final PhoneController phoneController = ControllerFactory
-			.getInstance(PhoneController.class);
-	
+	private static final long serialVersionUID = -35206773748747801L;
+
+	private final Controller<Phone> phoneController = ControllerFactory.getInstanceFor(Phone.class);
 
 	public PhoneEditDialog(Frame owner) {
 		super(owner);
@@ -60,20 +49,20 @@ public class PhoneEditDialog extends AbstractDialogView<Phone>{
 
 	private void init() {
 		phoneController.addView(this);
-		setModel( new Phone());
-		setEditable(false);	
-		//listeners
-		okButton.addActionListener(new ActionListener(){
+		// listeners
+		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveModel();				
-			}});
-		cancelButton.addActionListener(new ActionListener(){
+				saveModel();
+			}
+		});
+		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				close();				
-			}});
-	}	
+				close();
+			}
+		});
+	}
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
@@ -93,51 +82,47 @@ public class PhoneEditDialog extends AbstractDialogView<Phone>{
 		cancelButton = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		//======== this ========
+		// ======== this ========
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
-		//======== dialogPane ========
+		// ======== dialogPane ========
 		{
 			dialogPane.setBorder(Borders.DIALOG_BORDER);
 			dialogPane.setLayout(new BorderLayout());
 
-			//======== contentPanel ========
+			// ======== contentPanel ========
 			{
-				contentPanel.setLayout(new FormLayout(
-					"20dlu, $lcgap, 65dlu, $lcgap, default:grow, $lcgap, 17dlu",
-					"4*(default, $lgap), default"));
+				contentPanel.setLayout(new FormLayout("20dlu, $lcgap, 65dlu, $lcgap, default:grow, $lcgap, 17dlu", "4*(default, $lgap), default"));
 				contentPanel.add(separator, cc.xywh(3, 3, 3, 1));
 
-				//---- lblHousePhone ----
+				// ---- lblHousePhone ----
 				lblHousePhone.setText("House phone:");
 				contentPanel.add(lblHousePhone, cc.xy(3, 5));
 				contentPanel.add(txtHousePhone, cc.xy(5, 5));
 
-				//---- lblMobilePhone ----
+				// ---- lblMobilePhone ----
 				lblMobilePhone.setText("Mobile phone:");
 				contentPanel.add(lblMobilePhone, cc.xy(3, 7));
 				contentPanel.add(txtMobilePhone, cc.xy(5, 7));
 
-				//---- lblWorkPhone ----
+				// ---- lblWorkPhone ----
 				lblWorkPhone.setText("Work phone:");
 				contentPanel.add(lblWorkPhone, cc.xy(3, 9));
 				contentPanel.add(txtWorkPhone, cc.xy(5, 9));
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-			//======== actionButtonBar ========
+			// ======== actionButtonBar ========
 			{
 				actionButtonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
-				actionButtonBar.setLayout(new FormLayout(
-					"$glue, $button, $rgap, $button",
-					"pref"));
+				actionButtonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "pref"));
 
-				//---- okButton ----
+				// ---- okButton ----
 				okButton.setText("OK");
 				actionButtonBar.add(okButton, cc.xy(2, 1));
 
-				//---- cancelButton ----
+				// ---- cancelButton ----
 				cancelButton.setText("Cancel");
 				actionButtonBar.add(cancelButton, cc.xy(4, 1));
 			}
@@ -163,6 +148,7 @@ public class PhoneEditDialog extends AbstractDialogView<Phone>{
 	private JPanel actionButtonBar;
 	private JButton okButton;
 	private JButton cancelButton;
+
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 	@Override
 	public void close() {
@@ -171,28 +157,22 @@ public class PhoneEditDialog extends AbstractDialogView<Phone>{
 	}
 
 	@Override
-	public void setModel(Phone model) {
-		super.setModel(model);
-		loadValues();
-	}
-
-	@Override
 	public void loadValues() {
 		txtHousePhone.setText(getModel().getHousePhone());
 		txtMobilePhone.setText(getModel().getMobilePhone());
 		txtWorkPhone.setText(getModel().getWorkPhone());
 	}
-	
+
 	@Override
-	public void updateValues(){
+	public void updateValues() {
 		getModel().setHousePhone(txtHousePhone.getText());
 		getModel().setMobilePhone(txtMobilePhone.getText());
 		getModel().setWorkPhone(txtWorkPhone.getText());
-	}	
+	}
 
 	@Override
-	Controller<Phone> getController() {		
+	Controller<Phone> getController() {
 		return phoneController;
-	}	
+	}
 
 }

@@ -24,10 +24,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
-import org.uagrm.addressbook.controller.ContactController;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.swing.ListModel;
@@ -52,10 +50,10 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 			.getLogger(EditGroupContactsDialog.class);
 
 	private final Controller<Group> groupController = ControllerFactory
-			.getInstance(GroupController.class);
+.getInstanceFor(Group.class);
 
 	private final Controller<Contact> contactController = ControllerFactory
-			.getInstance(ContactController.class);
+.getInstanceFor(Contact.class);
 
 	private final ListModel<Contact> contactListModel = new ListModel<Contact>();
 
@@ -68,7 +66,7 @@ public class EditGroupContactsDialog extends JDialog implements View<Group> {
 	}
 
 	private void init() {
-		ControllerFactory.getInstance(GroupController.class).addView(this);
+		groupController.addView(this);
 		contactListModel.clear();
 		this.listContacts.setModel(contactListModel);
 	}

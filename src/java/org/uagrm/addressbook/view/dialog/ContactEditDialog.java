@@ -22,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
-import org.uagrm.addressbook.controller.ContactController;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.controller.GroupController;
@@ -30,11 +29,13 @@ import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.Phone;
+import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.view.View;
 import org.uagrm.addressbook.view.component.ActionPanelList;
 import org.uagrm.addressbook.view.component.AddressActionPanelList;
 import org.uagrm.addressbook.view.component.GroupActionPanelList;
 import org.uagrm.addressbook.view.component.PhoneActionPanelList;
+import org.uagrm.addressbook.view.component.VirtualAddressActionPanelList;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -48,18 +49,18 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 
 	private static final Logger LOG = Logger.getLogger(ContactEditDialog.class);
 
-	private final Controller<Contact> contactController = ControllerFactory
-			.getInstance(ContactController.class);
+	private final Controller<Contact> contactController = ControllerFactory.getInstanceFor(Contact.class);
 
-	private final Controller<Group> groupController = ControllerFactory
-			.getInstance(GroupController.class);
+	private final Controller<Group> groupController = ControllerFactory.getInstanceFor(Group.class);
 
-	private final ActionPanelList<Group> groupPanelList = new GroupActionPanelList(
-			false);
-	private final ActionPanelList<Address> addressPanelList = new AddressActionPanelList(
-			true);
-	private final ActionPanelList<Phone> phonePanelList = new PhoneActionPanelList(
-			true);
+	private final ActionPanelList<Group> groupPanelList = new GroupActionPanelList(false);
+
+	private final ActionPanelList<Address> addressPanelList = new AddressActionPanelList(true);
+
+	private final ActionPanelList<Phone> phonePanelList = new PhoneActionPanelList(true);
+
+	private final ActionPanelList<VirtualAddress> vAddressPanelList = new VirtualAddressActionPanelList(true);
+
 	private Contact contact;
 	private boolean isCreation;
 
@@ -80,6 +81,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		groupPanelList.getActionPanel().setTitle("Groups");
 		addressPanelList.getActionPanel().setTitle("Addresses");
 		phonePanelList.getActionPanel().setTitle("Phones");
+		vAddressPanelList.getActionPanel().setTitle("Virtual Address");
 		contactController.addView(this);
 		groupController.addView(this);
 		setPluggablePanel(groupPanelList);
@@ -102,18 +104,27 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 				setPluggablePanel(addressPanelList);
 			}
 		});
-		
+
 		JButton btnPhone = new JButton("Phone");
-		btnPhone .addActionListener(new ActionListener() {
+		btnPhone.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setPluggablePanel(phonePanelList);
 			}
 		});
 
+		JButton btnVAddress = new JButton("Virtual Address");
+		btnVAddress.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setPluggablePanel(vAddressPanelList);
+			}
+		});
+
 		buttonBar.add(btnGroup);
 		buttonBar.add(btnAddress);
 		buttonBar.add(btnPhone);
+		buttonBar.add(btnVAddress);
 	}
 
 	private void setPluggablePanel(Component component) {
@@ -162,8 +173,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("messages");
-		DefaultComponentFactory compFactory = DefaultComponentFactory
-				.getInstance();
+		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		separator1 = compFactory.createSeparator("Contact");
 		buttonBar = new JButtonBar();
 		panelMain = new JPanel();
@@ -180,17 +190,14 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		// ======== this ========
 		setTitle("Dialog Contact");
 		Container contentPane = getContentPane();
-		contentPane
-				.setLayout(new FormLayout(
-						"11dlu, $lcgap, 52dlu, $lcgap, 170dlu:grow, $lcgap, 25dlu",
-						"2*(default, $lgap), 47dlu, $lgap, default, $lgap, 79dlu:grow, 2*($lgap, default)"));
+		contentPane.setLayout(new FormLayout("11dlu, $lcgap, 52dlu, $lcgap, 170dlu:grow, $lcgap, 25dlu",
+				"2*(default, $lgap), 47dlu, $lgap, default, $lgap, 79dlu:grow, 2*($lgap, default)"));
 		contentPane.add(separator1, cc.xy(5, 3));
 		contentPane.add(buttonBar, cc.xywh(3, 5, 1, 5));
 
 		// ======== panelMain ========
 		{
-			panelMain.setLayout(new FormLayout("73dlu, $lcgap, 111dlu",
-					"2*(default, $lgap), default"));
+			panelMain.setLayout(new FormLayout("73dlu, $lcgap, 111dlu", "2*(default, $lgap), default"));
 
 			// ---- lblFirstName ----
 			lblFirstName.setText("First name:");
@@ -210,13 +217,11 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		{
 			pluggablePanel.setLayout(new BorderLayout());
 		}
-		contentPane.add(pluggablePanel, cc.xywh(5, 9, 1, 1,
-				CellConstraints.FILL, CellConstraints.FILL));
+		contentPane.add(pluggablePanel, cc.xywh(5, 9, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
 		// ======== panelActions ========
 		{
-			panelActions.setLayout(new FormLayout(
-					"default:grow, 2*($lcgap, default)", "default"));
+			panelActions.setLayout(new FormLayout("default:grow, 2*($lcgap, default)", "default"));
 
 			// ---- btnAccept ----
 			btnAccept.setText(bundle.getString("common.accept"));
@@ -261,7 +266,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	@Override
 	public void close() {
 		contactController.removeView(this);
-		ControllerFactory.getInstance(GroupController.class).removeView(this);
+		groupController.removeView(this);
 		this.dispose();
 	}
 
@@ -285,13 +290,13 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		contact.getGroups().addAll(groupPanelList.getListModel().getElements());
 		//
 		contact.getAddresses().clear();
-		contact.getAddresses().addAll(
-				addressPanelList.getListModel().getElements());
+		contact.getAddresses().addAll(addressPanelList.getListModel().getElements());
 		//
 		contact.getPhones().clear();
-		contact.getPhones().addAll(
-				phonePanelList.getListModel().getElements());
-		// TODO virtual_addresses.
+		contact.getPhones().addAll(phonePanelList.getListModel().getElements());
+		// 
+		contact.getVirtualAddresses().clear();
+		contact.getVirtualAddresses().addAll(vAddressPanelList.getListModel().getElements());
 	}
 
 	private void updateLists() {
@@ -329,8 +334,12 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void updateVAddressList() {
-		// TODO Auto-generated method stub
-
+		if (contact.getVirtualAddresses().isEmpty()) {
+			contactController.preloadEntity(contact, VirtualAddress.class);
+		}
+		vAddressPanelList.getListModel().clear();
+		vAddressPanelList.getListModel().addAllElements(contact.getVirtualAddresses());
+		vAddressPanelList.updateUI();
 	}
 
 	@Override
@@ -340,8 +349,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 			if (model == null) {// was deleted
 				this.close();
 			} else if (this.contact.equals((Contact) model)) {
-				LOG.info("Updating model : " + this.getClass().getName()
-						+ ", values: " + model.toString());
+				LOG.info("Updating model : " + this.getClass().getName() + ", values: " + model.toString());
 				setModel((Contact) model);
 			}
 		}// from groups

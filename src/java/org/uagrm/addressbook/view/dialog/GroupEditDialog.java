@@ -22,7 +22,6 @@ import javax.swing.JTextField;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.view.View;
 
@@ -38,7 +37,7 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 	private static final Logger LOG = Logger.getLogger(GroupEditDialog.class);
 
 	private final Controller<Group> controller = ControllerFactory
-			.getInstance(GroupController.class);
+.getInstanceFor(Group.class);
 	private Group group;
 	private boolean isCreation;
 
@@ -54,7 +53,7 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 	}
 
 	private void init() {
-		ControllerFactory.getInstance(GroupController.class).addView(this);
+		controller.addView(this);
 	}
 
 	private void btnAcceptActionPerformed(ActionEvent e) {

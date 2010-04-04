@@ -10,20 +10,16 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Observable;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.controller.CountryController;
 import org.uagrm.addressbook.model.Country;
-import org.uagrm.addressbook.view.View;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
@@ -33,10 +29,9 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class CountryEditDialog extends JDialog implements View<Country> {
+public class CountryEditDialog extends AbstractDialogView<Country> {
 
-	private final CountryController countryController = ControllerFactory.getInstance(CountryController.class);
-	private Country country;
+	private final Controller<Country> countryController = ControllerFactory.getInstanceFor(Country.class);
 
 	public CountryEditDialog(Frame owner) {
 		super(owner);
@@ -54,19 +49,13 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 		okButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				okAction();
+				saveModel();
 			}});
 		cancelButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				close();
 			}});
-	}
-
-	private void okAction() {
-		updateValues();
-		countryController.save(country, true);
-		this.close();
 	}
 
 	private void initComponents() {
@@ -151,33 +140,20 @@ public class CountryEditDialog extends JDialog implements View<Country> {
 	private JButton okButton;
 	private JButton cancelButton;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
-	@Override
-	public void close() {
-		this.dispose();
-	}
 
 	@Override
-	public void setModel(Country model) {
-		this.country = model;
-		loadValues();
-	}
-
-	private void loadValues() {
-		txtName.setText(country.getName());
-	}
-
-	private void updateValues() {
-		country.setName(txtName.getText());
+	public void loadValues() {
+		txtName.setText(getModel().getName());
 	}
 
 	@Override
-	public void update(Observable source, Object model) {
-		throw new NotImplementedException();
+	public void updateValues() {
+		getModel().setName(txtName.getText());
 	}
 
 	@Override
-	public Country getModel() {
-		return country;
+	Controller<Country> getController() {
+		return countryController;
 	}
 
 }

@@ -3,8 +3,8 @@ package org.uagrm.addressbook.view.component;
 import java.awt.Frame;
 import java.util.List;
 
+import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.view.dialog.SearchDialog;
 import org.uagrm.addressbook.view.dialog.SelectableItem;
@@ -18,7 +18,7 @@ import org.uagrm.addressbook.view.event.SearchEventType;
  */
 public class GroupActionPanelList extends ActionPanelList<Group> {
 
-	private GroupController groupController = ControllerFactory.getInstance(GroupController.class);
+	private Controller<Group> groupController = ControllerFactory.getInstanceFor(Group.class);
 
 	public GroupActionPanelList(boolean editionEnabled) {
 		super(editionEnabled);

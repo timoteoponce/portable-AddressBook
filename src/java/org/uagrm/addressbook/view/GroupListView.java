@@ -22,7 +22,6 @@ import javax.swing.ListSelectionModel;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.controller.GroupController;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
@@ -37,7 +36,7 @@ import com.jgoodies.forms.layout.FormLayout;
 public class GroupListView extends JPanel implements View<Group> {
 	private static final Logger LOG = Logger.getLogger(GroupListView.class);
 
-	private final Controller<Group> controller = ControllerFactory.getInstance(GroupController.class);
+	private final Controller<Group> controller = ControllerFactory.getInstanceFor(Group.class);
 	private final ListModel<Group> listModel = new ListModel<Group>();
 
 	private JFrame mainWindow;
@@ -48,7 +47,7 @@ public class GroupListView extends JPanel implements View<Group> {
 	}
 
 	private void init() {
-		ControllerFactory.getInstance(GroupController.class).addView(this);
+		controller.addView(this);
 		groupList.setModel(listModel);
 		groupList.setCellRenderer(new CustomListCellRenderer());
 		//

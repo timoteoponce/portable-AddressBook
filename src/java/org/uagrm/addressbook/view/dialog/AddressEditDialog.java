@@ -10,32 +10,20 @@ import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.Collection;
 import java.util.Observable;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
-import org.uagrm.addressbook.controller.AddressController;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.controller.CountryController;
 import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Country;
-import org.uagrm.addressbook.view.View;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
-import org.uagrm.addressbook.view.event.GenericEvent;
-import org.uagrm.addressbook.view.event.GenericEventListener;
-import org.uagrm.addressbook.view.event.GenericEventTrigger;
-import org.uagrm.addressbook.view.event.GenericEventType;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -49,8 +37,10 @@ public class AddressEditDialog extends AbstractDialogView<Address>{
 
 	private static final Logger LOG = Logger.getLogger(AddressEditDialog.class);
 
-	private final AddressController addressController = ControllerFactory.getInstance(AddressController.class);
+	private final Controller<Address> addressController = ControllerFactory.getInstanceFor(Address.class);
 	
+	private final Controller<Country> countryController = ControllerFactory.getInstanceFor(Country.class);
+
 	public AddressEditDialog(Frame owner) {
 		super(owner);
 		initComponents();
@@ -65,10 +55,7 @@ public class AddressEditDialog extends AbstractDialogView<Address>{
 
 	private void init() {
 		addressController.addView(this);
-		ControllerFactory.getInstance(CountryController.class).addView(this);
-		//
-		setModel(new Address());
-		setEditable( false );
+		countryController.addView(this);
 		//		
 		comboCountry.setRenderer(new CustomListCellRenderer());
 		updateCountryCombo();
@@ -91,11 +78,9 @@ public class AddressEditDialog extends AbstractDialogView<Address>{
 	}
 
 	private void updateCountryCombo() {
-		CountryController countryController = ControllerFactory.getInstance(CountryController.class);
 		comboCountry.removeAllItems();
 
-		Collection<Country> countryList = countryController.getElements();
-		for (Country country : countryList) {
+		for (Country country : countryController.getElements()) {
 			comboCountry.addItem(country);
 		}
 		comboCountry.updateUI();
@@ -105,6 +90,7 @@ public class AddressEditDialog extends AbstractDialogView<Address>{
 	private void addCountry() {
 		CountryEditDialog dialog = new CountryEditDialog(this);
 		dialog.setModel(new Country());
+		dialog.setSaveable(true);
 		dialog.setVisible(true);
 	}
 
@@ -225,15 +211,8 @@ public class AddressEditDialog extends AbstractDialogView<Address>{
 	@Override
 	public void close() {
 		addressController.removeView(this);
-		ControllerFactory.getInstance(CountryController.class).removeView(this);
+		countryController.removeView(this);
 		this.dispose();
-	}
-
-
-	@Override
-	public void setModel(Address model) {
-		super.setModel( model );
-		loadValues();
 	}
 
 	@Override
@@ -262,7 +241,7 @@ public class AddressEditDialog extends AbstractDialogView<Address>{
 				LOG.info("Updating model : " + this.getClass().getName() + ", values: " + model.toString());
 				setModel((Address) model);
 			}
-		} else if (source.getClass().equals(CountryController.class)) {
+		} else if (source.equals(countryController)) {
 			updateCountryCombo();
 		}
 	}
