@@ -8,13 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Observable;
 import java.util.ResourceBundle;
 
-import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -23,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Group;
-import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
 import org.uagrm.addressbook.view.dialog.GroupEditDialog;
 
@@ -33,13 +29,10 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class GroupListView extends JPanel implements View<Group> {
+public class GroupListView extends AbstractListView<Group> {
 	private static final Logger LOG = Logger.getLogger(GroupListView.class);
 
 	private final Controller<Group> controller = ControllerFactory.getInstanceFor(Group.class);
-	private final ListModel<Group> listModel = new ListModel<Group>();
-
-	private JFrame mainWindow;
 
 	public GroupListView() {
 		initComponents();
@@ -48,22 +41,24 @@ public class GroupListView extends JPanel implements View<Group> {
 
 	private void init() {
 		controller.addView(this);
-		groupList.setModel(listModel);
+		groupList.setModel(getListModel());
 		groupList.setCellRenderer(new CustomListCellRenderer());
 		//
 		updateList();
 	}
 
+	@Override
 	public void updateList() {
-		listModel.clear();
-		listModel.addAllElements(controller.getElements());
+		getListModel().clear();
+		getListModel().addElement(new Group(null, "All", ""));
+		getListModel().addAllElements(controller.getElements());
 		groupList.updateUI();
 	}
 
 	private void groupListMouseClicked(MouseEvent e) {
-		// final int index = groupList.getSelectedIndex();
+		final int index = groupList.getSelectedIndex();
 
-		if (e.getModifiers() == MouseEvent.BUTTON3_MASK /* && index > 0 */) {
+		if (e.getModifiers() == MouseEvent.BUTTON3_MASK && index > 0) {
 			showPopUpMenu(e.getX(), e.getY());
 		}
 	}
@@ -72,33 +67,19 @@ public class GroupListView extends JPanel implements View<Group> {
 		ResourceBundle bundle = ResourceBundle.getBundle("messages");
 		//
 		JPopupMenu menu = new JPopupMenu();
-		JMenuItem createItem = new JMenuItem(bundle.getString("common.create"));
 		JMenuItem editItem = new JMenuItem(bundle.getString("common.edit"));
 		JMenuItem removeItem = new JMenuItem(bundle.getString("common.remove"));
-		menu.add(createItem);
 		menu.add(editItem);
 		menu.add(removeItem);
 
-		createItem.addActionListener(getCreateActionListener());
 		removeItem.addActionListener(getRemoveActionListener());
 		editItem.addActionListener(getEditActionListener());
-
 		menu.show(this, posX, posY);
 	}
 
-	private ActionListener getCreateActionListener() {
-		ActionListener listener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showcreateDialog();
-			}
-
-		};
-		return listener;
-	}
-
-	public void showcreateDialog() {
-		GroupEditDialog dialog = new GroupEditDialog(mainWindow);
+	@Override
+	public void addNew() {
+		GroupEditDialog dialog = new GroupEditDialog(getMainWindow());
 		dialog.setIsCreation(true);
 		dialog.setVisible(true);
 	}
@@ -107,16 +88,17 @@ public class GroupListView extends JPanel implements View<Group> {
 		ActionListener listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showEditDialog();
+				editCurrent();
 			}
 		};
 		return listener;
 	}
 
-	public void showEditDialog() {
+	@Override
+	public void editCurrent() {
 		final int index = groupList.getSelectedIndex();
 		if (index > 0) {
-			GroupEditDialog dialog = new GroupEditDialog(mainWindow);
+			GroupEditDialog dialog = new GroupEditDialog(getMainWindow());
 			dialog.setModel((Group) groupList.getSelectedValue());
 			dialog.setVisible(true);
 		}
@@ -126,18 +108,13 @@ public class GroupListView extends JPanel implements View<Group> {
 		ActionListener listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				deleteGroup();
+				removeCurrent();
 			}
 		};
 		return listener;
 	}
 
-	public void deleteGroup() {
-		final int index = groupList.getSelectedIndex();
-		if (index > 0) {
-			controller.delete((Group) groupList.getSelectedValue(), true);
-		}
-	}
+
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
@@ -172,32 +149,15 @@ public class GroupListView extends JPanel implements View<Group> {
 	private JList groupList;
 
 	// JFormDesigner - End of variables declaration //GEN-END:variables
+
 	@Override
-	public void setModel(Group model) {
-		// not needed in this view,
+	public Controller<Group> getController() {
+		return controller;
 	}
 
 	@Override
-	public void close() {
-		controller.removeView(this);
-		this.setVisible(false);
-	}
-
-	public void setMainView(JFrame mainView) {
-		this.mainWindow = mainView;
-	}
-
-	@Override
-	public void update(Observable source, Object model) {
-		if (source.equals(controller)) {
-			updateList();
-		}
-	}
-
-	@Override
-	public Group getModel() {
-		// TODO Auto-generated method stub
-		return null;
+	public JList getList() {
+		return groupList;
 	}
 
 }

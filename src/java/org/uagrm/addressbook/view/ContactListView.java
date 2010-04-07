@@ -17,6 +17,7 @@ import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
+import org.uagrm.addressbook.view.dialog.ContactEditDialog;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -101,7 +102,21 @@ public class ContactListView extends JPanel implements View<Contact> {
 
 	@Override
 	public Contact getModel() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void showCreateDialog() {
+		ContactEditDialog dialog = new ContactEditDialog(mainWindow);
+		dialog.setContact(new Contact());
+		dialog.setVisible(true);
+	}
+
+	public void showEditDialog() {
+		if (contactList.getSelectedIndex() > -1) {
+			ContactEditDialog dialog = new ContactEditDialog(mainWindow);
+			dialog.setContact((Contact) contactList.getSelectedValue());
+			dialog.setCreation(false);
+			dialog.setVisible(true);
+		}
 	}
 }

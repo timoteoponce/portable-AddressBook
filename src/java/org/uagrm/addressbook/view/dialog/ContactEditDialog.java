@@ -141,6 +141,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 
 	public void setContact(Contact contact) {
 		this.contact = contact;
+		loadValues();
 	}
 
 	public boolean isCreation() {

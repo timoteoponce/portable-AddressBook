@@ -10,13 +10,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.lang.StringUtils;
-import org.uagrm.addressbook.model.Contact;
-import org.uagrm.addressbook.view.dialog.ContactEditDialog;
+import org.uagrm.addressbook.model.Group;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -28,7 +26,7 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
  */
 public class MainView extends JFrame {
 
-	private final GroupListView groupListView;
+	private final ListView<Group> groupListView;
 	private final ContactListView contactListView;
 
 	public MainView() {
@@ -36,14 +34,36 @@ public class MainView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// groupView
 		groupListView = new GroupListView();
-		groupListView.setMainView(this);
-		panelGroups.add(groupListView, BorderLayout.CENTER);
+		groupListView.setMainWindow(this);
+		panelGroups.add((JPanel) groupListView, BorderLayout.CENTER);
 		// contactView
 		contactListView = new ContactListView();
 		contactListView.setMainView(this);
 		panelContacts.add(contactListView, BorderLayout.CENTER);
 		//
 		setTitle("MainView");
+		addListeners();
+	}
+
+	private void addListeners() {
+		btnGroupsAdd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				groupListView.addNew();
+			}
+		});
+		btnContactAdd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				contactListView.showCreateDialog();
+			}
+		});
+		btnOpsEdit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				contactListView.showEditDialog();
+			}
+		});
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException,
@@ -59,67 +79,37 @@ public class MainView extends JFrame {
 		frame.setVisible(true);
 	}
 
-	private void tbButtonCreateGroupActionPerformed(ActionEvent e) {
-	    groupListView.showcreateDialog();
-	}
-
-	private void tbButtonCreateContactActionPerformed(ActionEvent e) {
-		//TODO put this is ContactView
-		ContactEditDialog dialog = new ContactEditDialog(this);
-		dialog.setContact(new Contact());
-		dialog.setVisible(true);
-	}
-
 
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("messages");
 		mainMenuBar = new JMenuBar();
-		toolBar1 = new JToolBar();
-		tbButtonCreateGroup = new JButton();
-		tbButtonCreateContact = new JButton();
 		mainPanel = new JPanel();
 		panelGroups = new SimpleInternalFrame();
 		panelContacts = new SimpleInternalFrame();
+		panelView = new JPanel();
+		panelOpsGroup = new JPanel();
+		btnGroupsAdd = new JButton();
+		panelOpsContact = new JPanel();
+		btnContactAdd = new JButton();
+		panelOpsView = new JPanel();
+		btnOpsEdit = new JButton();
 		CellConstraints cc = new CellConstraints();
 
 		//======== this ========
 		setTitle(bundle.getString("MainView.title"));
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
-			"default, $lcgap, default:grow, $lcgap, default",
-			"29dlu, $lgap, default:grow, $lgap, default"));
+			"default:grow",
+			"default:grow"));
 		setJMenuBar(mainMenuBar);
-
-		//======== toolBar1 ========
-		{
-
-			//---- tbButtonCreateGroup ----
-			tbButtonCreateGroup.setText(bundle.getString("MainView.createGroup"));
-			tbButtonCreateGroup.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					tbButtonCreateGroupActionPerformed(e);
-				}
-			});
-			toolBar1.add(tbButtonCreateGroup);
-
-			//---- tbButtonCreateContact ----
-			tbButtonCreateContact.setText(bundle.getString("MainView.tbButtonCreateContact.text"));
-			tbButtonCreateContact.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					tbButtonCreateContactActionPerformed(e);
-				}
-			});
-			toolBar1.add(tbButtonCreateContact);
-		}
-		contentPane.add(toolBar1, cc.xywh(1, 1, 3, 1));
 
 		//======== mainPanel ========
 		{
 			mainPanel.setLayout(new FormLayout(
 				"87dlu:grow, $lcgap, 86dlu:grow, $lcgap, default:grow",
-				"default:grow"));
+				"default:grow, $lgap, default"));
 
 			//======== panelGroups ========
 			{
@@ -136,9 +126,51 @@ public class MainView extends JFrame {
 				panelContactsContentPane.setLayout(new BorderLayout());
 			}
 			mainPanel.add(panelContacts, cc.xywh(3, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+
+			//======== panelView ========
+			{
+				panelView.setLayout(new BorderLayout());
+			}
+			mainPanel.add(panelView, cc.xywh(5, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+
+			//======== panelOpsGroup ========
+			{
+				panelOpsGroup.setLayout(new FormLayout(
+					"2*(default, $lcgap), default",
+					"default"));
+
+				//---- btnGroupsAdd ----
+				btnGroupsAdd.setText(bundle.getString("MainView.btnGroupsAdd.text"));
+				panelOpsGroup.add(btnGroupsAdd, cc.xy(3, 1));
+			}
+			mainPanel.add(panelOpsGroup, cc.xy(1, 3));
+
+			//======== panelOpsContact ========
+			{
+				panelOpsContact.setLayout(new FormLayout(
+					"2*(default, $lcgap), default",
+					"default"));
+
+				//---- btnContactAdd ----
+				btnContactAdd.setText(bundle.getString("MainView.btnContactAdd.text"));
+				panelOpsContact.add(btnContactAdd, cc.xy(3, 1));
+			}
+			mainPanel.add(panelOpsContact, cc.xy(3, 3));
+
+			//======== panelOpsView ========
+			{
+				panelOpsView.setLayout(new FormLayout(
+					"2*(default, $lcgap), default",
+					"default"));
+
+				//---- btnOpsEdit ----
+				btnOpsEdit.setText(bundle.getString("MainView.btnOpsEdit.text"));
+				panelOpsView.add(btnOpsEdit, cc.xy(1, 1));
+			}
+			mainPanel.add(panelOpsView, cc.xy(5, 3));
 		}
-		contentPane.add(mainPanel, cc.xywh(3, 3, 1, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
-		setSize(485, 415);
+		contentPane.add(mainPanel, cc.xywh(1, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+		setSize(625, 360);
 		setLocationRelativeTo(getOwner());
 		// //GEN-END:initComponents
 	}
@@ -146,11 +178,15 @@ public class MainView extends JFrame {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY
 	// //GEN-BEGIN:variables
 	private JMenuBar mainMenuBar;
-	private JToolBar toolBar1;
-	private JButton tbButtonCreateGroup;
-	private JButton tbButtonCreateContact;
 	private JPanel mainPanel;
 	private SimpleInternalFrame panelGroups;
 	private SimpleInternalFrame panelContacts;
+	private JPanel panelView;
+	private JPanel panelOpsGroup;
+	private JButton btnGroupsAdd;
+	private JPanel panelOpsContact;
+	private JButton btnContactAdd;
+	private JPanel panelOpsView;
+	private JButton btnOpsEdit;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 }
