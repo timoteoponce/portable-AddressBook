@@ -10,8 +10,7 @@ import org.uagrm.addressbook.model.dao.GenericDao;
  * @author Timoteo Ponce
  * 
  */
-public class CountryController extends AbstractController<Country> implements
-		Controller<Country> {
+public class CountryController extends AbstractController<Country> {
 
 
 	private static Controller<Country> instance;

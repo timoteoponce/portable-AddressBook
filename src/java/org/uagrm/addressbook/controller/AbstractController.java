@@ -64,6 +64,11 @@ public abstract class AbstractController<T> extends Observable implements
 	}
 
 	@Override
+	public <K> java.util.Collection<T> getElementsBy(java.lang.Class<K> targetClass, K target) {
+		throw new UnsupportedOperationException();
+	};
+
+	@Override
 	public T preloadEntity(T entity, Class<?> target) {
 		getDao().loadReferences(entity, target);
 		return entity;
@@ -81,7 +86,7 @@ public abstract class AbstractController<T> extends Observable implements
 		notifyObservers(model);
 	}
 
-	private void refreshElementList() {
+	protected void refreshElementList() {
 		cachedElementList.clear();
 		cachedElementList.addAll(getDao().selectAll());
 	}

@@ -19,6 +19,8 @@ public interface Controller<T> {
     
     Collection<T> getElements();
     
+	<K> Collection<T> getElementsBy(Class<K> targetClass, K target);
+
 	void save(T element, boolean updateViews);
 
     void delete(T element, boolean updateViews);

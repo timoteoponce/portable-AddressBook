@@ -4,20 +4,19 @@
 
 package org.uagrm.addressbook.view;
 
-import java.util.Observable;
 
-import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Contact;
-import org.uagrm.addressbook.model.swing.ListModel;
-import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
+import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.view.dialog.ContactEditDialog;
+import org.uagrm.addressbook.view.event.GenericEvent;
+import org.uagrm.addressbook.view.event.GenericEventListener;
+import org.uagrm.addressbook.view.event.GenericEventType;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -25,31 +24,16 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class ContactListView extends JPanel implements View<Contact> {
+public class ContactListView extends AbstractListView<Contact> implements GenericEventListener {
 
 	private static final Logger LOG = Logger.getLogger(ContactListView.class);
 
 	private final Controller<Contact> controller = ControllerFactory.getInstanceFor(Contact.class);
 
-	private final ListModel<Contact> listModel = new ListModel<Contact>();
-
-	private JFrame mainWindow;
 
 	public ContactListView() {
 		initComponents();
 		init();
-	}
-
-	private void init() {
-		controller.addView(this);
-		contactList.setModel(listModel);
-		contactList.setCellRenderer(new CustomListCellRenderer());
-		updateList();
-	}
-
-	private void updateList() {
-		listModel.clear();
-		listModel.addAllElements(controller.getElements());
 	}
 
 	private void initComponents() {
@@ -70,29 +54,6 @@ public class ContactListView extends JPanel implements View<Contact> {
 		// //GEN-END:initComponents
 	}
 
-	@Override
-	public void close() {
-		controller.removeView(this);
-		this.setVisible(false);
-	}
-
-	@Override
-	public void setModel(Contact model) {
-		// not needed in this view,
-	}
-
-	@Override
-	public void update(Observable source, Object model) {
-		if (source.equals(controller)) {
-			updateList();
-		}
-
-	}
-
-	public void setMainView(JFrame mainView) {
-		this.mainWindow = mainView;
-	}
-
 	// JFormDesigner - Variables declaration - DO NOT MODIFY
 	// //GEN-BEGIN:variables
 	private JScrollPane scrollContactList;
@@ -101,22 +62,40 @@ public class ContactListView extends JPanel implements View<Contact> {
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	@Override
-	public Contact getModel() {
-		return null;
-	}
-
-	public void showCreateDialog() {
-		ContactEditDialog dialog = new ContactEditDialog(mainWindow);
+	public void addNew() {
+		ContactEditDialog dialog = new ContactEditDialog(getMainWindow());
 		dialog.setContact(new Contact());
 		dialog.setVisible(true);
 	}
 
-	public void showEditDialog() {
-		if (contactList.getSelectedIndex() > -1) {
-			ContactEditDialog dialog = new ContactEditDialog(mainWindow);
-			dialog.setContact((Contact) contactList.getSelectedValue());
+	@Override
+	public void editCurrent() {
+		if (getModel() != null) {
+			ContactEditDialog dialog = new ContactEditDialog(getMainWindow());
+			dialog.setContact(getModel());
 			dialog.setCreation(false);
 			dialog.setVisible(true);
+		}
+	}
+
+	@Override
+	public Controller<Contact> getController() {
+		return controller;
+	}
+
+	@Override
+	public JList getList() {
+		return contactList;
+	}
+
+	@Override
+	public void eventFired(GenericEvent event) {
+		if(event.getType() == GenericEventType.ELEMENT_SELECTED){
+			final ListView<Group> groupListView = (ListView<Group>) event.getSource();
+			final Group group = groupListView.getModel();
+			getListModel().clear();
+			getListModel().addAllElements(controller.getElementsBy(Group.class, group));
+			getList().updateUI();
 		}
 	}
 }

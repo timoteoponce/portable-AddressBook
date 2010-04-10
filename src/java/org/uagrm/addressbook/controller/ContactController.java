@@ -1,5 +1,6 @@
 package org.uagrm.addressbook.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -16,8 +17,7 @@ import org.uagrm.addressbook.model.dao.GenericDao;
  * @author Timoteo Ponce
  * 
  */
-public class ContactController extends AbstractController<Contact> implements
-		Controller<Contact> {
+public class ContactController extends AbstractController<Contact> {
 
 	private static final Logger LOG = Logger.getLogger(ContactController.class);
 
@@ -101,5 +101,18 @@ public class ContactController extends AbstractController<Contact> implements
 			controller.save(vAddress, false);
 		}
 	}
+
+	@Override
+	public <K> java.util.Collection<Contact> getElementsBy(java.lang.Class<K> targetClass, K target) {
+		List<Contact> list = (List<Contact>) getElements();
+		if (targetClass.equals(Group.class) && ((Group) target).getId() != null) {
+			list.clear();
+			Group group = (Group) target;
+			list.addAll(dao.getByGroup(group.getId()));
+		} else {
+			refreshElementList();
+		}
+		return list;
+	};
 
 }

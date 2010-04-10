@@ -11,8 +11,7 @@ import org.uagrm.addressbook.model.dao.VirtualAddressDao;
  * 
  */
 public class VirtualAddressController extends
-		AbstractController<VirtualAddress> implements
-		Controller<VirtualAddress> {
+ AbstractController<VirtualAddress> {
 
 
 	private static Controller<VirtualAddress> instance;

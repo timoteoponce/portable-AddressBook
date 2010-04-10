@@ -11,8 +11,7 @@ import org.uagrm.addressbook.model.dao.GroupDao;
  * @author Timoteo Ponce
  * 
  */
-public class GroupController extends AbstractController<Group> implements
-		Controller<Group> {
+public class GroupController extends AbstractController<Group> {
 
 	private static final Logger LOG = Logger.getLogger(GroupController.class);
 

@@ -10,8 +10,7 @@ import org.uagrm.addressbook.model.dao.ProtocolDao;
  * @author Timoteo Ponce
  * 
  */
-public class ProtocolController extends AbstractController<Protocol> implements
-		Controller<Protocol> {
+public class ProtocolController extends AbstractController<Protocol> {
 
 
 	private static Controller<Protocol> instance;

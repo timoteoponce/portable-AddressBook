@@ -10,8 +10,7 @@ import org.uagrm.addressbook.model.dao.PhoneDao;
  * @author Timoteo Ponce
  * 
  */
-public class PhoneController extends AbstractController<Phone> implements
-		Controller<Phone> {
+public class PhoneController extends AbstractController<Phone> {
 
 
 	private static Controller<Phone> instance;

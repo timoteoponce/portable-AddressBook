@@ -10,11 +10,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.lang.StringUtils;
+import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.view.event.GenericEventListener;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -27,7 +30,8 @@ import com.jgoodies.uif_lite.panel.SimpleInternalFrame;
 public class MainView extends JFrame {
 
 	private final ListView<Group> groupListView;
-	private final ContactListView contactListView;
+	private final ListView<Contact> contactListView;
+	private final GroupView groupView;
 
 	public MainView() {
 		initComponents();
@@ -38,8 +42,14 @@ public class MainView extends JFrame {
 		panelGroups.add((JPanel) groupListView, BorderLayout.CENTER);
 		// contactView
 		contactListView = new ContactListView();
-		contactListView.setMainView(this);
-		panelContacts.add(contactListView, BorderLayout.CENTER);
+		contactListView.setMainWindow(this);
+		panelContacts.add((JPanel) contactListView, BorderLayout.CENTER);
+		// views
+		groupView = new GroupView();
+		panelView.setViewportView(groupView);
+		// listeners
+		groupListView.addEventListener((GenericEventListener) contactListView);
+		groupListView.addEventListener(groupView);
 		//
 		setTitle("MainView");
 		addListeners();
@@ -55,13 +65,13 @@ public class MainView extends JFrame {
 		btnContactAdd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				contactListView.showCreateDialog();
+				contactListView.addNew();
 			}
 		});
 		btnOpsEdit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				contactListView.showEditDialog();
+				contactListView.addNew();
 			}
 		});
 	}
@@ -88,7 +98,7 @@ public class MainView extends JFrame {
 		mainPanel = new JPanel();
 		panelGroups = new SimpleInternalFrame();
 		panelContacts = new SimpleInternalFrame();
-		panelView = new JPanel();
+		panelView = new JScrollPane();
 		panelOpsGroup = new JPanel();
 		btnGroupsAdd = new JButton();
 		panelOpsContact = new JPanel();
@@ -126,11 +136,6 @@ public class MainView extends JFrame {
 				panelContactsContentPane.setLayout(new BorderLayout());
 			}
 			mainPanel.add(panelContacts, cc.xywh(3, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
-
-			//======== panelView ========
-			{
-				panelView.setLayout(new BorderLayout());
-			}
 			mainPanel.add(panelView, cc.xywh(5, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
 			//======== panelOpsGroup ========
@@ -181,7 +186,7 @@ public class MainView extends JFrame {
 	private JPanel mainPanel;
 	private SimpleInternalFrame panelGroups;
 	private SimpleInternalFrame panelContacts;
-	private JPanel panelView;
+	private JScrollPane panelView;
 	private JPanel panelOpsGroup;
 	private JButton btnGroupsAdd;
 	private JPanel panelOpsContact;

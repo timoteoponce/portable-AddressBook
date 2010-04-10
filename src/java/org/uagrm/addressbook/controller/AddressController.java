@@ -10,8 +10,7 @@ import org.uagrm.addressbook.model.dao.GenericDao;
  * @author Timoteo Ponce
  * 
  */
-public class AddressController extends AbstractController<Address> implements
-		Controller<Address> {
+public class AddressController extends AbstractController<Address> {
 
 	// private static final Logger LOG =
 	// Logger.getLogger(AddressController.class);
