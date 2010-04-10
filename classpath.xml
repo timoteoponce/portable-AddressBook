@@ -54,16 +54,22 @@
 	-->
 
 	<!-- Findbugs -->	
-	<property name="findbugs.home" location="lib/findbugs/" />
+	<property name="findbugs.home" location="${common.lib}/findbugs/1.3.7" />
 	<path id="findbugs.classpath">
 		<fileset dir="${findbugs.home}" includes="**/*.jar" />
 	</path>
 
 	<!-- PMD -->	
-	<property name="pmd.home" location="lib/pmd/" />
+	<property name="pmd.home" location="${common.lib}/pmd/4.2.5" />
 	<path id="pmd.classpath">
-		<fileset dir="${pmd.home}" includes="**/*.jar" />
+		<fileset dir="${pmd.home}" includes="lib/*.jar" />
 		<path refid="findbugs.classpath"/>
+	</path>
+	
+	<!-- JUnit -->	
+	<property name="junit.home" location="${common.lib}/junit/4.8.1" />
+	<path id="junit.classpath">
+		<fileset dir="${junit.home}" includes="*.jar" />		
 	</path>
 	
 	<!--<property name="l2fprod.home" location="lib/l2fprod"/>		

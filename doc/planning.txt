@@ -25,6 +25,35 @@ Iterations
 		- Integrate with sqlite
 		- MVC + DAO pattern maybe? 
 		- Running application storing
+	I2:
+		- Implementation of controllers
+		- Implementation of CRUD views
+		- Event based interaction through Views
+		- Strategy pattern to avoid DRY
+	I3:
+		- Refination of implementation
+*		- Implementation of Contact,Group Views
+		- Interaction between UIs
+	M1:
+		- First functional version
+	I4:		
+		- Validation of data in Views.
+		- Support for Images
+		- Support for Html content
+		- Cleanup of UIs.
+	M2:
+		- Functional version without addons
+		- Release 0.1
+	I5:
+		- Search support 
+		- Import/Export to CSV
+		- Import/Export to vCard3
+	M3:
+		- Release 0.2
+	I6:
+		- Smart group support
+		- Print
+		- Help & guides	
 
 
 Product Backlog
@@ -33,8 +62,8 @@ Product Backlog
 Sprints
 ===============
 
- Sprint Backlogs
- ===============
+Sprint Backlogs
+===============
 
 Dates
 ===============

@@ -12,63 +12,63 @@
 
 	[DEV-003]
 	- Implementation of AddressDao -> Code and Test cases
-	* Status: Pending
+	* Status: Done
 
 	-- Controllers 
 
 	[DEV-004]
 	- Implementation of Address Controller
-	* Status: Pending
+	* Status: Done
 
 	[DEV-005]
 	- Implementation of Country Controller
-	* Status: Pending
+	* Status: Done
 
 	[DEV-006]
 	- Implementation of Phone Controller
-	* Status: Pending
+	* Status: Done
 
 	[DEV-007]
 	- Implementation of Protocol Controller
-	* Status: Pending
+	* Status: Done
 
 	[DEV-008]
 	- Implementation of VirtualAddress Controller
-	* Status: Pending
+	* Status: Done
 
 	[DEV-009]
 	- Implementation of Group Controller
-	* Status: In process
+	* Status: Done
 
 	[DEV-010]
 	- Implementation of Contact Controller
-	* Status: In process
+	* Status: Done
 
 	-- POJO Views
 	[DEV-011]
 	- Implementation of Address View
 		- CRUD operations
-	* Status: Pending
+	* Status: Done
 
 	[DEV-012]
 	- Implementation of Country View
 		- CRUD operations.
-	* Status: Pending
+	* Status: Done
 
 	[DEV-013]
 	- Implementation of Phone View
 		- CRUD operations.
-	* Status: Pending
+	* Status: Done
 
 	[DEV-014]
 	- Implementation of Protocol View
 		- CRUD operations
-	* Status: Pending
+	* Status: Done
 
 	[DEV-015]
 	- Implementation of VirtualAddress View
 		- CRUD operations
-	* Status: Pending
+	* Status: Done
 
 	[DEV-016]
 	- Implementation of Group views 
@@ -88,7 +88,7 @@
 
 	[DEV-402]
 	- Add QA metrics to project
-	* Status: Pending
+	* Status: Done
 
 	[DEV-403]
 	- Add Test metrics to project

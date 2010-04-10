@@ -6,8 +6,7 @@
 	<import file="${classpath.location}" />
 
 	<path id="compile.classpath">
-		<fileset dir="lib" includes="*.jar" />
-		<!--<path refid="l2fprod.classpath"/>-->
+		<fileset dir="lib" includes="*.jar" />		
 	</path>
 
 	<path id="src.path">
@@ -23,6 +22,7 @@
 
 	<path id="test.classpath">
 		<path refid="run.classpath" />
+		<path refid="junit.classpath" />
 	</path>
 
 
