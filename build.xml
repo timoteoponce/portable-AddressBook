@@ -7,7 +7,7 @@
 
 	<path id="compile.classpath">
 		<fileset dir="lib" includes="*.jar" />
-		<path refid="l2fprod.classpath"/>		
+		<!--<path refid="l2fprod.classpath"/>-->
 	</path>
 
 	<path id="src.path">

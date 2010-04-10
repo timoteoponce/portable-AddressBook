@@ -66,10 +66,10 @@
 		<path refid="findbugs.classpath"/>
 	</path>
 	
-	<property name="l2fprod.home" location="lib/l2fprod"/>		
+	<!--<property name="l2fprod.home" location="lib/l2fprod"/>		
 	<path id="l2fprod.classpath">
 		<fileset dir="${l2fprod.home}" includes="**/*.jar"/>
-	</path>
+	</path>-->
 
 
 </project>

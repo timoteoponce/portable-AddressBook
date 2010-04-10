@@ -4,8 +4,6 @@
 
 package org.uagrm.addressbook.view.dialog;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -19,7 +17,9 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
@@ -40,7 +40,6 @@ import org.uagrm.addressbook.view.component.VirtualAddressActionPanelList;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import com.l2fprod.common.swing.JButtonBar;
 
 /**
  * @author Timoteo Ponce
@@ -51,7 +50,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 
 	private final Controller<Contact> contactController = ControllerFactory.getInstanceFor(Contact.class);
 
-	private final Controller<Group> groupController = ControllerFactory.getInstanceFor(Group.class);
+	private final Controller<Group> groupController = ControllerFactory.getInstanceFor(Group.class);	
 
 	private final ActionPanelList<Group> groupPanelList = new GroupActionPanelList(false);
 
@@ -77,62 +76,24 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void init() {
-		initToolbar();
+		initTabs();
+		contactController.addView(this);
+		groupController.addView(this);
+	}
+
+	private void initTabs() {
 		groupPanelList.setTitle("Groups");
 		addressPanelList.setTitle("Addresses");
 		phonePanelList.setTitle("Phones");
 		vAddressPanelList.setTitle("Virtual Address");
-		contactController.addView(this);
-		groupController.addView(this);
-		setPluggablePanel(groupPanelList);
+		addTab("Groups", groupPanelList);
+		addTab("Addresses", addressPanelList);
+		addTab("Phone", phonePanelList);
+		addTab("Virtual Address", vAddressPanelList);
 	}
 
-	private void initToolbar() {
-		buttonBar.setOrientation(JButtonBar.VERTICAL);
-		JButton btnGroup = new JButton("Groups");
-		btnGroup.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setPluggablePanel(groupPanelList);
-			}
-		});
-
-		JButton btnAddress = new JButton("Addresses");
-		btnAddress.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setPluggablePanel(addressPanelList);
-			}
-		});
-
-		JButton btnPhone = new JButton("Phone");
-		btnPhone.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setPluggablePanel(phonePanelList);
-			}
-		});
-
-		JButton btnVAddress = new JButton("Virtual Address");
-		btnVAddress.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setPluggablePanel(vAddressPanelList);
-			}
-		});
-
-		buttonBar.add(btnGroup);
-		buttonBar.add(btnAddress);
-		buttonBar.add(btnPhone);
-		buttonBar.add(btnVAddress);
-	}
-
-	private void setPluggablePanel(Component component) {
-		if (pluggablePanel.getComponentCount() == 0 || !pluggablePanel.getComponent(0).equals(component)) {
-			pluggablePanel.removeAll();
-			pluggablePanel.add(component, BorderLayout.CENTER);
-			pluggablePanel.updateUI();
-		}
+	private void addTab(final String label, final ActionPanelList<?> component) {
+		tabbedPane.addTab(label, component);
 	}
 
 	public Contact getContact() {
@@ -176,55 +137,58 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		ResourceBundle bundle = ResourceBundle.getBundle("messages");
 		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		separator1 = compFactory.createSeparator("Contact");
-		buttonBar = new JButtonBar();
 		panelMain = new JPanel();
 		lblFirstName = new JLabel();
 		txtFirstName = new JTextField();
 		lblLastName = new JLabel();
 		txtLastName = new JTextField();
-		pluggablePanel = new JPanel();
+		tabbedPane = new JTabbedPane();
 		panelActions = new JPanel();
 		btnAccept = new JButton();
 		btnCancel = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		// ======== this ========
+		//======== this ========
 		setTitle("Dialog Contact");
 		Container contentPane = getContentPane();
-		contentPane.setLayout(new FormLayout("11dlu, $lcgap, 52dlu, $lcgap, 170dlu:grow, $lcgap, 25dlu",
-				"2*(default, $lgap), 47dlu, $lgap, default, $lgap, 79dlu:grow, 2*($lgap, default)"));
-		contentPane.add(separator1, cc.xy(5, 3));
-		contentPane.add(buttonBar, cc.xywh(3, 5, 1, 5));
+		contentPane.setLayout(new FormLayout(
+"11dlu, $lcgap, 170dlu:grow, $lcgap, 25dlu", "2*(default, $lgap), 37dlu, $lgap, default, $lgap, 79dlu:grow, 2*($lgap, default)"));
+		contentPane.add(separator1, cc.xy(3, 3));
 
-		// ======== panelMain ========
+		//======== panelMain ========
 		{
-			panelMain.setLayout(new FormLayout("73dlu, $lcgap, 111dlu", "2*(default, $lgap), default"));
+			panelMain.setLayout(new FormLayout(
+				"73dlu, $lcgap, 111dlu",
+				"2*(default, $lgap), default"));
 
-			// ---- lblFirstName ----
+			//---- lblFirstName ----
 			lblFirstName.setText("First name:");
 			lblFirstName.setLabelFor(txtFirstName);
 			panelMain.add(lblFirstName, cc.xy(1, 1));
 			panelMain.add(txtFirstName, cc.xy(3, 1));
 
-			// ---- lblLastName ----
+			//---- lblLastName ----
 			lblLastName.setText("Last name:");
 			lblLastName.setLabelFor(txtLastName);
 			panelMain.add(lblLastName, cc.xy(1, 3));
 			panelMain.add(txtLastName, cc.xy(3, 3));
 		}
-		contentPane.add(panelMain, cc.xy(5, 5));
+		contentPane.add(panelMain, cc.xy(3, 5));
 
-		// ======== pluggablePanel ========
+		// ======== tabbedPane ========
 		{
-			pluggablePanel.setLayout(new BorderLayout());
+			tabbedPane.setTabPlacement(SwingConstants.LEFT);
+			tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		}
-		contentPane.add(pluggablePanel, cc.xywh(5, 9, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+		contentPane.add(tabbedPane, cc.xywh(3, 9, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
-		// ======== panelActions ========
+		//======== panelActions ========
 		{
-			panelActions.setLayout(new FormLayout("default:grow, 2*($lcgap, default)", "default"));
+			panelActions.setLayout(new FormLayout(
+				"default:grow, 2*($lcgap, default)",
+				"default"));
 
-			// ---- btnAccept ----
+			//---- btnAccept ----
 			btnAccept.setText(bundle.getString("common.accept"));
 			btnAccept.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -233,7 +197,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 			});
 			panelActions.add(btnAccept, cc.xy(3, 1));
 
-			// ---- btnCancel ----
+			//---- btnCancel ----
 			btnCancel.setText(bundle.getString("common.cancel"));
 			btnCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -242,8 +206,8 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 			});
 			panelActions.add(btnCancel, cc.xy(5, 1));
 		}
-		contentPane.add(panelActions, cc.xy(5, 11));
-		setSize(600, 365);
+		contentPane.add(panelActions, cc.xy(3, 11));
+		setSize(525, 370);
 		setLocationRelativeTo(getOwner());
 		// //GEN-END:initComponents
 	}
@@ -251,17 +215,15 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	// JFormDesigner - Variables declaration - DO NOT MODIFY
 	// //GEN-BEGIN:variables
 	private JComponent separator1;
-	private JButtonBar buttonBar;
 	private JPanel panelMain;
 	private JLabel lblFirstName;
 	private JTextField txtFirstName;
 	private JLabel lblLastName;
 	private JTextField txtLastName;
-	private JPanel pluggablePanel;
+	private JTabbedPane tabbedPane;
 	private JPanel panelActions;
 	private JButton btnAccept;
 	private JButton btnCancel;
-
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	@Override
