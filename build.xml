@@ -188,7 +188,7 @@
 		</copy>
 	</target>
 
-	<!-- Tests -->
+	<!-- Tests - - >
 
 	<target name="test" depends="compile-test">		
 		<property name="junit.dest" value="${project.build.report}/junit" />
@@ -212,8 +212,8 @@
 			<report format="frames" todir="${junit.dest}" />
 		</junitreport>
 	</target>
-
-	<!-- QA -->
+-->
+	<!-- QA - - >
 	<target name="qa" depends="cpd,findbugs,pmd" />
 
 	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="findbugs.classpath" />
@@ -264,5 +264,6 @@
 			</fileset>
 		</cpd>
 	</target>
+	-->
 
 </project>
