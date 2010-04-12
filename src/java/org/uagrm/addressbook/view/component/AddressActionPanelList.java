@@ -26,16 +26,7 @@ public class AddressActionPanelList extends ActionPanelList<Address> {
 		dialog.setSaveable(false);
 		dialog.setModel(new Address());
 		dialog.setVisible(true);
-		dialog.addEventListener(new GenericEventListener() {
-
-			@Override
-			public void eventFired(GenericEvent event) {
-				if (event.getType() == GenericEventType.DIALOG_SAVE) {
-					Address address = ((AddressEditDialog) event.getSource()).getModel();
-					addElement(address);
-				}
-			}
-		});
+		dialog.addEventListener(this);
 	}
 
 	@Override
@@ -45,17 +36,7 @@ public class AddressActionPanelList extends ActionPanelList<Address> {
 		dialog.setSaveable(false);
 		dialog.setModel(getSelected());
 		dialog.setVisible(true);
-		dialog.addEventListener(new GenericEventListener() {
-
-			@Override
-			public void eventFired(GenericEvent event) {
-				if (event.getType() == GenericEventType.DIALOG_SAVE) {
-					Address address = ((AddressEditDialog) event.getSource()).getModel();
-					removeSelected();
-					addElement(address);
-				}
-			}
-		});
+		dialog.addEventListener(this);
 	}
 
 

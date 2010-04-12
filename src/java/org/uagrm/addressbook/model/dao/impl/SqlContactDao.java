@@ -16,6 +16,7 @@ import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.VirtualAddress;
+import org.uagrm.addressbook.model.dao.AddressDao;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GroupDao;
@@ -96,6 +97,9 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 			contact.getGroups().clear();
 			contact.getGroups().addAll(groupDao.getByContact(contact.getId()));
 		}
+		//TODO Address
+		//TODO Phone
+		//TODO VirtualAddress
 	}
 
 	@Override
@@ -103,20 +107,6 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 		final Contact contact = new Contact();
 		fillValues(contact, rs);
 		return contact;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}
 
 	@Override
@@ -165,31 +155,19 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 
 	@Override
 	public void saveVirtualAddresses(Contact contact) {
-		removeVirtualAddressReferences(contact);
+		deleteReference(new ReferenceLink(contact.getId(), null,
+				"ID_CONTACT", null, "CONTACT_VIRTUAL_ADDRESSES"));		
 
 		for (VirtualAddress vaddress : contact.getVirtualAddresses()) {
 			if (vaddress.getId() == null) {
 				throw new IllegalArgumentException("Unsaved vaddress");
 			} else {// update
-				addVirtualAddressReference(contact, vaddress);
+				createReference(new ReferenceLink(contact.getId(),
+				vaddress.getId(), null, null, "CONTACT_VIRTUAL_ADDRESSES"));
 			}
 		}
 		LOG.info("VirtualAddresses saved: "
 				+ contact.getVirtualAddresses().size());
-	}
-
-	private void addVirtualAddressReference(Contact contact,
-			VirtualAddress vaddress) {
-		ReferenceLink ref = new ReferenceLink(contact.getId(),
-				vaddress.getId(), null, null, "CONTACT_PHONES");
-		createReference(ref);
-	}
-
-	private void removeVirtualAddressReferences(Contact contact) {
-		LOG.debug("Removing contact -> virtualAddress references.");
-		ReferenceLink ref = new ReferenceLink(contact.getId(), null,
-				"ID_CONTACT", null, "CONTACT_VIRTUAL_ADDRESSES");
-		deleteReference(ref);
 	}
 
 	@Override

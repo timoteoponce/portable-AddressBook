@@ -62,24 +62,24 @@ public class Contact implements SelectableItem {
 	public Set<Address> getAddresses() {
 		return addresses;
 	}
-	
-	public boolean hasAddresses(){
+
+	public boolean hasAddresses() {
 		return !addresses.isEmpty();
 	}
 
 	public Set<VirtualAddress> getVirtualAddresses() {
 		return virtualAddresses;
 	}
-	
-	public boolean hasVirtualAddresses(){
+
+	public boolean hasVirtualAddresses() {
 		return !virtualAddresses.isEmpty();
 	}
 
 	public Set<Phone> getPhones() {
 		return phones;
 	}
-	
-	public boolean hasPhones(){
+
+	public boolean hasPhones() {
 		return !phones.isEmpty();
 	}
 
@@ -93,20 +93,20 @@ public class Contact implements SelectableItem {
 	}
 
 	@Override
-	public boolean equals(SelectableItem item) {	    	
-	    if (this == item)
+	public boolean equals(SelectableItem item) {
+		if (this == item)
+			return true;
+		if (item == null)
+			return false;
+		if (getClass() != item.getClass())
+			return false;
+		Contact other = (Contact) item;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
 		return true;
-	    if (item == null)
-		return false;
-	    if (getClass() != item.getClass())
-		return false;
-	    Contact other = (Contact) item;
-	    if (id == null) {
-		if (other.id != null)
-		    return false;
-	    } else if (!id.equals(other.id))
-		return false;
-	    return true;
-	}	
+	}
 
 }

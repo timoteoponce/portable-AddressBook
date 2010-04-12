@@ -30,25 +30,7 @@ public class ContactActionPanelList extends ActionPanelList<Contact> {
 		dialog.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) contactController.getElements()));
 		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) getElements()));
 		dialog.showDialog();
-		dialog.addSearchEventListener(getSearchListener());
-	}
-
-	private SearchEventListener getSearchListener() {
-		SearchEventListener listener = new SearchEventListener() {
-
-			@Override
-			public void eventFired(SearchEvent event) {
-				SearchDialog dialog = (SearchDialog) event.getSource();
-
-				if (event.getType() == SearchEventType.SELECTED) {
-					Contact contact = (Contact) dialog.getSelected();
-					if (contact != null) {
-						addElement(contact);
-					}
-				}
-			}
-		};
-		return listener;
+		dialog.addSearchEventListener(this);
 	}
 
 	@Override

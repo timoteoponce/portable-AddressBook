@@ -26,16 +26,7 @@ public class PhoneActionPanelList extends ActionPanelList<Phone> {
 		dialog.setSaveable(false);
 		dialog.setModel(new Phone());
 		dialog.setVisible(true);
-		dialog.addEventListener(new GenericEventListener() {
-
-			@Override
-			public void eventFired(GenericEvent event) {
-				if (event.getType() == GenericEventType.DIALOG_SAVE) {
-					Phone phone = ((PhoneEditDialog) event.getSource()).getModel();
-					addElement(phone);
-				}
-			}
-		});
+		dialog.addEventListener(this);
 	}
 
 	@Override
@@ -45,17 +36,7 @@ public class PhoneActionPanelList extends ActionPanelList<Phone> {
 		dialog.setSaveable(false);
 		dialog.setModel(getSelected());
 		dialog.setVisible(true);
-		dialog.addEventListener(new GenericEventListener() {
-
-			@Override
-			public void eventFired(GenericEvent event) {
-				if (event.getType() == GenericEventType.DIALOG_SAVE) {
-					Phone phone = ((PhoneEditDialog) event.getSource()).getModel();
-					removeSelected();
-					addElement(phone);
-				}
-			}
-		});
+		dialog.addEventListener(this);
 	}
 
 

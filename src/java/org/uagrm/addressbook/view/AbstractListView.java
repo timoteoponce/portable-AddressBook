@@ -112,8 +112,7 @@ public abstract class AbstractListView<T> extends JPanel implements ListView<T> 
 	}
 
 	protected void clicked(MouseEvent e) {
-		final int index = getList().getSelectedIndex();
-		System.out.println("index: " + index);
+		final int index = getList().getSelectedIndex();		
 		setModel((T) getList().getSelectedValue());
 
 		if (e.getModifiers() == MouseEvent.BUTTON3_MASK && index > 0) {

@@ -26,16 +26,7 @@ public class VirtualAddressActionPanelList extends ActionPanelList<VirtualAddres
 		dialog.setSaveable(false);
 		dialog.setModel(new VirtualAddress());
 		dialog.setVisible(true);
-		dialog.addEventListener(new GenericEventListener() {
-
-			@Override
-			public void eventFired(GenericEvent event) {
-				if (event.getType() == GenericEventType.DIALOG_SAVE) {
-					VirtualAddress vAddress = ((VirtualAddressEditDialog) event.getSource()).getModel();
-					addElement(vAddress);
-				}
-			}
-		});
+		dialog.addEventListener(this);
 	}
 
 	@Override
@@ -45,17 +36,7 @@ public class VirtualAddressActionPanelList extends ActionPanelList<VirtualAddres
 		dialog.setSaveable(false);
 		dialog.setModel(getSelected());
 		dialog.setVisible(true);
-		dialog.addEventListener(new GenericEventListener() {
-
-			@Override
-			public void eventFired(GenericEvent event) {
-				if (event.getType() == GenericEventType.DIALOG_SAVE) {
-					VirtualAddress vAddress = ((VirtualAddressEditDialog) event.getSource()).getModel();
-					removeSelected();
-					addElement(vAddress);
-				}
-			}
-		});
+		dialog.addEventListener(this);
 	}
 
 

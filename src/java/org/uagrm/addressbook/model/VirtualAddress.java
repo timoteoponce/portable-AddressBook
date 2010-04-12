@@ -60,6 +60,11 @@ public class VirtualAddress implements Entity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((identifier == null) ? 0 : identifier.hashCode());
+		result = prime * result
+				+ ((protocol == null) ? 0 : protocol.hashCode());
+		result = prime * result + ((website == null) ? 0 : website.hashCode());
 		return result;
 	}
 
@@ -77,15 +82,28 @@ public class VirtualAddress implements Entity {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (identifier == null) {
+			if (other.identifier != null)
+				return false;
+		} else if (!identifier.equals(other.identifier))
+			return false;
+		if (protocol == null) {
+			if (other.protocol != null)
+				return false;
+		} else if (!protocol.equals(other.protocol))
+			return false;
+		if (website == null) {
+			if (other.website != null)
+				return false;
+		} else if (!website.equals(other.website))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-	    return "VirtualAddress [id=" + id + ", identifier=" + identifier
-		    + ", protocol=" + protocol + ", website=" + website + "]";
+		return "VirtualAddress [id=" + id + ", identifier=" + identifier
+				+ ", protocol=" + protocol + ", website=" + website + "]";
 	}
-	
-	
 
 }

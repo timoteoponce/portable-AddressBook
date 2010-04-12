@@ -2,14 +2,14 @@ package org.uagrm.addressbook.model;
 
 /**
  * @author Timoteo Ponce
- *
+ * 
  */
 public class Protocol implements Entity {
 	private Integer id;
 	private String name;
 	private Integer port;
 
-	public Protocol() {		
+	public Protocol() {
 	}
 
 	public Protocol(Integer id, String name, Integer port) {
@@ -48,6 +48,8 @@ public class Protocol implements Entity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((port == null) ? 0 : port.hashCode());
 		return result;
 	}
 
@@ -65,7 +67,18 @@ public class Protocol implements Entity {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (port == null) {
+			if (other.port != null)
+				return false;
+		} else if (!port.equals(other.port))
+			return false;
 		return true;
 	}
+	
 
 }

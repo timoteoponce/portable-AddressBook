@@ -12,7 +12,16 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.swing.ListModel;
+import org.uagrm.addressbook.view.dialog.DialogView;
+import org.uagrm.addressbook.view.dialog.SearchDialog;
+import org.uagrm.addressbook.view.event.GenericEvent;
+import org.uagrm.addressbook.view.event.GenericEventListener;
+import org.uagrm.addressbook.view.event.GenericEventType;
+import org.uagrm.addressbook.view.event.SearchEvent;
+import org.uagrm.addressbook.view.event.SearchEventListener;
+import org.uagrm.addressbook.view.event.SearchEventType;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -20,7 +29,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class ActionPanelList<T> extends JPanel {
+public class ActionPanelList<T> extends JPanel implements GenericEventListener,SearchEventListener {
 
 	private final ListModel<T> listModel = new ListModel<T>();
 	private boolean editionEnabled;
@@ -41,7 +50,8 @@ public class ActionPanelList<T> extends JPanel {
 					addNewElement();
 				} else if (e.getActionCommand().equals(ActionPanel.ACTION_EDIT)) {
 					editSelected();
-				} else if (e.getActionCommand().equals(ActionPanel.ACTION_REMOVE)) {
+				} else if (e.getActionCommand().equals(
+						ActionPanel.ACTION_REMOVE)) {
 					removeSelected();
 				}
 
@@ -93,6 +103,36 @@ public class ActionPanelList<T> extends JPanel {
 		listModel.clear();
 	}
 
+	@Override
+	public void eventFired(GenericEvent event) {
+		if (event.getType() == GenericEventType.DIALOG_SAVE) {
+			T element = ((DialogView<T>) event.getSource()).getModel();
+			if(element!= null){
+				addElement(element);
+			}
+		} else if (event.getType() == GenericEventType.DIALOG_SAVE) {
+			T element = ((DialogView<T>) event.getSource()).getModel();
+			if(element!= null){
+				removeSelected();
+				addElement(element);
+			}
+		}
+
+	}
+	
+
+	@Override
+	public void eventFired(SearchEvent event) {
+		SearchDialog dialog = (SearchDialog) event.getSource();
+
+		if (event.getType() == SearchEventType.SELECTED) {
+			T element = (T) dialog.getSelected();
+			if (element != null) {
+				addElement(element);
+			}
+		}		
+	}
+
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY
 		// //GEN-BEGIN:initComponents
@@ -109,7 +149,8 @@ public class ActionPanelList<T> extends JPanel {
 		{
 			listScrollPane.setViewportView(list);
 		}
-		add(listScrollPane, cc.xywh(1, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+		add(listScrollPane, cc.xywh(1, 3, 1, 1, CellConstraints.FILL,
+				CellConstraints.FILL));
 		// //GEN-END:initComponents
 	}
 
@@ -119,4 +160,5 @@ public class ActionPanelList<T> extends JPanel {
 	private JScrollPane listScrollPane;
 	private JList list;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
+
 }

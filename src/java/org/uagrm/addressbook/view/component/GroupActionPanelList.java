@@ -30,27 +30,9 @@ public class GroupActionPanelList extends ActionPanelList<Group> {
 		dialog.setValidElements((List<SelectableItem>) ((List<? extends SelectableItem>) groupController.getElements()));
 		dialog.setInvalidElements((List<SelectableItem>) ((List<? extends SelectableItem>) getElements()));
 		dialog.showDialog();
-		dialog.addSearchEventListener(getSearchListener());
+		dialog.addSearchEventListener(this);
 	}
-
-	private SearchEventListener getSearchListener() {
-		SearchEventListener listener = new SearchEventListener() {
-
-			@Override
-			public void eventFired(SearchEvent event) {
-				SearchDialog dialog = (SearchDialog) event.getSource();
-
-				if (event.getType() == SearchEventType.SELECTED) {
-					Group group = (Group) dialog.getSelected();
-					if (group != null) {
-						addElement(group);
-					}
-				}
-			}
-		};
-		return listener;
-	}
-
+	
 	@Override
 	public void editSelected() {
 		// TODO implement
