@@ -20,7 +20,9 @@ import org.uagrm.addressbook.model.dao.AddressDao;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GroupDao;
+import org.uagrm.addressbook.model.dao.PhoneDao;
 import org.uagrm.addressbook.model.dao.SqlOperation;
+import org.uagrm.addressbook.model.dao.VirtualAddressDao;
 
 /**
  * @author Timoteo Ponce
@@ -32,19 +34,20 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	private static final Logger LOG = Logger.getLogger(SqlContactDao.class);
 
 	@Override
-	public Set<Contact> getByGroup(final Integer groupId) {
+	public Set<Contact> getByGroup(Group group) {
 		final QueryBuilder builder = QueryBuilder.createQuery(SqlOperation.SQL_SELECT_ALL);
 		builder.setVariable(VAR_COLUMNS, "c.*");
 		builder.setVariable(VAR_TABLE, TABLE_NAME);
 		builder.append(" c INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS);
-		builder.append(" gc ON c.ID = gc.ID_CONTACT WHERE gc.ID_GROUP = " + groupId);
+		builder.append(" gc ON c.ID = gc.ID_CONTACT WHERE gc.ID_GROUP = " + group.getId());
 
 		final Set<Contact> contacts = new HashSet<Contact>();
 		ResultSet rs = getDatabaseHandler().executeQuery(builder.getQuery());
 		try {
 			while (rs.next()) {
-				contacts.add(new Contact(Integer.valueOf(rs.getInt(1)), rs
-						.getString(2), rs.getString(3)));
+				Contact contact = new Contact();
+				fillValues(contact, rs);
+				contacts.add(contact);
 			}
 		} catch (SQLException e) {
 			LOG.error(e, e);
@@ -90,12 +93,22 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 			GroupDao groupDao = DaoFactory.getInstance(GroupDao.class);
 
 			contact.getGroups().clear();
-			contact.getGroups().addAll(groupDao.getByContact(contact.getId()));
+			contact.getGroups().addAll(groupDao.getByContact(contact));
+		}else if(target.equals(Address.class)){
+			AddressDao dao = DaoFactory.getInstance(AddressDao.class);
+			contact.getAddresses().clear();
+			contact.getAddresses().addAll(dao.getByContact(contact));
+		}else if(target.equals(Phone.class)){
+			PhoneDao dao = DaoFactory.getInstance(PhoneDao.class);
+			contact.getPhones().clear();
+			contact.getPhones().addAll(dao.getByContact(contact));
+		}else if(target.equals(VirtualAddress.class)){
+			VirtualAddressDao dao = DaoFactory.getInstance(VirtualAddressDao.class);
+			contact.getVirtualAddresses().clear();
+			contact.getVirtualAddresses().addAll(dao.getByContact(contact));
 		}
-		//TODO Address
-		//TODO Phone
-		//TODO VirtualAddress
 	}
+	
 
 	@Override
 	protected Contact loadValues(ResultSet rs) throws SQLException {

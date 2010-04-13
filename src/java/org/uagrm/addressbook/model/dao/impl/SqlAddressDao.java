@@ -4,15 +4,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang.text.StrBuilder;
+import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Address;
+import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Country;
 import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.AddressDao;
 import org.uagrm.addressbook.model.dao.CountryDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
+import org.uagrm.addressbook.model.dao.GroupDao;
+import org.uagrm.addressbook.model.dao.SqlOperation;
 
 /**
  * @author Timoteo Ponce
@@ -79,6 +85,30 @@ public class SqlAddressDao extends AbstractSqlDao<Address> implements
 	@Override
 	protected Collection<ReferenceLink> getReferences(Address entity) {
 		return new ArrayList<ReferenceLink>();
+	}
+
+	@Override
+	public Set<Address> getByContact(Contact contact) {
+		final QueryBuilder builder = QueryBuilder.createQuery(SqlOperation.SQL_SELECT_ALL);
+		builder.setVariable(VAR_COLUMNS, "c.*");
+		builder.setVariable(VAR_TABLE, TABLE_NAME);
+		builder.append(" c INNER JOIN " + "CONTACT_ADDRESSES");
+		builder.append(" gc ON c.ID = gc.ID_ADDRESS WHERE gc.ID_CONTACT = " + contact.getId());
+
+		final Set<Address> addresses = new HashSet<Address>();
+		ResultSet rs = getDatabaseHandler().executeQuery(builder.getQuery());
+		try {
+			while (rs.next()) {
+				Address address = new Address();
+				fillValues(address, rs);
+				addresses.add(address);
+			}
+		} catch (SQLException e) {
+			Logger.getLogger(SqlAddressDao.class).error(e, e);
+		} finally {
+			getDatabaseHandler().closeQuietly(rs);
+		}
+		return addresses;
 	}
 
 }

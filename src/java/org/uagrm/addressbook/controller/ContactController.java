@@ -108,7 +108,7 @@ public class ContactController extends AbstractController<Contact> {
 		if (targetClass.equals(Group.class) && ((Group) target).getId() != null) {
 			list.clear();
 			Group group = (Group) target;
-			list.addAll(dao.getByGroup(group.getId()));
+			list.addAll(dao.getByGroup(group));
 		} else {
 			refreshElementList();
 		}

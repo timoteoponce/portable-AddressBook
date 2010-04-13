@@ -32,20 +32,20 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 			ContactDao contactDao = DaoFactory.getInstance(ContactDao.class);
 
 			group.getContacts().clear();
-			group.getContacts().addAll(contactDao.getByGroup(group.getId()));
+			group.getContacts().addAll(contactDao.getByGroup(group));
 		}
 	}
 
 	@Override
-	public Set<Group> getByContact(Integer contactId) {
+	public Set<Group> getByContact(Contact contact) {
 		final QueryBuilder builder = QueryBuilder.createQuery(SqlOperation.SQL_SELECT_ALL);
 		builder.setVariable(VAR_COLUMNS, "g.*");
 		builder.setVariable(VAR_TABLE, TABLE_NAME);
 		builder.append(" g INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS);
-		builder.append(" gc ON g.ID = gc.ID_GROUP WHERE gc.ID_CONTACT = " + contactId);
+		builder.append(" gc ON g.ID = gc.ID_GROUP WHERE gc.ID_CONTACT = " + contact.getId());
 		
 		final Set<Group> groups = new HashSet<Group>();
-		ResultSet rs = getDatabaseHandler().executeQuery(builder.toString());
+		ResultSet rs = getDatabaseHandler().executeQuery(builder.getQuery());
 		try {
 			while (rs.next()) {
 				groups.add(new Group(Integer.valueOf(rs.getInt(1)), rs

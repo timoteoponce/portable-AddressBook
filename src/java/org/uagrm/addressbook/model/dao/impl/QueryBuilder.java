@@ -43,5 +43,10 @@ public class QueryBuilder {
 	public String getQuery() {
 		return buffer.toString();
 	}
+	
+	@Override
+	public String toString() {	
+		return getQuery();
+	}
 
 }
