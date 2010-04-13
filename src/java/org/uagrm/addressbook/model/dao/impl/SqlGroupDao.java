@@ -16,8 +16,7 @@ import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GroupDao;
-import org.uagrm.addressbook.util.ConfigKeys;
-import org.uagrm.addressbook.util.Configuration;
+import org.uagrm.addressbook.model.dao.SqlOperation;
 
 /**
  * @author Timoteo Ponce
@@ -39,17 +38,14 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 
 	@Override
 	public Set<Group> getByContact(Integer contactId) {
-		final StrBuilder buffer = new StrBuilder();
-		buffer.append(Configuration.getConfigKey(ConfigKeys.SQL_SELECT_ALL)
-				.trim());
-		buffer.replaceAll(VAR_COLUMNS, "g.*");
-		buffer.replaceAll(VAR_TABLE, TABLE_NAME);
-		buffer.append(" g INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS);
-		buffer.append(" gc ON g.ID = gc.ID_GROUP WHERE gc.ID_CONTACT = "
-				+ contactId);
+		final QueryBuilder builder = QueryBuilder.createQuery(SqlOperation.SQL_SELECT_ALL);
+		builder.setVariable(VAR_COLUMNS, "g.*");
+		builder.setVariable(VAR_TABLE, TABLE_NAME);
+		builder.append(" g INNER JOIN " + GroupDao.TABLE_GROUP_CONTACTS);
+		builder.append(" gc ON g.ID = gc.ID_GROUP WHERE gc.ID_CONTACT = " + contactId);
 		
 		final Set<Group> groups = new HashSet<Group>();
-		ResultSet rs = getDatabaseHandler().executeQuery(buffer.toString());
+		ResultSet rs = getDatabaseHandler().executeQuery(builder.toString());
 		try {
 			while (rs.next()) {
 				groups.add(new Group(Integer.valueOf(rs.getInt(1)), rs

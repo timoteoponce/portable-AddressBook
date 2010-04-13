@@ -10,8 +10,6 @@ import java.sql.Statement;
 import javax.sql.rowset.CachedRowSet;
 
 import org.apache.log4j.Logger;
-import org.uagrm.addressbook.util.ConfigKeys;
-import org.uagrm.addressbook.util.Configuration;
 
 import com.sun.rowset.CachedRowSetImpl;
 
@@ -45,10 +43,8 @@ public final class DatabaseHandlerImpl implements DatabaseHandler {
 	@Override
 	public void connect() {
 		try {
-			final String connectionClass = Configuration
-					.getConfigKey(ConfigKeys.DB_CONNECTION_CLASS);
-			final String dbLocation = Configuration
-					.getConfigKey(ConfigKeys.DB_CONNECTION_LOCATION);
+			final String connectionClass = DatabaseProperty.DB_CONNECTION_CLASS.getValue();
+			final String dbLocation = DatabaseProperty.DB_CONNECTION_LOCATION.getValue();
 			Class.forName(connectionClass);
 			setConnection(DriverManager.getConnection(dbLocation));
 		} catch (SQLException e) {

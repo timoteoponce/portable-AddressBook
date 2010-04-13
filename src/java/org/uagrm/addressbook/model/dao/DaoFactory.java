@@ -4,13 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.uagrm.addressbook.model.dao.impl.SqlAddressDao;
-import org.uagrm.addressbook.util.ConfigKeys;
-import org.uagrm.addressbook.util.Configuration;
+import org.uagrm.data.DatabaseProperty;
 
 /**
- * Factory class used to instantiate DAOs implementations from 
- * DAO interfaces.
+ * Factory class used to instantiate DAOs implementations from DAO interfaces.
  * e.g. {@link AddressDao} could instantiate {@link SqlAddressDao}
+ * 
  * @author Timoteo Ponce
  * 
  */
@@ -27,12 +26,9 @@ public class DaoFactory {
 
 	private static <T> T createInstance(Class<T> clazz) {
 		try {
-			final String daoTypeId = GenericDao.class.getPackage().getName()
-					+ ".impl."
-					+ Configuration.getConfigKey(ConfigKeys.DAO_PREFIX);
+			final String daoTypeId = GenericDao.class.getPackage().getName() + ".impl." + DatabaseProperty.DAO_PREFIX.getValue();
 
-			Object instance = Class.forName(daoTypeId + clazz.getSimpleName())
-					.newInstance();
+			Object instance = Class.forName(daoTypeId + clazz.getSimpleName()).newInstance();
 			daoMap.put(clazz.getName(), instance);
 			return (T) instance;
 		} catch (Exception e) {

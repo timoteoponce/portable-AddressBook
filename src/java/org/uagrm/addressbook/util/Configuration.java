@@ -38,7 +38,7 @@ public final class Configuration {
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public static String getConfigKey(final String key) {
+	public static String getConfigValue(final String key) {
 		if (appProperties == null) {
 			try {
 				loadAppPropertyFile();
