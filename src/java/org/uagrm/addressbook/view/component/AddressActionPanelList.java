@@ -4,9 +4,6 @@ import java.awt.Frame;
 
 import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.view.dialog.AddressEditDialog;
-import org.uagrm.addressbook.view.event.GenericEvent;
-import org.uagrm.addressbook.view.event.GenericEventListener;
-import org.uagrm.addressbook.view.event.GenericEventType;
 
 /**
  * @author Timoteo Ponce

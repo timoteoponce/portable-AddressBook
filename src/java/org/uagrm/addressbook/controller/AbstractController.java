@@ -9,6 +9,8 @@ import java.util.Observer;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.Entity;
 import org.uagrm.addressbook.model.dao.GenericDao;
+import org.uagrm.addressbook.model.dto.EntityStatus;
+import org.uagrm.addressbook.model.dto.StatusType;
 
 public abstract class AbstractController<T> extends Observable implements
 		Controller<T> {
@@ -35,7 +37,7 @@ public abstract class AbstractController<T> extends Observable implements
 			getDao().update(element);
 		}
 		if (updateViews) {
-			updateAllViews(element);
+			updateAllViews(EntityStatus.create(element, StatusType.UPDATED));
 		}
 	}
 
@@ -51,7 +53,7 @@ public abstract class AbstractController<T> extends Observable implements
 	public void delete(T element, boolean updateViews) {
 		getDao().delete(element);
 		if (updateViews) {
-			updateAllViews(null);
+			updateAllViews(EntityStatus.create(element, StatusType.DELETED));
 		}
 	}
 
@@ -80,7 +82,7 @@ public abstract class AbstractController<T> extends Observable implements
 		this.deleteObserver(observer);
 	}
 
-	public void updateAllViews(T model) {
+	public void updateAllViews(EntityStatus<T> model) {
 		refreshElementList();
 		setChanged();
 		notifyObservers(model);

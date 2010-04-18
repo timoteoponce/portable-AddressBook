@@ -4,17 +4,18 @@
 
 package org.uagrm.addressbook.view.dialog;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,8 +23,12 @@ import javax.swing.JTextField;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
+import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
-import org.uagrm.addressbook.view.View;
+import org.uagrm.addressbook.model.dto.EntityStatus;
+import org.uagrm.addressbook.model.dto.StatusType;
+import org.uagrm.addressbook.view.component.ActionPanelList;
+import org.uagrm.addressbook.view.component.ContactActionPanelList;
 
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -32,18 +37,21 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class GroupEditDialog extends JDialog implements View<Group> {
+public class GroupEditDialog extends AbstractDialogView<Group> {
 
 	private static final Logger LOG = Logger.getLogger(GroupEditDialog.class);
 
-	private final Controller<Group> controller = ControllerFactory
-.getInstanceFor(Group.class);
-	private Group group;
-	private boolean isCreation;
+	private final Controller<Group> controller = ControllerFactory.getInstanceFor(Group.class);
+
+	private final Controller<Contact> contactController = ControllerFactory.getInstanceFor(Contact.class);
+
+	private final ActionPanelList<Contact> contactList = new ContactActionPanelList(false);
+
 
 	public GroupEditDialog(Frame owner) {
 		super(owner);
 		initComponents();
+		init();
 	}
 
 	public GroupEditDialog(Dialog parent) {
@@ -54,31 +62,16 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 
 	private void init() {
 		controller.addView(this);
+		contactController.addView(this);
+		this.panelContacts.add(BorderLayout.CENTER, contactList);
 	}
 
 	private void btnAcceptActionPerformed(ActionEvent e) {
-		updateValues();
-		controller.save(group, true);
-		close();
+		saveModel();
 	}
 
 	private void btnCancelActionPerformed(ActionEvent e) {
 		close();
-	}
-
-	private void btnEditActionPerformed(ActionEvent e) {
-		editMembers();
-	}
-
-	/*
-	 * public GroupEdit(Dialog owner) { super(owner); initComponents(); }
-	 */
-
-	private void editMembers() {
-		EditGroupContactsDialog dialog = new EditGroupContactsDialog(this);
-		dialog.setModel(group);
-		dialog.setLocked(isCreation);
-		dialog.setVisible(true);
 	}
 
 	private void initComponents() {
@@ -91,8 +84,7 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 		txtName = new JTextField();
 		lblDescription = new JLabel();
 		txtDescription = new JTextField();
-		separator1 = compFactory.createSeparator(bundle.getString("GroupEdit.members"));
-		btnEdit = new JButton();
+		panelContacts = new JPanel();
 		panelOperations = new JPanel();
 		btnAccept = new JButton();
 		btnCancel = new JButton();
@@ -103,7 +95,7 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"31dlu, 55dlu, 109dlu, default:grow",
-			"default, default:grow, 5*(default), default:grow, default, fill:16dlu"));
+ "default, default:grow, 4*(default), default:grow, 2*(default), fill:16dlu"));
 		contentPane.add(separator2, cc.xywh(2, 2, 2, 1));
 
 		//---- lblName ----
@@ -119,17 +111,12 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 		lblDescription.setDisplayedMnemonic('D');
 		contentPane.add(lblDescription, cc.xy(2, 4));
 		contentPane.add(txtDescription, cc.xy(3, 4));
-		contentPane.add(separator1, cc.xywh(2, 6, 2, 1));
 
-		//---- btnEdit ----
-		btnEdit.setText(bundle.getString("GroupEdit.editMembers"));
-		btnEdit.setMnemonic('E');
-		btnEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				btnEditActionPerformed(e);
-			}
-		});
-		contentPane.add(btnEdit, cc.xy(3, 7));
+		// ======== panelContacts ========
+		{
+			panelContacts.setLayout(new BorderLayout());
+		}
+		contentPane.add(panelContacts, cc.xywh(2, 6, 2, 2, CellConstraints.FILL, CellConstraints.FILL));
 
 		//======== panelOperations ========
 		{
@@ -156,7 +143,7 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 			panelOperations.add(btnCancel, cc.xy(5, 1));
 		}
 		contentPane.add(panelOperations, cc.xywh(2, 9, 2, 1));
-		setSize(425, 235);
+		setSize(490, 355);
 		setLocationRelativeTo(getOwner());
 		// //GEN-END:initComponents
 	}
@@ -168,57 +155,69 @@ public class GroupEditDialog extends JDialog implements View<Group> {
 	private JTextField txtName;
 	private JLabel lblDescription;
 	private JTextField txtDescription;
-	private JComponent separator1;
-	private JButton btnEdit;
+	private JPanel panelContacts;
 	private JPanel panelOperations;
 	private JButton btnAccept;
 	private JButton btnCancel;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
-	private void loadValues() {
-		txtName.setText(group.getName());
-		txtDescription.setText(group.getDescription());
+	@Override
+	public void loadValues() {
+		txtName.setText(getModel().getName());
+		txtDescription.setText(getModel().getDescription());
+		updateContactList();
 	}
 
-	private void updateValues() {
-		group.setName(txtName.getText());
-		group.setDescription(txtDescription.getText());
-	}	
+	private void updateContactList() {
+		// if (getModel().getContacts().isEmpty()) {
+		controller.preloadEntity(getModel(), Contact.class);
+		// }
+		contactList.addAllElements(getModel().getContacts());
+	}
 
 	@Override
-	public void setModel(Group model) {
-		this.group = model;
-		loadValues();
-	}	
+	public void updateValues() {
+		getModel().setName(txtName.getText());
+		getModel().setDescription(txtDescription.getText());
+		//
+		getModel().getContacts().clear();
+		getModel().getContacts().addAll(contactList.getElements());
+	}
 
-	public void setIsCreation(boolean value) {
-		this.isCreation = value;
-		setModel(new Group());
-		btnAccept.setText("Save");
-		LOG.debug("IsCreation: " + value);
+	@Override
+	Controller<Group> getController() {
+		return controller;
 	}
 
 	@Override
 	public void close() {
 		controller.removeView(this);
+		contactController.removeView(this);
 		this.dispose();
 	}
 
 	@Override
 	public void update(Observable source, Object model) {
 		if (source.equals(controller)) {
-			if (model == null) {// was deleted
-				this.close();
-			} else if (this.group.equals((Group) model)) {
-				LOG.info("Updating model : " + this.getClass().getName()
-						+ ", values: " + model.toString());
-				setModel((Group) model);
+			final EntityStatus<Group> entityStatus = (EntityStatus<Group>) model;
+			if (entityStatus.getEntity().equals(model)) {
+				if (entityStatus.getStatus() == StatusType.DELETED) {
+					this.close();
+				} else {
+					setModel(entityStatus.getEntity());
+				}
+			}
+		} else if (source.equals(contactController)) {
+			final EntityStatus<Contact> entityStatus = (EntityStatus<Contact>) model;			
+			final int index = ((List<Contact>) contactList.getElements()).lastIndexOf(entityStatus.getEntity());
+
+			if (index > -1) {
+				if (entityStatus.getStatus() == StatusType.DELETED) {
+					((List<Contact>) contactList.getElements()).remove(index);
+				}
 			}
 		}
 	}
 
-	@Override
-	public Group getModel() {
-		return group;
-	}
+
 }

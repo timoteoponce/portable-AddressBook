@@ -14,7 +14,6 @@ import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -30,7 +29,8 @@ import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.model.VirtualAddress;
-import org.uagrm.addressbook.view.View;
+import org.uagrm.addressbook.model.dto.EntityStatus;
+import org.uagrm.addressbook.model.dto.StatusType;
 import org.uagrm.addressbook.view.component.ActionPanelList;
 import org.uagrm.addressbook.view.component.AddressActionPanelList;
 import org.uagrm.addressbook.view.component.GroupActionPanelList;
@@ -44,7 +44,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class ContactEditDialog extends JDialog implements View<Contact> {
+public class ContactEditDialog extends AbstractDialogView<Contact> {
 
 	private static final Logger LOG = Logger.getLogger(ContactEditDialog.class);
 
@@ -59,9 +59,6 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	private final ActionPanelList<Phone> phonePanelList = new PhoneActionPanelList(true);
 
 	private final ActionPanelList<VirtualAddress> vAddressPanelList = new VirtualAddressActionPanelList(true);
-
-	private Contact contact;
-	private boolean isCreation;
 
 	public ContactEditDialog(Frame owner) {
 		super(owner);
@@ -96,38 +93,12 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 		tabbedPane.addTab(label, component);
 	}
 
-	public Contact getContact() {
-		return contact;
-	}
-
-	public void setContact(Contact contact) {
-		this.contact = contact;
-		loadValues();
-	}
-
-	public boolean isCreation() {
-		return isCreation;
-	}
-
-	public void setCreation(boolean isCreation) {
-		this.isCreation = isCreation;
-	}
-
 	private void btnAcceptActionPerformed(ActionEvent e) {
-		okAction();
+		saveModel();
 	}
 
-	private void okAction() {
-		updateValues();
-		contactController.save(contact, true);
-		close();
-	}
 
 	private void btnCancelActionPerformed(ActionEvent e) {
-		cancelAction();
-	}
-
-	private void cancelAction() {
 		close();
 	}
 
@@ -234,18 +205,15 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	@Override
-	public void setModel(Contact model) {
-		this.contact = model;
-		loadValues();
-	}
-
-	private void loadValues() {
-		txtFirstName.setText(contact.getFirstName());
-		txtLastName.setText(contact.getLastName());
+	public void loadValues() {
+		txtFirstName.setText(getModel().getFirstName());
+		txtLastName.setText(getModel().getLastName());
 		updateLists();
 	}
 
-	private void updateValues() {
+	@Override
+	public void updateValues() {
+		Contact contact = getModel();
 		contact.setFirstName(txtFirstName.getText());
 		contact.setLastName(txtLastName.getText());
 		//
@@ -270,38 +238,38 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	private void updateGroupList() {
-		if (contact.getGroups().isEmpty()) {
-			contactController.preloadEntity(contact, Group.class);
+		if (getModel().getGroups().isEmpty()) {
+			contactController.preloadEntity(getModel(), Group.class);
 		}
 		groupPanelList.clear();
-		groupPanelList.addAllElements(contact.getGroups());
+		groupPanelList.addAllElements(getModel().getGroups());
 		groupPanelList.updateUI();
 	}
 
 	private void updateAddressList() {
-		if (!contact.hasAddresses()) {
-			contactController.preloadEntity(contact, Address.class);
+		if (!getModel().hasAddresses()) {
+			contactController.preloadEntity(getModel(), Address.class);
 		}
 		addressPanelList.clear();
-		addressPanelList.addAllElements(contact.getAddresses());
+		addressPanelList.addAllElements(getModel().getAddresses());
 		addressPanelList.updateUI();
 	}
 
 	private void updatePhoneList() {
-		if (contact.getPhones().isEmpty()) {
-			contactController.preloadEntity(contact, Phone.class);
+		if (getModel().getPhones().isEmpty()) {
+			contactController.preloadEntity(getModel(), Phone.class);
 		}
 		phonePanelList.clear();
-		phonePanelList.addAllElements(contact.getPhones());
+		phonePanelList.addAllElements(getModel().getPhones());
 		phonePanelList.updateUI();
 	}
 
 	private void updateVAddressList() {
-		if (contact.getVirtualAddresses().isEmpty()) {
-			contactController.preloadEntity(contact, VirtualAddress.class);
+		if (getModel().getVirtualAddresses().isEmpty()) {
+			contactController.preloadEntity(getModel(), VirtualAddress.class);
 		}
 		vAddressPanelList.clear();
-		vAddressPanelList.addAllElements(contact.getVirtualAddresses());
+		vAddressPanelList.addAllElements(getModel().getVirtualAddresses());
 		vAddressPanelList.updateUI();
 	}
 
@@ -309,11 +277,15 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	public void update(Observable source, Object model) {
 		// from contacts
 		if (source.equals(contactController)) {
-			if (model == null) {// was deleted
-				this.close();
-			} else if (this.contact.equals((Contact) model)) {
-				LOG.info("Updating model : " + this.getClass().getName() + ", values: " + model.toString());
-				setModel((Contact) model);
+			final EntityStatus<Contact> entityStatus = (EntityStatus<Contact>) model;
+
+			if (getModel().equals(entityStatus.getEntity())) {// was deleted
+				if (entityStatus.getStatus() == StatusType.DELETED) {
+					this.close();
+				} else {
+					LOG.info("Updating model : " + this.getClass().getName() + ", values: " + entityStatus.toString());
+					setModel(entityStatus.getEntity());
+				}
 			}
 		}// from groups
 		else if (source.getClass().equals(GroupController.class)) {
@@ -322,7 +294,7 @@ public class ContactEditDialog extends JDialog implements View<Contact> {
 	}
 
 	@Override
-	public Contact getModel() {
-		return contact;
+	Controller<Contact> getController() {
+		return contactController;
 	}
 }

@@ -23,6 +23,8 @@ import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Country;
+import org.uagrm.addressbook.model.dto.EntityStatus;
+import org.uagrm.addressbook.model.dto.StatusType;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
 
 import com.jgoodies.forms.factories.Borders;
@@ -237,9 +239,15 @@ public class AddressEditDialog extends AbstractDialogView<Address>{
 	@Override
 	public void update(Observable source, Object model) {
 		if (source.equals(addressController)) {
-			if (model != null && this.getModel().equals((Address) model)) {
-				LOG.info("Updating model : " + this.getClass().getName() + ", values: " + model.toString());
-				setModel((Address) model);
+			final EntityStatus<Address> entityStatus = (EntityStatus<Address>) model;
+
+			if (entityStatus.getEntity().equals(getModel())) {
+				if (entityStatus.getStatus() == StatusType.DELETED) {
+					close();
+				} else {
+					LOG.info("Updating model : " + this.getClass().getName() + ", values: " + entityStatus);
+					setModel(entityStatus.getEntity());
+				}
 			}
 		} else if (source.equals(countryController)) {
 			updateCountryCombo();

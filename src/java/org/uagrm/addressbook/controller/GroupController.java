@@ -6,6 +6,8 @@ import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.model.dao.GroupDao;
+import org.uagrm.addressbook.model.dto.EntityStatus;
+import org.uagrm.addressbook.model.dto.StatusType;
 
 /**
  * @author Timoteo Ponce
@@ -42,7 +44,7 @@ public class GroupController extends AbstractController<Group> {
 		}
 		saveReferences(group, Contact.class);
 		if (updateViews) {
-			updateAllViews(group);
+			updateAllViews(EntityStatus.create(group, StatusType.UPDATED));
 		}
 	}
 

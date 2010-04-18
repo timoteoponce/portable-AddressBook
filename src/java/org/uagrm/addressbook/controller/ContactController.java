@@ -12,6 +12,8 @@ import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GenericDao;
+import org.uagrm.addressbook.model.dto.EntityStatus;
+import org.uagrm.addressbook.model.dto.StatusType;
 
 /**
  * @author Timoteo Ponce
@@ -56,7 +58,7 @@ public class ContactController extends AbstractController<Contact> {
 		saveReferences(contact, VirtualAddress.class);
 		saveReferences(contact, Group.class);
 		if (updateViews) {
-			updateAllViews(contact);
+			updateAllViews(EntityStatus.create(contact, StatusType.UPDATED));
 		}
 	}
 

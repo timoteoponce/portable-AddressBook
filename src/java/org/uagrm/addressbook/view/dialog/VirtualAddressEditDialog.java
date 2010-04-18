@@ -24,6 +24,8 @@ import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Protocol;
 import org.uagrm.addressbook.model.VirtualAddress;
+import org.uagrm.addressbook.model.dto.EntityStatus;
+import org.uagrm.addressbook.model.dto.StatusType;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
 
 import com.jgoodies.forms.factories.Borders;
@@ -221,9 +223,15 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 	@Override
 	public void update(Observable source, Object model) {
 		if (source.equals(vAddressController)) {
-			if (model != null && this.getModel().equals((VirtualAddress) model)) {
-				LOG.info("Updating model : " + this.getClass().getName() + ", values: " + model.toString());
-				setModel((VirtualAddress) model);
+			final EntityStatus<VirtualAddress> entityStatus = (EntityStatus<VirtualAddress>) model;
+
+			if (entityStatus.getEntity().equals(getModel())) {
+				if (entityStatus.getStatus() == StatusType.DELETED) {
+					close();
+				} else {
+					LOG.info("Updating model : " + this.getClass().getName() + ", values: " + model.toString());
+					setModel((VirtualAddress) model);
+				}
 			}
 		} else if (source.equals(protocolController)) {
 			updateProtocolCombo();

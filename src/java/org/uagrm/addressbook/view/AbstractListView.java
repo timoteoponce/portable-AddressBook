@@ -31,6 +31,8 @@ public abstract class AbstractListView<T> extends JPanel implements ListView<T> 
 
 	private T model;
 
+	private int currentIndex;
+
 	protected void init() {
 		getController().addView(this);
 		getList().setModel(getListModel());
@@ -112,15 +114,18 @@ public abstract class AbstractListView<T> extends JPanel implements ListView<T> 
 	}
 
 	protected void clicked(MouseEvent e) {
-		final int index = getList().getSelectedIndex();		
-		setModel((T) getList().getSelectedValue());
+		final int index = getList().getSelectedIndex();
+		if (currentIndex != index) {
+			setModel((T) getList().getSelectedValue());
 
-		if (e.getModifiers() == MouseEvent.BUTTON3_MASK && index > 0) {
-			showPopUpMenu(e.getX(), e.getY());
-		} else {
 			if (getModel() != null) {
 				fireEvent(GenericEventType.ELEMENT_SELECTED);
 			}
+			currentIndex = index;
+		}
+
+		if (e.getModifiers() == MouseEvent.BUTTON3_MASK && index > 0) {
+			showPopUpMenu(e.getX(), e.getY());
 		}
 	}
 

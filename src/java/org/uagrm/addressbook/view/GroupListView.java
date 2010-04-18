@@ -41,7 +41,9 @@ public class GroupListView extends AbstractListView<Group> {
 	@Override
 	public void addNew() {
 		GroupEditDialog dialog = new GroupEditDialog(getMainWindow());
-		dialog.setIsCreation(true);
+		dialog.setModel(new Group());
+		dialog.setEditable(true);
+		dialog.setSaveable(true);
 		dialog.setVisible(true);
 	}
 
@@ -50,6 +52,8 @@ public class GroupListView extends AbstractListView<Group> {
 		if (getModel() != null) {
 			GroupEditDialog dialog = new GroupEditDialog(getMainWindow());
 			dialog.setModel(getModel());
+			dialog.setEditable(true);
+			dialog.setSaveable(true);
 			dialog.setVisible(true);
 		}
 	}

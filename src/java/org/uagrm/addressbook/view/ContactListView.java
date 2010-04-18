@@ -64,16 +64,19 @@ public class ContactListView extends AbstractListView<Contact> implements Generi
 	@Override
 	public void addNew() {
 		ContactEditDialog dialog = new ContactEditDialog(getMainWindow());
-		dialog.setContact(new Contact());
+		dialog.setModel(new Contact());
 		dialog.setVisible(true);
+		dialog.setSaveable(true);
+		dialog.setEditable(true);
 	}
 
 	@Override
 	public void editCurrent() {
 		if (getModel() != null) {
 			ContactEditDialog dialog = new ContactEditDialog(getMainWindow());
-			dialog.setContact(getModel());
-			dialog.setCreation(false);
+			dialog.setModel(getModel());
+			dialog.setEditable(true);
+			dialog.setSaveable(true);
 			dialog.setVisible(true);
 		}
 	}

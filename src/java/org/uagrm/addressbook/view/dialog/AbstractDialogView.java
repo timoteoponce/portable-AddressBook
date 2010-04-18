@@ -10,6 +10,8 @@ import javax.swing.JDialog;
 import javax.swing.event.EventListenerList;
 
 import org.uagrm.addressbook.controller.Controller;
+import org.uagrm.addressbook.model.dto.EntityStatus;
+import org.uagrm.addressbook.model.dto.StatusType;
 import org.uagrm.addressbook.view.event.GenericEvent;
 import org.uagrm.addressbook.view.event.GenericEventListener;
 import org.uagrm.addressbook.view.event.GenericEventType;
@@ -93,15 +95,23 @@ public abstract class AbstractDialogView<T> extends JDialog implements DialogVie
 	
 	@Override
 	public void update(Observable source, Object model) {
+		final EntityStatus<T> entityStatus = (EntityStatus<T>) model;
+
 		if(source.equals(getController())){
-			if (model != null && getModel().equals(model)) {				
-				setModel((T) model);
+
+			if (entityStatus.getEntity().equals(model)) {
+				if (entityStatus.getStatus() == StatusType.DELETED) {
+					this.close();
+				} else {
+					setModel(entityStatus.getEntity());
+				}
 			}
 		}
 	}
 	
 	@Override
 	public void close() {
+		getController().removeView(this);
 		this.dispose();
 	}
 
