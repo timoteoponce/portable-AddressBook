@@ -214,6 +214,7 @@ public class GroupEditDialog extends AbstractDialogView<Group> {
 			if (index > -1) {
 				if (entityStatus.getStatus() == StatusType.DELETED) {
 					((List<Contact>) contactList.getElements()).remove(index);
+					contactList.updateUI();
 				}
 			}
 		}

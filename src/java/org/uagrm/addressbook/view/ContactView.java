@@ -9,6 +9,9 @@ import java.util.Observable;
 import javax.swing.JPanel;
 
 import org.uagrm.addressbook.model.Contact;
+import org.uagrm.addressbook.view.event.GenericEvent;
+import org.uagrm.addressbook.view.event.GenericEventListener;
+import org.uagrm.addressbook.view.event.GenericEventType;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -16,7 +19,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class ContactView extends JPanel implements View<Contact> {
+public class ContactView extends JPanel implements View<Contact>, GenericEventListener {
 	public ContactView() {
 		initComponents();
 	}
@@ -54,6 +57,17 @@ public class ContactView extends JPanel implements View<Contact> {
 	public Contact getModel() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void eventFired(GenericEvent event) {
+		if (event.getType() == GenericEventType.ELEMENT_SELECTED) {
+			if (event.getSource() instanceof ContactListView) {
+				final ContactListView listView = (ContactListView) event.getSource();
+				setModel(listView.getModel());
+			}
+		}
+
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY

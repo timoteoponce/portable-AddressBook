@@ -24,4 +24,15 @@ public class EntityStatus<T> {
 		return new EntityStatus<T>(entity, status);
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("EntityStatus [entity=");
+		builder.append(entity);
+		builder.append(", status=");
+		builder.append(status);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

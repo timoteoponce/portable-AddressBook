@@ -17,7 +17,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.lang.StringUtils;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.view.event.GenericEvent;
 import org.uagrm.addressbook.view.event.GenericEventListener;
+import org.uagrm.addressbook.view.event.GenericEventType;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -31,7 +33,8 @@ public class MainView extends JFrame {
 
 	private final ListView<Group> groupListView;
 	private final ListView<Contact> contactListView;
-	private final GroupView groupView;
+	private final View<Group> groupView;
+	private final View<Contact> contactView;
 
 	public MainView() {
 		initComponents();
@@ -46,10 +49,13 @@ public class MainView extends JFrame {
 		panelContacts.add((JPanel) contactListView, BorderLayout.CENTER);
 		// views
 		groupView = new GroupView();
-		panelView.setViewportView(groupView);
+		contactView = new ContactView();
+		// panelView.add((JPanel) groupView, BorderLayout.CENTER);
+		// panelView.add((JPanel) contactView, BorderLayout.CENTER);
 		// listeners
 		groupListView.addEventListener((GenericEventListener) contactListView);
-		groupListView.addEventListener(groupView);
+		groupListView.addEventListener((GenericEventListener) groupView);
+		contactListView.addEventListener((GenericEventListener) contactView);
 		//
 		setTitle("MainView");
 		addListeners();
@@ -72,6 +78,23 @@ public class MainView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				contactListView.addNew();
+			}
+		});
+
+		groupListView.addEventListener(new GenericEventListener() {
+			@Override
+			public void eventFired(GenericEvent event) {
+				if (event.getType() == GenericEventType.ELEMENT_SELECTED) {
+					scrollPaneView.setViewportView((JPanel) groupView);
+				}
+			}
+		});
+		contactListView.addEventListener(new GenericEventListener() {
+			@Override
+			public void eventFired(GenericEvent event) {
+				if (event.getType() == GenericEventType.ELEMENT_SELECTED) {
+					scrollPaneView.setViewportView((JPanel) contactView);
+				}
 			}
 		});
 	}
@@ -98,7 +121,8 @@ public class MainView extends JFrame {
 		mainPanel = new JPanel();
 		panelGroups = new SimpleInternalFrame();
 		panelContacts = new SimpleInternalFrame();
-		panelView = new JScrollPane();
+		panelView = new SimpleInternalFrame();
+		scrollPaneView = new JScrollPane();
 		panelOpsGroup = new JPanel();
 		btnGroupsAdd = new JButton();
 		panelOpsContact = new JPanel();
@@ -136,6 +160,14 @@ public class MainView extends JFrame {
 				panelContactsContentPane.setLayout(new BorderLayout());
 			}
 			mainPanel.add(panelContacts, cc.xywh(3, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+
+			// ======== panelView ========
+			{
+				panelView.setTitle(bundle.getString("MainView.panelView.title"));
+				Container panelViewContentPane = panelView.getContentPane();
+				panelViewContentPane.setLayout(new BorderLayout());
+				panelViewContentPane.add(scrollPaneView, BorderLayout.CENTER);
+			}
 			mainPanel.add(panelView, cc.xywh(5, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
 			//======== panelOpsGroup ========
@@ -186,7 +218,8 @@ public class MainView extends JFrame {
 	private JPanel mainPanel;
 	private SimpleInternalFrame panelGroups;
 	private SimpleInternalFrame panelContacts;
-	private JScrollPane panelView;
+	private SimpleInternalFrame panelView;
+	private JScrollPane scrollPaneView;
 	private JPanel panelOpsGroup;
 	private JButton btnGroupsAdd;
 	private JPanel panelOpsContact;
