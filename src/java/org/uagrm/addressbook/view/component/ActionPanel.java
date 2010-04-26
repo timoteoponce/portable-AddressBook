@@ -4,9 +4,9 @@
 
 package org.uagrm.addressbook.view.component;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -20,23 +20,15 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class ActionPanel extends JPanel {
 
-	public static final String ACTION_ADD = "add";
-	public static final String ACTION_EDIT = "edit";
-	public static final String ACTION_REMOVE = "remove";
+	private final ActionButtons actionButtons = new ActionButtons();
 
 	public ActionPanel() {
 		initComponents();
-		addButton.setActionCommand(ACTION_ADD);
-		editButton.setActionCommand(ACTION_EDIT);
-		removeButton.setActionCommand(ACTION_REMOVE);
+		actionPanel.add(actionButtons, BorderLayout.CENTER);
 	}
 
 	public JLabel getLabel() {
 		return label;
-	}
-
-	public void setLabel(JLabel label) {
-		this.label = label;
 	}
 
 	public JPanel getActionPanel() {
@@ -47,44 +39,16 @@ public class ActionPanel extends JPanel {
 		this.actionPanel = actionPanel;
 	}
 
-	public JButton getAddButton() {
-		return addButton;
-	}
-
-	public void setAddButton(JButton addButton) {
-		this.addButton = addButton;
-	}
-
-	public JButton getEditButton() {
-		return editButton;
-	}
-
-	public void setEditButton(JButton editButton) {
-		this.editButton = editButton;
-	}
-
-	public JButton getRemoveButton() {
-		return removeButton;
-	}
-
-	public void setRemoveButton(JButton removeButton) {
-		this.removeButton = removeButton;
-	}
-
 	public void setTitle(String title) {
 		this.label.setText(title);
 	}
 
+	public ActionButtons getActionButtons() {
+		return actionButtons;
+	}
+
 	public void addActionListener(ActionListener listener) {
-		if (this.addButton.isEnabled()) {
-			this.addButton.addActionListener(listener);
-		}
-		if (this.editButton.isEnabled()) {
-			this.editButton.addActionListener(listener);
-		}
-		if (this.removeButton.isEnabled()) {
-			this.removeButton.addActionListener(listener);
-		}
+		actionButtons.addActionListener(listener);
 	}
 
 	private void initComponents() {
@@ -94,37 +58,18 @@ public class ActionPanel extends JPanel {
 		label = compFactory.createLabel("text");
 		separator = new JSeparator();
 		actionPanel = new JPanel();
-		addButton = new JButton();
-		editButton = new JButton();
-		removeButton = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		//======== this ========
-		setLayout(new FormLayout(
-			"42dlu, $lcgap, default:grow, $lcgap, default",
-			"default"));
+		// ======== this ========
+		setLayout(new FormLayout("42dlu, $lcgap, default:grow, $lcgap, default", "default"));
 		add(label, cc.xy(1, 1));
 		add(separator, cc.xy(3, 1));
 
-		//======== actionPanel ========
+		// ======== actionPanel ========
 		{
-			actionPanel.setLayout(new FormLayout(
-				"2*(default, $lcgap), default",
-				"default"));
-
-			//---- addButton ----
-			addButton.setText("+");
-			actionPanel.add(addButton, cc.xy(1, 1));
-
-			//---- editButton ----
-			editButton.setText("*");
-			actionPanel.add(editButton, cc.xy(3, 1));
-
-			//---- removeButton ----
-			removeButton.setText("-");
-			actionPanel.add(removeButton, cc.xy(5, 1));
+			actionPanel.setLayout(new BorderLayout());
 		}
-		add(actionPanel, cc.xy(5, 1));
+		add(actionPanel, cc.xywh(5, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 		// //GEN-END:initComponents
 	}
 
@@ -133,8 +78,5 @@ public class ActionPanel extends JPanel {
 	private JLabel label;
 	private JSeparator separator;
 	private JPanel actionPanel;
-	private JButton addButton;
-	private JButton editButton;
-	private JButton removeButton;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 }

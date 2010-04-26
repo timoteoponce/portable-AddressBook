@@ -4,14 +4,17 @@
 
 package org.uagrm.addressbook.view;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.view.component.ActionButtons;
 import org.uagrm.addressbook.view.dialog.GroupEditDialog;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -21,13 +24,21 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author Timoteo Ponce
  */
 public class GroupListView extends AbstractListView<Group> {
-	private static final Logger LOG = Logger.getLogger(GroupListView.class);
+	// private static final Logger LOG = Logger.getLogger(GroupListView.class);
 
 	private final Controller<Group> controller = ControllerFactory.getInstanceFor(Group.class);
+	private final ActionButtons actionButtons = new ActionButtons();
 
 	public GroupListView() {
 		initComponents();
-		init();
+		this.init();
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+		operationPanel.add(actionButtons, BorderLayout.CENTER);
+		actionButtons.addActionListener(createActionButtonListener());
 	}
 
 	@Override
@@ -63,6 +74,7 @@ public class GroupListView extends AbstractListView<Group> {
 		// //GEN-BEGIN:initComponents
 		groupsPanel = new JScrollPane();
 		groupList = new JList();
+		operationPanel = new JPanel();
 		CellConstraints cc = new CellConstraints();
 
 		// ======== this ========
@@ -76,6 +88,12 @@ public class GroupListView extends AbstractListView<Group> {
 			groupsPanel.setViewportView(groupList);
 		}
 		add(groupsPanel, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+
+		// ======== operationPanel ========
+		{
+			operationPanel.setLayout(new BorderLayout());
+		}
+		add(operationPanel, cc.xywh(3, 5, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 		// //GEN-END:initComponents
 	}
 
@@ -83,7 +101,7 @@ public class GroupListView extends AbstractListView<Group> {
 	// //GEN-BEGIN:variables
 	private JScrollPane groupsPanel;
 	private JList groupList;
-
+	private JPanel operationPanel;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	@Override

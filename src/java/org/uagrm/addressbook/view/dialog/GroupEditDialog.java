@@ -20,7 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Contact;
@@ -39,7 +38,8 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class GroupEditDialog extends AbstractDialogView<Group> {
 
-	private static final Logger LOG = Logger.getLogger(GroupEditDialog.class);
+	// private static final Logger LOG =
+	// Logger.getLogger(GroupEditDialog.class);
 
 	private final Controller<Group> controller = ControllerFactory.getInstanceFor(Group.class);
 
@@ -63,6 +63,7 @@ public class GroupEditDialog extends AbstractDialogView<Group> {
 	private void init() {
 		controller.addView(this);
 		contactController.addView(this);
+		contactList.setTitle("Contacts");
 		this.panelContacts.add(BorderLayout.CENTER, contactList);
 	}
 
@@ -95,7 +96,7 @@ public class GroupEditDialog extends AbstractDialogView<Group> {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FormLayout(
 			"31dlu, 55dlu, 109dlu, default:grow",
- "default, default:grow, 4*(default), default:grow, 2*(default), fill:16dlu"));
+			"default, 25dlu, 4*(default), default:grow, 2*(default), fill:16dlu"));
 		contentPane.add(separator2, cc.xywh(2, 2, 2, 1));
 
 		//---- lblName ----
@@ -112,7 +113,7 @@ public class GroupEditDialog extends AbstractDialogView<Group> {
 		contentPane.add(lblDescription, cc.xy(2, 4));
 		contentPane.add(txtDescription, cc.xy(3, 4));
 
-		// ======== panelContacts ========
+		//======== panelContacts ========
 		{
 			panelContacts.setLayout(new BorderLayout());
 		}
@@ -143,7 +144,7 @@ public class GroupEditDialog extends AbstractDialogView<Group> {
 			panelOperations.add(btnCancel, cc.xy(5, 1));
 		}
 		contentPane.add(panelOperations, cc.xywh(2, 9, 2, 1));
-		setSize(490, 355);
+		setSize(460, 285);
 		setLocationRelativeTo(getOwner());
 		// //GEN-END:initComponents
 	}

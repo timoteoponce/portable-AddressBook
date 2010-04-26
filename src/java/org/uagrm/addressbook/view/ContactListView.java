@@ -5,14 +5,17 @@
 package org.uagrm.addressbook.view;
 
 
+import java.awt.BorderLayout;
+
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.view.component.ActionButtons;
 import org.uagrm.addressbook.view.dialog.ContactEditDialog;
 import org.uagrm.addressbook.view.event.GenericEvent;
 import org.uagrm.addressbook.view.event.GenericEventListener;
@@ -26,14 +29,23 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class ContactListView extends AbstractListView<Contact> implements GenericEventListener {
 
-	private static final Logger LOG = Logger.getLogger(ContactListView.class);
+	// private static final Logger LOG =
+	// Logger.getLogger(ContactListView.class);
 
 	private final Controller<Contact> controller = ControllerFactory.getInstanceFor(Contact.class);
+	private final ActionButtons actionButtons = new ActionButtons();
 
 
 	public ContactListView() {
 		initComponents();
-		init();
+		this.init();
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+		operationPanel.add(actionButtons, BorderLayout.CENTER);
+		actionButtons.addActionListener(createActionButtonListener());
 	}
 
 	private void initComponents() {
@@ -41,6 +53,7 @@ public class ContactListView extends AbstractListView<Contact> implements Generi
 		// //GEN-BEGIN:initComponents
 		scrollContactList = new JScrollPane();
 		contactList = new JList();
+		operationPanel = new JPanel();
 		CellConstraints cc = new CellConstraints();
 
 		// ======== this ========
@@ -51,6 +64,12 @@ public class ContactListView extends AbstractListView<Contact> implements Generi
 			scrollContactList.setViewportView(contactList);
 		}
 		add(scrollContactList, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
+
+		// ======== operationPanel ========
+		{
+			operationPanel.setLayout(new BorderLayout());
+		}
+		add(operationPanel, cc.xywh(3, 5, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 		// //GEN-END:initComponents
 	}
 
@@ -58,7 +77,7 @@ public class ContactListView extends AbstractListView<Contact> implements Generi
 	// //GEN-BEGIN:variables
 	private JScrollPane scrollContactList;
 	private JList contactList;
-
+	private JPanel operationPanel;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	@Override

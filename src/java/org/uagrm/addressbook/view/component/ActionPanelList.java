@@ -12,7 +12,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.dialog.DialogView;
 import org.uagrm.addressbook.view.dialog.SearchDialog;
@@ -29,7 +29,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class ActionPanelList<T> extends JPanel implements GenericEventListener,SearchEventListener {
+public class ActionPanelList<T> extends JPanel implements GenericEventListener, SearchEventListener {
 
 	private final ListModel<T> listModel = new ListModel<T>();
 	private boolean editionEnabled;
@@ -42,21 +42,8 @@ public class ActionPanelList<T> extends JPanel implements GenericEventListener,S
 	}
 
 	private void initActionPanel() {
-		actionPanel.getEditButton().setEnabled(editionEnabled);
-		actionPanel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getActionCommand().equals(ActionPanel.ACTION_ADD)) {
-					addNewElement();
-				} else if (e.getActionCommand().equals(ActionPanel.ACTION_EDIT)) {
-					editSelected();
-				} else if (e.getActionCommand().equals(
-						ActionPanel.ACTION_REMOVE)) {
-					removeSelected();
-				}
-
-			}
-		});
+		actionPanel.getActionButtons().setEditionEnabled(editionEnabled);
+		actionPanel.addActionListener(createActionButtonListener());
 	}
 
 	public void addNewElement() {
@@ -107,19 +94,18 @@ public class ActionPanelList<T> extends JPanel implements GenericEventListener,S
 	public void eventFired(GenericEvent event) {
 		if (event.getType() == GenericEventType.DIALOG_SAVE) {
 			T element = ((DialogView<T>) event.getSource()).getModel();
-			if(element!= null){
+			if (element != null) {
 				addElement(element);
 			}
 		} else if (event.getType() == GenericEventType.DIALOG_SAVE) {
 			T element = ((DialogView<T>) event.getSource()).getModel();
-			if(element!= null){
+			if (element != null) {
 				removeSelected();
 				addElement(element);
 			}
 		}
 
 	}
-	
 
 	@Override
 	public void eventFired(SearchEvent event) {
@@ -130,7 +116,28 @@ public class ActionPanelList<T> extends JPanel implements GenericEventListener,S
 			if (element != null) {
 				addElement(element);
 			}
-		}		
+		}
+	}
+
+	protected ActionListener createActionButtonListener() {
+		final ActionListener listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				final ActionType action = ActionType.valueOf(event.getActionCommand());
+				switch (action) {
+				case CREATE:
+					addNewElement();
+					break;
+				case UPDATE:
+					editSelected();
+					break;
+				case DELETE:
+					removeSelected();
+					break;
+				}
+			}
+		};
+		return listener;
 	}
 
 	private void initComponents() {
@@ -149,8 +156,7 @@ public class ActionPanelList<T> extends JPanel implements GenericEventListener,S
 		{
 			listScrollPane.setViewportView(list);
 		}
-		add(listScrollPane, cc.xywh(1, 3, 1, 1, CellConstraints.FILL,
-				CellConstraints.FILL));
+		add(listScrollPane, cc.xywh(1, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 		// //GEN-END:initComponents
 	}
 

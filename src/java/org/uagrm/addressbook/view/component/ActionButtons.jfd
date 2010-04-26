@@ -13,7 +13,7 @@
        <class>com.jgoodies.forms.layout.FormLayout</class> 
        <void method="setProperty"> 
         <string>$columnSpecs</string> 
-        <string>42dlu, labelcompgap, default:grow, labelcompgap, default</string> 
+        <string>default, labelcompgap, default, labelcompgap, default</string> 
        </void> 
        <void method="setProperty"> 
         <string>$rowSpecs</string> 
@@ -25,13 +25,13 @@
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
-        <string>com.jformdesigner.designer.wrapper.JGoodiesFormsLabel</string> 
+        <string>javax.swing.JButton</string> 
         <void method="setProperty"> 
-         <string>textWithMnemonic</string> 
          <string>text</string> 
+         <string>+</string> 
         </void> 
         <void property="name"> 
-         <string>label</string> 
+         <string>addButton</string> 
         </void> 
        </object> 
        <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -48,9 +48,13 @@
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JSeparator</string> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>*</string> 
+        </void> 
         <void property="name"> 
-         <string>separator</string> 
+         <string>editButton</string> 
         </void> 
        </object> 
        <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -66,13 +70,14 @@
        </object> 
       </void> 
       <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JPanel</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>java.awt.BorderLayout</class> 
-        </object> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>-</string> 
+        </void> 
         <void property="name"> 
-         <string>actionPanel</string> 
+         <string>removeButton</string> 
         </void> 
        </object> 
        <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -84,14 +89,6 @@
         <void method="setProperty"> 
          <string>gridY</string> 
          <int>1</int> 
-        </void> 
-        <void method="setProperty"> 
-         <string>hAlign</string> 
-         <object class="com.jgoodies.forms.layout.CellConstraints" field="FILL"/> 
-        </void> 
-        <void method="setProperty"> 
-         <string>vAlign</string> 
-         <object class="com.jgoodies.forms.layout.CellConstraints" field="FILL"/> 
         </void> 
        </object> 
       </void> 
@@ -108,7 +105,7 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>380</int> 
+        <int>135</int> 
         <int>25</int> 
        </object> 
       </void> 

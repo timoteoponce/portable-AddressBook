@@ -2,11 +2,8 @@ package org.uagrm.addressbook.view;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -38,49 +35,33 @@ public class MainView extends JFrame {
 
 	public MainView() {
 		initComponents();
+		groupListView = new GroupListView();
+		contactListView = new ContactListView();
+		groupView = new GroupView();
+		contactView = new ContactView();
+		init();
+	}
+
+	private void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// groupView
-		groupListView = new GroupListView();
 		groupListView.setMainWindow(this);
 		panelGroups.add((JPanel) groupListView, BorderLayout.CENTER);
 		// contactView
-		contactListView = new ContactListView();
 		contactListView.setMainWindow(this);
 		panelContacts.add((JPanel) contactListView, BorderLayout.CENTER);
 		// views
-		groupView = new GroupView();
-		contactView = new ContactView();
-		// panelView.add((JPanel) groupView, BorderLayout.CENTER);
-		// panelView.add((JPanel) contactView, BorderLayout.CENTER);
 		// listeners
 		groupListView.addEventListener((GenericEventListener) contactListView);
 		groupListView.addEventListener((GenericEventListener) groupView);
 		contactListView.addEventListener((GenericEventListener) contactView);
 		//
 		setTitle("MainView");
-		addListeners();
+		initViews();
 	}
 
-	private void addListeners() {
-		btnGroupsAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				groupListView.addNew();
-			}
-		});
-		btnContactAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				contactListView.addNew();
-			}
-		});
-		btnOpsEdit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				contactListView.addNew();
-			}
-		});
-
+	private void initViews() {
+		// to switch between properties viewer
 		groupListView.addEventListener(new GenericEventListener() {
 			@Override
 			public void eventFired(GenericEvent event) {
@@ -124,11 +105,8 @@ public class MainView extends JFrame {
 		panelView = new SimpleInternalFrame();
 		scrollPaneView = new JScrollPane();
 		panelOpsGroup = new JPanel();
-		btnGroupsAdd = new JButton();
 		panelOpsContact = new JPanel();
-		btnContactAdd = new JButton();
 		panelOpsView = new JPanel();
-		btnOpsEdit = new JButton();
 		CellConstraints cc = new CellConstraints();
 
 		//======== this ========
@@ -161,7 +139,7 @@ public class MainView extends JFrame {
 			}
 			mainPanel.add(panelContacts, cc.xywh(3, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
-			// ======== panelView ========
+			//======== panelView ========
 			{
 				panelView.setTitle(bundle.getString("MainView.panelView.title"));
 				Container panelViewContentPane = panelView.getContentPane();
@@ -172,39 +150,21 @@ public class MainView extends JFrame {
 
 			//======== panelOpsGroup ========
 			{
-				panelOpsGroup.setLayout(new FormLayout(
-					"2*(default, $lcgap), default",
-					"default"));
-
-				//---- btnGroupsAdd ----
-				btnGroupsAdd.setText(bundle.getString("MainView.btnGroupsAdd.text"));
-				panelOpsGroup.add(btnGroupsAdd, cc.xy(3, 1));
+				panelOpsGroup.setLayout(new BorderLayout());
 			}
-			mainPanel.add(panelOpsGroup, cc.xy(1, 3));
+			mainPanel.add(panelOpsGroup, cc.xywh(1, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
 			//======== panelOpsContact ========
 			{
-				panelOpsContact.setLayout(new FormLayout(
-					"2*(default, $lcgap), default",
-					"default"));
-
-				//---- btnContactAdd ----
-				btnContactAdd.setText(bundle.getString("MainView.btnContactAdd.text"));
-				panelOpsContact.add(btnContactAdd, cc.xy(3, 1));
+				panelOpsContact.setLayout(new BorderLayout());
 			}
-			mainPanel.add(panelOpsContact, cc.xy(3, 3));
+			mainPanel.add(panelOpsContact, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 
 			//======== panelOpsView ========
 			{
-				panelOpsView.setLayout(new FormLayout(
-					"2*(default, $lcgap), default",
-					"default"));
-
-				//---- btnOpsEdit ----
-				btnOpsEdit.setText(bundle.getString("MainView.btnOpsEdit.text"));
-				panelOpsView.add(btnOpsEdit, cc.xy(1, 1));
+				panelOpsView.setLayout(new BorderLayout());
 			}
-			mainPanel.add(panelOpsView, cc.xy(5, 3));
+			mainPanel.add(panelOpsView, cc.xywh(5, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 		}
 		contentPane.add(mainPanel, cc.xywh(1, 1, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
 		setSize(625, 360);
@@ -221,10 +181,7 @@ public class MainView extends JFrame {
 	private SimpleInternalFrame panelView;
 	private JScrollPane scrollPaneView;
 	private JPanel panelOpsGroup;
-	private JButton btnGroupsAdd;
 	private JPanel panelOpsContact;
-	private JButton btnContactAdd;
 	private JPanel panelOpsView;
-	private JButton btnOpsEdit;
 	// JFormDesigner - End of variables declaration //GEN-END:variables
 }

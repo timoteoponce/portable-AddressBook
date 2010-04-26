@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.EventListenerList;
 
+import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
 import org.uagrm.addressbook.view.event.GenericEvent;
@@ -151,6 +152,27 @@ public abstract class AbstractListView<T> extends JPanel implements ListView<T> 
 			}
 		});
 		menu.show(this, posX, posY);
+	}
+
+	protected ActionListener createActionButtonListener() {
+		final ActionListener listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				final ActionType action = ActionType.valueOf(event.getActionCommand());
+				switch (action) {
+				case CREATE:
+					addNew();
+					break;
+				case UPDATE:
+					editCurrent();
+					break;
+				case DELETE:
+					removeCurrent();
+					break;
+				}
+			}
+		};
+		return listener;
 	}
 
 }
