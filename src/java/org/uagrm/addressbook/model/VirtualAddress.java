@@ -8,19 +8,18 @@ public class VirtualAddress implements Entity {
 	private Integer id;
 	private String identifier;
 	private String website;
-	private Protocol protocol;
+	private Service service;
 
 	public VirtualAddress() {
 
 	}
 
-	public VirtualAddress(Integer id, String identifier, String website,
-			Protocol protocol) {
+	public VirtualAddress(Integer id, String identifier, String website, Service service) {
 		super();
 		this.id = id;
 		this.identifier = identifier;
 		this.website = website;
-		this.protocol = protocol;
+		this.service = service;
 	}
 
 	public Integer getId() {
@@ -39,12 +38,12 @@ public class VirtualAddress implements Entity {
 		this.identifier = identifier;
 	}
 
-	public Protocol getProtocol() {
-		return protocol;
+	public Service getService() {
+		return service;
 	}
 
-	public void setProtocol(Protocol protocol) {
-		this.protocol = protocol;
+	public void setService(Service service) {
+		this.service = service;
 	}
 
 	public String getWebsite() {
@@ -60,10 +59,8 @@ public class VirtualAddress implements Entity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((identifier == null) ? 0 : identifier.hashCode());
-		result = prime * result
-				+ ((protocol == null) ? 0 : protocol.hashCode());
+		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
+		result = prime * result + ((service == null) ? 0 : service.hashCode());
 		result = prime * result + ((website == null) ? 0 : website.hashCode());
 		return result;
 	}
@@ -87,10 +84,10 @@ public class VirtualAddress implements Entity {
 				return false;
 		} else if (!identifier.equals(other.identifier))
 			return false;
-		if (protocol == null) {
-			if (other.protocol != null)
+		if (service == null) {
+			if (other.service != null)
 				return false;
-		} else if (!protocol.equals(other.protocol))
+		} else if (!service.equals(other.service))
 			return false;
 		if (website == null) {
 			if (other.website != null)
@@ -102,8 +99,17 @@ public class VirtualAddress implements Entity {
 
 	@Override
 	public String toString() {
-		return "VirtualAddress [id=" + id + ", identifier=" + identifier
-				+ ", protocol=" + protocol + ", website=" + website + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("VirtualAddress [id=");
+		builder.append(id);
+		builder.append(", identifier=");
+		builder.append(identifier);
+		builder.append(", service=");
+		builder.append(service);
+		builder.append(", website=");
+		builder.append(website);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

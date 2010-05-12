@@ -22,6 +22,7 @@ public class SqlCountryDao extends AbstractSqlDao<Country> implements
 		final Country country = entity;
 		country.setId(rs.getInt("ID"));
 		country.setName(rs.getString("NAME"));
+		country.setImage(rs.getString("IMAGE"));
 	}
 
 	@Override
@@ -30,11 +31,13 @@ public class SqlCountryDao extends AbstractSqlDao<Country> implements
 
 		switch (action) {
 		case CREATE:
-			buffer.append("(null,'" + country.getName() + "')");
+			buffer.append("(null,'" + country.getName() + "',");
+			buffer.append("'" + country.getImage() + "')");
 			break;
 
 		case UPDATE:
-			buffer.append("name='" + country.getName() + "'");
+			buffer.append("NAME='" + country.getName() + "',");
+			buffer.append("IMAGE='" + country.getImage() + "'");
 			break;
 		}
 		return buffer.toString();

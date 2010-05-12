@@ -10,14 +10,13 @@ import java.util.Set;
 import org.apache.commons.lang.text.StrBuilder;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.actions.ActionType;
-import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
-import org.uagrm.addressbook.model.Protocol;
 import org.uagrm.addressbook.model.ReferenceLink;
+import org.uagrm.addressbook.model.Service;
 import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GenericDao;
-import org.uagrm.addressbook.model.dao.ProtocolDao;
+import org.uagrm.addressbook.model.dao.ServiceDao;
 import org.uagrm.addressbook.model.dao.SqlOperation;
 import org.uagrm.addressbook.model.dao.VirtualAddressDao;
 
@@ -25,25 +24,21 @@ import org.uagrm.addressbook.model.dao.VirtualAddressDao;
  * @author Timoteo Ponce
  * 
  */
-public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
-		implements VirtualAddressDao {
+public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress> implements VirtualAddressDao {
 
 	@Override
-	protected void fillValues(VirtualAddress entity, ResultSet rs)
-			throws SQLException {
+	protected void fillValues(VirtualAddress entity, ResultSet rs) throws SQLException {
 		final VirtualAddress vAddress = entity;
 		vAddress.setId(rs.getInt("ID"));
 		vAddress.setIdentifier(rs.getString("IDENTIFIER"));
-		vAddress.setProtocol(getProtocol(rs.getInt("ID_PROTOCOL")));
-		vAddress.setWebsite(rs.getString("WEBSITE")); 
+		vAddress.setService(getService(rs.getInt("ID_SERVICE")));
+		vAddress.setWebsite(rs.getString("WEBSITE"));
 	}
 
-	private Protocol getProtocol(int protocolId) {
-		GenericDao<Protocol> protocolDao = DaoFactory
-				.getInstance(ProtocolDao.class);
-		Protocol protocol = protocolDao.read(new Protocol(protocolId, null,
-				null));
-		return protocol;
+	private Service getService(int serviceId) {
+		GenericDao<Service> serviceDao = DaoFactory.getInstance(ServiceDao.class);
+		Service service = serviceDao.read(new Service(serviceId));
+		return service;
 	}
 
 	@Override
@@ -54,13 +49,13 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress>
 		case CREATE:
 			buffer.append("(null,'" + vAddress.getIdentifier() + "',");
 			buffer.append("'" + vAddress.getWebsite() + "',");
-			buffer.append(vAddress.getProtocol().getId() + ")");
+			buffer.append(vAddress.getService().getId() + ")");
 			break;
 
 		case UPDATE:
 			buffer.append("identifier = '" + vAddress.getIdentifier() + "',");
 			buffer.append("website='" + vAddress.getWebsite() + "',");
-			buffer.append("id_protocol=" + vAddress.getProtocol().getId());
+			buffer.append("ID_SERVICE=" + vAddress.getService().getId());
 			break;
 		}
 		return buffer.toString();

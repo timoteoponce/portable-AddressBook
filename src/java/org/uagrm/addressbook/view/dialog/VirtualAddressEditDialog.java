@@ -22,7 +22,7 @@ import javax.swing.JTextField;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.model.Protocol;
+import org.uagrm.addressbook.model.Service;
 import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.model.dto.EntityStatus;
 import org.uagrm.addressbook.model.dto.StatusType;
@@ -44,7 +44,7 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 
 	private final Controller<VirtualAddress> vAddressController = ControllerFactory.getInstanceFor(VirtualAddress.class);
 
-	private final Controller<Protocol> protocolController = ControllerFactory.getInstanceFor(Protocol.class);
+	private final Controller<Service> serviceController = ControllerFactory.getInstanceFor(Service.class);
 
 	public VirtualAddressEditDialog(Frame owner) {
 		super(owner);
@@ -60,10 +60,10 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 
 	private void init() {
 		vAddressController.addView(this);
-		protocolController.addView(this);
+		serviceController.addView(this);
 		//
-		comboProtocol.setRenderer(new CustomListCellRenderer());
-		updateProtocolCombo();
+		comboService.setRenderer(new CustomListCellRenderer());
+		updateServiceCombo();
 		// listeners
 		okButton.addActionListener(new ActionListener() {
 			@Override
@@ -80,24 +80,24 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 		btnAddProtocol.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				addProtocol();
+				addService();
 			}
 
 		});
 	}
 
-	private void updateProtocolCombo() {
-		comboProtocol.removeAllItems();
+	private void updateServiceCombo() {
+		comboService.removeAllItems();
 
-		for (Protocol protocol : protocolController.getElements()) {
-			comboProtocol.addItem(protocol);
+		for (Service protocol : serviceController.getElements()) {
+			comboService.addItem(protocol);
 		}
-		comboProtocol.updateUI();
+		comboService.updateUI();
 	}
 
-	private void addProtocol() {
-		ProtocolEditDialog dialog = new ProtocolEditDialog(this);
-		dialog.setModel(new Protocol());
+	private void addService() {
+		ServiceEditDialog dialog = new ServiceEditDialog(this);
+		dialog.setModel(new Service());
 		dialog.setSaveable(true);
 		dialog.setVisible(true);
 	}
@@ -113,7 +113,7 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 		lblWebsite = new JLabel();
 		txtWebsite = new JTextField();
 		lblProtocol = new JLabel();
-		comboProtocol = new JComboBox();
+		comboService = new JComboBox();
 		btnAddProtocol = new JButton();
 		buttonBar = new JPanel();
 		okButton = new JButton();
@@ -150,9 +150,9 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 
 				//---- lblProtocol ----
 				lblProtocol.setText("Protocol:");
-				lblProtocol.setLabelFor(comboProtocol);
+				lblProtocol.setLabelFor(comboService);
 				contentPanel.add(lblProtocol, cc.xy(3, 7));
-				contentPanel.add(comboProtocol, cc.xy(5, 7));
+				contentPanel.add(comboService, cc.xy(5, 7));
 
 				//---- btnAddProtocol ----
 				btnAddProtocol.setText("+");
@@ -192,7 +192,7 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 	private JLabel lblWebsite;
 	private JTextField txtWebsite;
 	private JLabel lblProtocol;
-	private JComboBox comboProtocol;
+	private JComboBox comboService;
 	private JButton btnAddProtocol;
 	private JPanel buttonBar;
 	private JButton okButton;
@@ -208,8 +208,8 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 		txtIdentifier.setText(getModel().getIdentifier());
 		txtWebsite.setText(getModel().getWebsite());
 
-		if (getModel().getProtocol() != null) {
-			comboProtocol.setSelectedItem(getModel().getProtocol());
+		if (getModel().getService() != null) {
+			comboService.setSelectedItem(getModel().getService());
 		}
 	}
 
@@ -217,7 +217,7 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 	public void updateValues() {
 		getModel().setIdentifier(txtIdentifier.getText());
 		getModel().setWebsite(txtWebsite.getText());
-		getModel().setProtocol((Protocol) comboProtocol.getSelectedItem());
+		getModel().setService((Service) comboService.getSelectedItem());
 	}
 
 	@Override
@@ -233,15 +233,15 @@ public class VirtualAddressEditDialog extends AbstractDialogView<VirtualAddress>
 					setModel((VirtualAddress) model);
 				}
 			}
-		} else if (source.equals(protocolController)) {
-			updateProtocolCombo();
+		} else if (source.equals(serviceController)) {
+			updateServiceCombo();
 		}
 	}
 
 	@Override
 	public void close() {
 		vAddressController.removeView(this);
-		protocolController.removeView(this);
+		serviceController.removeView(this);
 		this.dispose();
 	}
 

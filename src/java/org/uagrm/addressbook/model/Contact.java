@@ -15,20 +15,21 @@ public class Contact implements SelectableItem {
 	private Integer id;
 	private String firstName;
 	private String lastName;
+	private String image;
 	private final Set<Group> groups = new HashSet<Group>();
 	private final Set<Address> addresses = new HashSet<Address>();
 	private final Set<VirtualAddress> virtualAddresses = new HashSet<VirtualAddress>();
 	private final Set<Phone> phones = new HashSet<Phone>();
 
 	public Contact() {
-
 	}
 
-	public Contact(Integer id, String firstName, String lastName) {
+	public Contact(Integer id, String firstName, String lastName, String image) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.image = image;
 	}
 
 	public Integer getId() {
@@ -53,6 +54,14 @@ public class Contact implements SelectableItem {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public Set<Group> getGroups() {
@@ -89,7 +98,25 @@ public class Contact implements SelectableItem {
 
 	@Override
 	public String toString() {
-		return "[ " + id + " , " + firstName + " , " + lastName + " ]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Contact [addresses=");
+		builder.append(addresses);
+		builder.append(", firstName=");
+		builder.append(firstName);
+		builder.append(", groups=");
+		builder.append(groups);
+		builder.append(", id=");
+		builder.append(id);
+		builder.append(", image=");
+		builder.append(image);
+		builder.append(", lastName=");
+		builder.append(lastName);
+		builder.append(", phones=");
+		builder.append(phones);
+		builder.append(", virtualAddresses=");
+		builder.append(virtualAddresses);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	@Override

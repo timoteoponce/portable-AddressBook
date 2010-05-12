@@ -4,19 +4,26 @@ package org.uagrm.addressbook.model;
  * @author Timoteo Ponce
  * 
  */
-public class Protocol implements Entity {
+public class Service implements Entity {
 	private Integer id;
 	private String name;
-	private Integer port;
+	private String description;
+	private String image;
 
-	public Protocol() {
+	public Service() {
 	}
 
-	public Protocol(Integer id, String name, Integer port) {
+	public Service(Integer id) {
+		super();
+		this.id = id;
+	}
+
+	public Service(Integer id, String name, String description, String image) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.port = port;
+		this.description = description;
+		this.image = image;
 	}
 
 	public Integer getId() {
@@ -35,12 +42,20 @@ public class Protocol implements Entity {
 		this.name = name;
 	}
 
-	public Integer getPort() {
-		return port;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setPort(Integer port) {
-		this.port = port;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	@Override
@@ -49,7 +64,6 @@ public class Protocol implements Entity {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((port == null) ? 0 : port.hashCode());
 		return result;
 	}
 
@@ -61,7 +75,7 @@ public class Protocol implements Entity {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Protocol other = (Protocol) obj;
+		Service other = (Service) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -72,13 +86,22 @@ public class Protocol implements Entity {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (port == null) {
-			if (other.port != null)
-				return false;
-		} else if (!port.equals(other.port))
-			return false;
 		return true;
 	}
-	
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Service [description=");
+		builder.append(description);
+		builder.append(", id=");
+		builder.append(id);
+		builder.append(", image=");
+		builder.append(image);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append("]");
+		return builder.toString();
+	}
 
 }

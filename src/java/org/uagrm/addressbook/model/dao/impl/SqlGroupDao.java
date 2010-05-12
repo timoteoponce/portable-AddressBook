@@ -91,6 +91,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 		group.setId(rs.getInt("ID"));
 		group.setName(rs.getString("NAME"));
 		group.setDescription(rs.getString("DESCRIPTION"));
+		group.setImage(rs.getString("IMAGE"));
 	}
 
 	@Override
@@ -99,12 +100,14 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 		switch (action) {
 		case CREATE:
 			buffer.append("(null,'" + group.getName() + "',");
-			buffer.append("'" + group.getDescription() + "')");
+			buffer.append("'" + group.getDescription() + "',");
+			buffer.append("'" + group.getImage() + "')");
 			break;
 
 		case UPDATE:
-			buffer.append("name='" + group.getName() + "',");
-			buffer.append("description='" + group.getDescription() + "'");
+			buffer.append("NAME='" + group.getName() + "',");
+			buffer.append("DESCRIPTION='" + group.getDescription() + "',");
+			buffer.append("IMAGE='" + group.getImage() + "'");
 			break;
 		}
 		return buffer.toString();
@@ -121,37 +124,6 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 		fillValues(group, rs);
 
 		return group;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}
 
 	@Override

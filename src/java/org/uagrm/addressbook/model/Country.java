@@ -7,14 +7,29 @@ package org.uagrm.addressbook.model;
 public class Country implements Entity {
 	private Integer id;
 	private String name;
+	private String image;
 
 	public Country() {
 	}
 
-	public Country(Integer id, String name) {
+	public Country(Integer id) {
+		super();
+		this.id = id;
+	}
+
+	public Country(Integer id, String name, String image) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.image = image;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public Integer getId() {
@@ -66,7 +81,15 @@ public class Country implements Entity {
 
 	@Override
 	public String toString() {
-		return "[ " + id + " , " + name + " ]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Country [id=");
+		builder.append(id);
+		builder.append(", image=");
+		builder.append(image);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.uagrm.addressbook.model.Protocol;
+import org.uagrm.addressbook.model.Service;
 import org.uagrm.addressbook.model.VirtualAddress;
 
 /**
@@ -13,64 +13,61 @@ import org.uagrm.addressbook.model.VirtualAddress;
  */
 public class VirtualAddressDaoTest implements GenericDaoTestNot {
 
-    final VirtualAddressDao dao = DaoFactory
-	    .getInstance(VirtualAddressDao.class);
+	final VirtualAddressDao dao = DaoFactory.getInstance(VirtualAddressDao.class);
 
-    @Override
-    @Test
-    public void createEntries() {
-	VirtualAddress vAddress = new VirtualAddress();
-	vAddress.setIdentifier("timo.slack@mymail.com");
-	vAddress.setProtocol(getSmtpProtocol());
-	vAddress.setWebsite("http://timouagrm.co.nr");
+	@Override
+	@Test
+	public void createEntries() {
+		VirtualAddress vAddress = new VirtualAddress();
+		vAddress.setIdentifier("timo.slack@mymail.com");
+		vAddress.setService(getService());
+		vAddress.setWebsite("http://timouagrm.co.nr");
 
-	dao.create(vAddress);
-	Assert.assertNotNull(vAddress.getId());
-    }
-
-    private Protocol getSmtpProtocol() {
-	return createProtocol("SMTP", 25);
-    }
-
-    @Override
-    @Test
-    public void updateEntries() {
-	Collection<VirtualAddress> list = dao.selectAll();
-	if (!list.isEmpty()) {
-	    VirtualAddress vAddress = list.iterator().next();
-	    final Integer id = vAddress.getId();
-	    vAddress.setIdentifier("msn:timo.com");
-	    vAddress.setProtocol(getImProtocol());
-
-	    dao.update(vAddress);
-
-	    Assert.assertEquals(id, vAddress.getId());
+		dao.create(vAddress);
+		Assert.assertNotNull(vAddress.getId());
 	}
-    }
 
-    private Protocol getImProtocol() {
-	return createProtocol("MSN", 1554);
-    }
+	private Service getService() {
+		return createService("SMTP");
+	}
 
-    private Protocol createProtocol(String name, int port) {
-	final ProtocolDao protocolDao = DaoFactory
-		.getInstance(ProtocolDao.class);
+	@Override
+	@Test
+	public void updateEntries() {
+		Collection<VirtualAddress> list = dao.selectAll();
+		if (!list.isEmpty()) {
+			VirtualAddress vAddress = list.iterator().next();
+			final Integer id = vAddress.getId();
+			vAddress.setIdentifier("msn:timo.com");
+			vAddress.setService(getImProtocol());
 
-	Protocol protocol = new Protocol();
-	protocol.setName(name);
-	protocol.setPort(port);
-	protocolDao.create(protocol);
+			dao.update(vAddress);
 
-	return protocol;
-    }
+			Assert.assertEquals(id, vAddress.getId());
+		}
+	}
 
-    @Override
-    @Test
-    public void deleteEntries() {
-	VirtualAddress vAddress = dao.selectAll().iterator().next();	
-	dao.delete(vAddress);
+	private Service getImProtocol() {
+		return createService("MSN");
+	}
 
-	Assert.assertNull(dao.read(vAddress));
-    }
+	private Service createService(String name) {
+		final ServiceDao serviceDao = DaoFactory.getInstance(ServiceDao.class);
+
+		Service service = new Service();
+		service.setName(name);
+		serviceDao.create(service);
+
+		return service;
+	}
+
+	@Override
+	@Test
+	public void deleteEntries() {
+		VirtualAddress vAddress = dao.selectAll().iterator().next();
+		dao.delete(vAddress);
+
+		Assert.assertNull(dao.read(vAddress));
+	}
 
 }

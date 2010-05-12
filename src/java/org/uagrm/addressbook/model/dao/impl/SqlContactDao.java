@@ -63,6 +63,7 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 		contact.setId(rs.getInt("ID"));
 		contact.setFirstName(rs.getString("FIRST_NAME"));
 		contact.setLastName(rs.getString("LAST_NAME"));
+		contact.setImage(rs.getString("IMAGE"));
 	}
 
 	@Override
@@ -71,12 +72,14 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 		switch (action) {
 		case CREATE:
 			buffer.append("(null,'" + contact.getFirstName() + "',");
-			buffer.append("'" + contact.getLastName() + "')");
+			buffer.append("'" + contact.getLastName() + "',");
+			buffer.append("'" + contact.getImage() + "')");
 			break;
 
 		case UPDATE:
 			buffer.append("FIRST_NAME='" + contact.getFirstName() + "',");
-			buffer.append("LAST_NAME='" + contact.getLastName() + "'");
+			buffer.append("LAST_NAME='" + contact.getLastName() + "',");
+			buffer.append("IMAGE='" + contact.getImage() + "'");
 			break;
 		}
 		return buffer.toString();

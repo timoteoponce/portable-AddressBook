@@ -113,3 +113,9 @@
 	[DEV-408]
 	- Create developer guide wiki
 	* Status: Pending
+
+------------------------
+	- Database modifications
+		- Refactor: Protocol -> Service
+		- Image field: Country,Contact,Group,Service
+		- Use ActiveRecord instead of DAO

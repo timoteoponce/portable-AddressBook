@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.model.Protocol;
+import org.uagrm.addressbook.model.Service;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
@@ -29,18 +29,18 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Timoteo Ponce
  */
-public class ProtocolEditDialog extends AbstractDialogView<Protocol> {
+public class ServiceEditDialog extends AbstractDialogView<Service> {
 	private static final long serialVersionUID = 5700285433210269078L;
 
-	private final Controller<Protocol> protocolController = ControllerFactory.getInstanceFor(Protocol.class);
+	private final Controller<Service> serviceController = ControllerFactory.getInstanceFor(Service.class);
 
-	public ProtocolEditDialog(Frame owner) {
+	public ServiceEditDialog(Frame owner) {
 		super(owner);
 		initComponents();
 		init();
 	}
 
-	public ProtocolEditDialog(Dialog owner) {
+	public ServiceEditDialog(Dialog owner) {
 		super(owner);
 		initComponents();
 		init();
@@ -62,7 +62,8 @@ public class ProtocolEditDialog extends AbstractDialogView<Protocol> {
 	}
 
 	private void initComponents() {
-		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+		// JFormDesigner - Component initialization - DO NOT MODIFY
+		// //GEN-BEGIN:initComponents
 		DefaultComponentFactory compFactory = DefaultComponentFactory.getInstance();
 		dialogPane = new JPanel();
 		contentPanel = new JPanel();
@@ -76,19 +77,18 @@ public class ProtocolEditDialog extends AbstractDialogView<Protocol> {
 		cancelButton = new JButton();
 		CellConstraints cc = new CellConstraints();
 
-		//======== this ========
+		// ======== this ========
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
-		//======== dialogPane ========
+		// ======== dialogPane ========
 		{
 			dialogPane.setBorder(Borders.DIALOG_BORDER);
 			dialogPane.setLayout(new BorderLayout());
 
-			//======== contentPanel ========
+			// ======== contentPanel ========
 			{
-				contentPanel.setLayout(new FormLayout(
-"17dlu, $lcgap, 67dlu, $lcgap, default:grow, $lcgap, 17dlu", "3*(default, $lgap), default"));
+				contentPanel.setLayout(new FormLayout("17dlu, $lcgap, 67dlu, $lcgap, default:grow, $lcgap, 17dlu", "3*(default, $lgap), default"));
 				contentPanel.add(separatorProperties, cc.xywh(3, 1, 3, 1));
 
 				// ---- lblName ----
@@ -105,18 +105,16 @@ public class ProtocolEditDialog extends AbstractDialogView<Protocol> {
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
-			//======== buttonBar ========
+			// ======== buttonBar ========
 			{
 				buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
-				buttonBar.setLayout(new FormLayout(
-					"$glue, $button, $rgap, $button",
-					"pref"));
+				buttonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "pref"));
 
-				//---- okButton ----
+				// ---- okButton ----
 				okButton.setText("OK");
 				buttonBar.add(okButton, cc.xy(2, 1));
 
-				//---- cancelButton ----
+				// ---- cancelButton ----
 				cancelButton.setText("Cancel");
 				buttonBar.add(cancelButton, cc.xy(4, 1));
 			}
@@ -125,10 +123,12 @@ public class ProtocolEditDialog extends AbstractDialogView<Protocol> {
 		contentPane.add(dialogPane, BorderLayout.CENTER);
 		setSize(405, 195);
 		setLocationRelativeTo(getOwner());
-		// JFormDesigner - End of component initialization  //GEN-END:initComponents
+		// JFormDesigner - End of component initialization
+		// //GEN-END:initComponents
 	}
 
-	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+	// JFormDesigner - Variables declaration - DO NOT MODIFY
+	// //GEN-BEGIN:variables
 	private JPanel dialogPane;
 	private JPanel contentPanel;
 	private JComponent separatorProperties;
@@ -139,25 +139,24 @@ public class ProtocolEditDialog extends AbstractDialogView<Protocol> {
 	private JPanel buttonBar;
 	private JButton okButton;
 	private JButton cancelButton;
-	// JFormDesigner - End of variables declaration  //GEN-END:variables
+
+	// JFormDesigner - End of variables declaration //GEN-END:variables
 
 	@Override
-	Controller<Protocol> getController() {
-		return protocolController;
+	Controller<Service> getController() {
+		return serviceController;
 	}
 
 	@Override
 	public void loadValues() {
 		txtName.setText(getModel().getName());
-		if (getModel().getPort() != null) {
-			txtPort.setText(getModel().getPort().toString());
-		}
+		txtPort.setText(getModel().getDescription());
 	}
 
 	@Override
 	public void updateValues() {
 		getModel().setName(txtName.getText());
-		getModel().setPort(Integer.parseInt(txtPort.getText()));
+		getModel().setDescription(txtPort.getText());
 	}
 
 }

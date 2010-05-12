@@ -15,6 +15,7 @@ public class Group implements SelectableItem {
 	private Integer id;
 	private String name;
 	private String description;
+	private String image;
 	private final Set<Contact> contacts = new HashSet<Contact>();
 
 	public Group() {
@@ -50,6 +51,14 @@ public class Group implements SelectableItem {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public Set<Contact> getContacts() {

@@ -17,7 +17,6 @@ import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.AddressDao;
 import org.uagrm.addressbook.model.dao.CountryDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GroupDao;
 import org.uagrm.addressbook.model.dao.SqlOperation;
 
 /**
@@ -39,7 +38,7 @@ public class SqlAddressDao extends AbstractSqlDao<Address> implements
 
 	private Country getCountry(int countryId) {
 		CountryDao countryDao = DaoFactory.getInstance(CountryDao.class);
-		return countryDao.read(new Country(countryId, null));
+		return countryDao.read(new Country(countryId));
 	}
 
 	@Override
