@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.EventListenerList;
 
+import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.swing.ListModel;
 import org.uagrm.addressbook.view.cell.CustomListCellRenderer;
@@ -33,6 +34,12 @@ public abstract class AbstractListView<T> extends JPanel implements ListView<T> 
 	private T model;
 
 	private int currentIndex;
+
+	private final Logger log;
+
+	public AbstractListView() {
+		log = Logger.getLogger(getClass());
+	}
 
 	protected void init() {
 		getController().addView(this);
@@ -115,8 +122,10 @@ public abstract class AbstractListView<T> extends JPanel implements ListView<T> 
 	}
 
 	protected void clicked(MouseEvent e) {
+
 		final int index = getList().getSelectedIndex();
 		if (currentIndex != index) {
+			log.debug("Index changed : " + index);
 			setModel((T) getList().getSelectedValue());
 
 			if (getModel() != null) {

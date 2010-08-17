@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
+import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Contact;
@@ -28,7 +29,11 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author Timoteo Ponce
  */
 public class GroupView extends JPanel implements View<Group>, GenericEventListener {
+
+	private static final Logger LOG = Logger.getLogger(GroupView.class);
+
 	private final Controller<Group> groupController = ControllerFactory.getInstanceFor(Group.class);
+
 	private Group group;
 
 	public GroupView() {
@@ -113,6 +118,7 @@ public class GroupView extends JPanel implements View<Group>, GenericEventListen
 	@Override
 	public void eventFired(GenericEvent event) {
 		if (event.getType() == GenericEventType.ELEMENT_SELECTED) {
+			LOG.debug("Event ELEMENT_SELECTED received");
 			if (event.getSource() instanceof GroupListView) {
 				final GroupListView listView = (GroupListView) event.getSource();
 				setModel(listView.getModel());

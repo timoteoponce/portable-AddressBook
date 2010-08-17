@@ -10,11 +10,10 @@ import java.util.Set;
 import org.apache.commons.lang.text.StrBuilder;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.actions.ActionType;
-import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Phone;
-import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.PhoneDao;
+import org.uagrm.addressbook.model.dao.ReferenceLink;
 import org.uagrm.addressbook.model.dao.SqlOperation;
 
 /**

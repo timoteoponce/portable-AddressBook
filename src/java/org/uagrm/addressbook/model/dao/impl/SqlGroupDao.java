@@ -12,10 +12,10 @@ import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
-import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.ContactDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
 import org.uagrm.addressbook.model.dao.GroupDao;
+import org.uagrm.addressbook.model.dao.ReferenceLink;
 import org.uagrm.addressbook.model.dao.SqlOperation;
 
 /**
