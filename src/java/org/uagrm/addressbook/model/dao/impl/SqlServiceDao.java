@@ -7,8 +7,8 @@ import java.util.Collection;
 
 import org.apache.commons.lang.text.StrBuilder;
 import org.uagrm.addressbook.controller.actions.ActionType;
-import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.Service;
+import org.uagrm.addressbook.model.dao.ReferenceLink;
 import org.uagrm.addressbook.model.dao.ServiceDao;
 
 /**

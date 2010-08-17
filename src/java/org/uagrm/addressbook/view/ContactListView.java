@@ -11,6 +11,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Contact;
@@ -29,8 +30,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class ContactListView extends AbstractListView<Contact> implements GenericEventListener {
 
-	// private static final Logger LOG =
-	// Logger.getLogger(ContactListView.class);
+	private static final Logger LOG = Logger.getLogger(ContactListView.class);
 
 	private final Controller<Contact> controller = ControllerFactory.getInstanceFor(Contact.class);
 	private final ActionButtons actionButtons = new ActionButtons();
@@ -113,6 +113,7 @@ public class ContactListView extends AbstractListView<Contact> implements Generi
 	@Override
 	public void eventFired(GenericEvent event) {
 		if(event.getType() == GenericEventType.ELEMENT_SELECTED){
+			LOG.debug("Event ELEMENT_SELECTED received");
 			final ListView<Group> groupListView = (ListView<Group>) event.getSource();
 			final Group group = groupListView.getModel();
 			getListModel().clear();

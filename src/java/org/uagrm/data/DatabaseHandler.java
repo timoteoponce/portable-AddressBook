@@ -28,7 +28,7 @@ public interface DatabaseHandler {
      * @param query query to be executed.
      * @return
      */
-    ResultSet executeQuery(String query);
+	ResultSet executeQuery(String query);
 
     /**
      * Performs a database UPDATE/DELETE using the given SQL string, returns 

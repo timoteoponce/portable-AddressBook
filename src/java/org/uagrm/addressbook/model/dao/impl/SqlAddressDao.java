@@ -13,10 +13,10 @@ import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Address;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Country;
-import org.uagrm.addressbook.model.ReferenceLink;
 import org.uagrm.addressbook.model.dao.AddressDao;
 import org.uagrm.addressbook.model.dao.CountryDao;
 import org.uagrm.addressbook.model.dao.DaoFactory;
+import org.uagrm.addressbook.model.dao.ReferenceLink;
 import org.uagrm.addressbook.model.dao.SqlOperation;
 
 /**

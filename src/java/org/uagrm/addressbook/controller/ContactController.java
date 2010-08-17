@@ -1,5 +1,6 @@
 package org.uagrm.addressbook.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -106,15 +107,16 @@ public class ContactController extends AbstractController<Contact> {
 
 	@Override
 	public <K> java.util.Collection<Contact> getElementsBy(java.lang.Class<K> targetClass, K target) {
-		List<Contact> list = (List<Contact>) getElements();
-		if (targetClass.equals(Group.class) && ((Group) target).getId() != null) {
-			list.clear();
+		final List<Contact> list = new ArrayList<Contact>();
+		if (targetClass.equals(Group.class) && ((Group) target).getId() != null) {			
 			Group group = (Group) target;
 			list.addAll(dao.getByGroup(group));
 		} else {
 			refreshElementList();
+			list.addAll((List<Contact>) getElements());
 		}
 		return list;
-	};
+	}
+
 
 }
