@@ -23,13 +23,6 @@ public interface Controller<T> {
 
 	void save(T element, boolean updateViews);
 
-    void delete(T element, boolean updateViews);
+	void delete(T element, boolean updateViews);
     
-    /**
-     * Returns the given entity with related references of the given target.
-     * @param entity
-     * @param target 
-     * @return
-     */
-    T preloadEntity(T entity,Class<?> target);
 }

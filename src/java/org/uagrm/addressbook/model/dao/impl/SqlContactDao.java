@@ -33,6 +33,10 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 
 	private static final Logger LOG = Logger.getLogger(SqlContactDao.class);
 
+	public SqlContactDao() {
+		super(Contact.class);
+	}
+
 	@Override
 	public Set<Contact> getByGroup(Group group) {
 		final QueryBuilder builder = QueryBuilder.createQuery(SqlOperation.SQL_SELECT_ALL);
@@ -67,8 +71,10 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	}
 
 	@Override
-	protected String getFields(Contact contact, ActionType action) {
+	protected String getFields(ActionType action) {
 		final StrBuilder buffer = new StrBuilder();
+		final Contact contact = getInstance();
+
 		switch (action) {
 		case CREATE:
 			buffer.append("(null,'" + contact.getFirstName() + "',");
@@ -91,25 +97,22 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	}
 
 	@Override
-	public void loadReferences(Contact contact, Class<?> target) {
-		if (target.equals(Group.class)) {
-			GroupDao groupDao = DaoFactory.getInstance(GroupDao.class);
+	public void loadReferences(final Contact contact) {
+		GroupDao groupDao = DaoFactory.getInstance(GroupDao.class);
+		contact.getGroups().clear();
+		contact.getGroups().addAll(groupDao.getByContact(contact));
 
-			contact.getGroups().clear();
-			contact.getGroups().addAll(groupDao.getByContact(contact));
-		}else if(target.equals(Address.class)){
-			AddressDao dao = DaoFactory.getInstance(AddressDao.class);
-			contact.getAddresses().clear();
-			contact.getAddresses().addAll(dao.getByContact(contact));
-		}else if(target.equals(Phone.class)){
-			PhoneDao dao = DaoFactory.getInstance(PhoneDao.class);
-			contact.getPhones().clear();
-			contact.getPhones().addAll(dao.getByContact(contact));
-		}else if(target.equals(VirtualAddress.class)){
-			VirtualAddressDao dao = DaoFactory.getInstance(VirtualAddressDao.class);
-			contact.getVirtualAddresses().clear();
-			contact.getVirtualAddresses().addAll(dao.getByContact(contact));
-		}
+		AddressDao addressDao = DaoFactory.getInstance(AddressDao.class);
+		contact.getAddresses().clear();
+		contact.getAddresses().addAll(addressDao.getByContact(contact));
+
+		PhoneDao phoneDao = DaoFactory.getInstance(PhoneDao.class);
+		contact.getPhones().clear();
+		contact.getPhones().addAll(phoneDao.getByContact(contact));
+
+		VirtualAddressDao vAddressDao = DaoFactory.getInstance(VirtualAddressDao.class);
+		contact.getVirtualAddresses().clear();
+		contact.getVirtualAddresses().addAll(vAddressDao.getByContact(contact));
 	}
 	
 
@@ -121,77 +124,77 @@ public class SqlContactDao extends AbstractSqlDao<Contact> implements
 	}
 
 	@Override
-	public void saveGroups(Contact contact) {
-		deleteReference(new ReferenceLink(null, contact.getId(), null,
+	public void saveGroups() {
+		deleteReference(new ReferenceLink(null, getId().intValue(), null,
 				"ID_CONTACT", "GROUP_CONTACTS"));
 
 
-		for (Group group : contact.getGroups()) {
-			createReference(new ReferenceLink(group.getId(), contact.getId(),
+		for (Group group : getInstance().getGroups()) {
+			createReference(new ReferenceLink(group.getId(), getId().intValue(),
 					null, null, "GROUP_CONTACTS"));
 		}
-		LOG.info("Addresses saved: " + contact.getAddresses().size());
+		LOG.info("Addresses saved: " + getInstance().getAddresses().size());
 	}
 
 	@Override
-	public void saveAddresses(Contact contact) {
-		deleteReference(new ReferenceLink(contact.getId(), null, "ID_CONTACT",
+	public void saveAddresses() {
+		deleteReference(new ReferenceLink(getId().intValue(), null, "ID_CONTACT",
 				null, "CONTACT_ADDRESSES"));
 
-		for (Address address : contact.getAddresses()) {
+		for (Address address : getInstance().getAddresses()) {
 			if (address.getId() == null) {
 				throw new IllegalArgumentException("Unsaved address");
 			} else {// update
-				createReference(new ReferenceLink(contact.getId(), address
+				createReference(new ReferenceLink(getInstance().getId(), address
 						.getId(), null, null, "CONTACT_ADDRESSES"));
 			}
 		}
-		LOG.info("Addresses saved: " + contact.getAddresses().size());
+		LOG.info("Addresses saved: " + getInstance().getAddresses().size());
 	}
 
 	@Override
-	public void savePhones(Contact contact) {
-		deleteReference(new ReferenceLink(contact.getId(), null, "ID_CONTACT",
+	public void savePhones() {
+		deleteReference(new ReferenceLink(getInstance().getId(), null, "ID_CONTACT",
 				null, "CONTACT_PHONES"));
-		for (Phone phone : contact.getPhones()) {
+		for (Phone phone : getInstance().getPhones()) {
 			if (phone.getId() == null) {
 				throw new IllegalArgumentException("Unsaved phone");
 			} else {// update
-				createReference(new ReferenceLink(contact.getId(), phone
+				createReference(new ReferenceLink(getInstance().getId(), phone
 						.getId(), null, null, "CONTACT_PHONES"));
 			}
 		}
-		LOG.info("Phones saved: " + contact.getPhones().size());
+		LOG.info("Phones saved: " + getInstance().getPhones().size());
 	}
 
 	@Override
-	public void saveVirtualAddresses(Contact contact) {
-		deleteReference(new ReferenceLink(contact.getId(), null,
+	public void saveVirtualAddresses() {
+		deleteReference(new ReferenceLink(getInstance().getId(), null,
 				"ID_CONTACT", null, "CONTACT_VIRTUAL_ADDRESSES"));		
 
-		for (VirtualAddress vaddress : contact.getVirtualAddresses()) {
+		for (VirtualAddress vaddress : getInstance().getVirtualAddresses()) {
 			if (vaddress.getId() == null) {
 				throw new IllegalArgumentException("Unsaved vaddress");
 			} else {// update
-				createReference(new ReferenceLink(contact.getId(),
+				createReference(new ReferenceLink(getInstance().getId(),
 				vaddress.getId(), null, null, "CONTACT_VIRTUAL_ADDRESSES"));
 			}
 		}
 		LOG.info("VirtualAddresses saved: "
-				+ contact.getVirtualAddresses().size());
+ + getInstance().getVirtualAddresses().size());
 	}
 
 	@Override
-	protected Collection<ReferenceLink> getReferences(Contact entity) {
+	protected Collection<ReferenceLink> getReferences() {
 		Collection<ReferenceLink> list = new ArrayList<ReferenceLink>();
 
-		list.add(new ReferenceLink(entity.getId(), null, "ID_CONTACT", null,
+		list.add(new ReferenceLink(getId().intValue(), null, "ID_CONTACT", null,
 				"CONTACT_VIRTUAL_ADDRESSES"));
 
-		list.add(new ReferenceLink(entity.getId(), null, "ID_CONTACT", null,
+		list.add(new ReferenceLink(getId().intValue(), null, "ID_CONTACT", null,
 				"CONTACT_PHONES"));
 
-		list.add(new ReferenceLink(entity.getId(), null, "ID_CONTACT", null,
+		list.add(new ReferenceLink(getId().intValue(), null, "ID_CONTACT", null,
 				"CONTACT_ADDRESSES"));
 
 		return list;

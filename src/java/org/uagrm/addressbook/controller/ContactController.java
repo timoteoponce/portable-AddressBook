@@ -11,8 +11,7 @@ import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.model.Phone;
 import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.model.dao.ContactDao;
-import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GenericDao;
+import org.uagrm.addressbook.model.dao.Home;
 import org.uagrm.addressbook.model.dto.EntityStatus;
 import org.uagrm.addressbook.model.dto.StatusType;
 
@@ -26,33 +25,29 @@ public class ContactController extends AbstractController<Contact> {
 
 	private static Controller<Contact> instance;
 
-	private final ContactDao dao = DaoFactory.getInstance(ContactDao.class);
-
-	private ContactController() {
+	private ContactController(Home<Contact> home) {
+		super(home);
 	}
 
-	public static Controller<Contact> getInstance() {
+	public static Controller<Contact> getInstance(Home<Contact> home) {
 		if (instance == null) {
-			instance = new ContactController();
+			instance = new ContactController(home);
 		}
 		return instance;
 	}
 
 	@Override
-	protected GenericDao<Contact> getDao() {
-		return dao;
-	}
-
-	@Override
 	public void save(Contact contact, boolean updateViews) {
 		LOG.debug("Saving contact");
+		getHome().setInstance(contact);
+
 		// save or update the group
 		if (contact.getId() == null) {
 			LOG.debug("Creating...");
-			dao.create(contact);
+			getHome().persist();
 		} else {
 			LOG.debug("Updating...");
-			dao.update(contact);
+			getHome().update();
 		}
 		saveReferences(contact, Address.class);
 		saveReferences(contact, Phone.class);
@@ -61,24 +56,32 @@ public class ContactController extends AbstractController<Contact> {
 		if (updateViews) {
 			updateAllViews(EntityStatus.create(contact, StatusType.UPDATED));
 		}
+		getHome().clearInstance();
+	}
+
+	private ContactDao getSpecificHome() {
+		return (ContactDao) getHome();
 	}
 
 	@Override
 	protected void saveReferences(Contact contact, Class<?> target) {
 		LOG.info("Saving Contact references: " + target);
+		getHome().setInstance(contact);
+
 		if (target.equals(Address.class)) {
 			updateAddresses(contact.getAddresses());
-			dao.saveAddresses(contact);
+			getSpecificHome().saveAddresses();
 		} else if (target.equals(Phone.class)) {
 			updatePhones(contact.getPhones());
-			dao.savePhones(contact);
+			getSpecificHome().savePhones();
 		} else if (target.equals(VirtualAddress.class)) {
 			updateVirtualAddresses(contact.getVirtualAddresses());
-			dao.saveVirtualAddresses(contact);
+			getSpecificHome().saveVirtualAddresses();
 		} else if (target.equals(Group.class)) {
 			//groups are validated in other controller
-			dao.saveGroups(contact);
+			getSpecificHome().saveGroups();
 		}
+		getHome().clearInstance();
 	}
 
 	private void updateAddresses(Set<Address> addresses) {
@@ -110,7 +113,7 @@ public class ContactController extends AbstractController<Contact> {
 		final List<Contact> list = new ArrayList<Contact>();
 		if (targetClass.equals(Group.class) && ((Group) target).getId() != null) {			
 			Group group = (Group) target;
-			list.addAll(dao.getByGroup(group));
+			list.addAll(getSpecificHome().getByGroup(group));
 		} else {
 			refreshElementList();
 			list.addAll((List<Contact>) getElements());

@@ -1,9 +1,7 @@
 package org.uagrm.addressbook.controller;
 
 import org.uagrm.addressbook.model.VirtualAddress;
-import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GenericDao;
-import org.uagrm.addressbook.model.dao.VirtualAddressDao;
+import org.uagrm.addressbook.model.dao.Home;
 
 
 /**
@@ -16,22 +14,15 @@ public class VirtualAddressController extends
 
 	private static Controller<VirtualAddress> instance;
 
-	private final VirtualAddressDao dao = DaoFactory
-			.getInstance(VirtualAddressDao.class);
-
-	private VirtualAddressController() {
+	private VirtualAddressController(Home<VirtualAddress> home) {
+		super(home);
 	}
 
-	public static Controller<VirtualAddress> getInstance() {
+	public static Controller<VirtualAddress> getInstance(Home<VirtualAddress> home) {
 		if (instance == null) {
-			instance = new VirtualAddressController();
+			instance = new VirtualAddressController(home);
 		}
 		return instance;
-	}
-
-	@Override
-	protected GenericDao<VirtualAddress> getDao() {
-		return dao;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package org.uagrm.addressbook.model.dao;
 
 import org.junit.Test;
-import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Phone;
 
 /**
@@ -12,14 +11,12 @@ public class ContactDaoTest implements GenericDaoTestNot {
 
 	private final ContactDao dao = DaoFactory.getInstance(ContactDao.class);
 
-	private final Contact contact = new Contact();
-
 	@Override
 	@Test
 	public void createEntries() {
-		contact.setFirstName("Juan Timoteo");
-		contact.setLastName("Ponce Ortiz");
-		dao.create(contact);
+		dao.getInstance().setFirstName("Juan Timoteo");
+		dao.getInstance().setLastName("Ponce Ortiz");
+		dao.persist();
 		// phone
 		createPhones();
 		// address
@@ -39,30 +36,28 @@ public class ContactDaoTest implements GenericDaoTestNot {
 	}
 
 	private void createPhones() {
-		final GenericDao<Phone> phoneDao = DaoFactory
-				.getInstance(PhoneDao.class);
-		final Phone phone1 = new Phone();
-		phone1.setHousePhone("1111aa");
-		phone1.setMobilePhone("2222aa");
-		phone1.setWorkPhone("3333aa");
+		final Home<Phone> phoneDao = DaoFactory
+.getInstance(PhoneDao.class);
+		phoneDao.getInstance().setHousePhone("1111aa");
+		phoneDao.getInstance().setMobilePhone("2222aa");
+		phoneDao.getInstance().setWorkPhone("3333aa");
 
-		phoneDao.create(phone1);
+		phoneDao.persist();
+		dao.getInstance().getPhones().add(phoneDao.getInstance());
 
-		final Phone phone2 = new Phone();
-		phone2.setHousePhone("1111bb");
-		phone2.setMobilePhone("2222bb");
-		phone2.setWorkPhone("3333bb");
+		phoneDao.clearInstance();
+		phoneDao.getInstance().setHousePhone("1111bb");
+		phoneDao.getInstance().setMobilePhone("2222bb");
+		phoneDao.getInstance().setWorkPhone("3333bb");
 
-		phoneDao.create(phone2);
-
-		contact.getPhones().add(phone1);
-		contact.getPhones().add(phone2);
-		dao.savePhones(contact);
+		phoneDao.persist();
+		dao.getInstance().getPhones().add(phoneDao.getInstance());
+		dao.savePhones();
 	}
 
 	@Override
 	public void deleteEntries() {
-		dao.delete(contact);
+		dao.delete();
 	}
 
 	@Override

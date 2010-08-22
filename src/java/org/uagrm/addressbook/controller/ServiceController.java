@@ -1,9 +1,7 @@
 package org.uagrm.addressbook.controller;
 
 import org.uagrm.addressbook.model.Service;
-import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GenericDao;
-import org.uagrm.addressbook.model.dao.ServiceDao;
+import org.uagrm.addressbook.model.dao.Home;
 
 
 /**
@@ -15,22 +13,17 @@ public class ServiceController extends AbstractController<Service> {
 
 	private static Controller<Service> instance;
 
-	private final ServiceDao dao = DaoFactory.getInstance(ServiceDao.class);
-
-	private ServiceController() {
+	private ServiceController(Home<Service> home) {
+		super(home);
 	}
 
-	public static Controller<Service> getInstance() {
+	public static Controller<Service> getInstance(Home<Service> home) {
 		if (instance == null) {
-			instance = new ServiceController();
+			instance = new ServiceController(home);
 		}
 		return instance;
 	}
 
-	@Override
-	protected GenericDao<Service> getDao() {
-		return dao;
-	}
 
 	@Override
 	protected void saveReferences(Service element, Class<?> target) {

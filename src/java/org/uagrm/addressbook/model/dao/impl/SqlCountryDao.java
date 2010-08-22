@@ -17,6 +17,11 @@ import org.uagrm.addressbook.model.dao.ReferenceLink;
  */
 public class SqlCountryDao extends AbstractSqlDao<Country> implements
 		CountryDao {
+
+	public SqlCountryDao() {
+		super(Country.class);
+	}
+
 	@Override
 	protected void fillValues(Country entity, ResultSet rs) throws SQLException {
 		final Country country = entity;
@@ -26,8 +31,9 @@ public class SqlCountryDao extends AbstractSqlDao<Country> implements
 	}
 
 	@Override
-	protected String getFields(Country country, ActionType action) {
+	protected String getFields(ActionType action) {
 		final StrBuilder buffer = new StrBuilder();
+		final Country country = getInstance();
 
 		switch (action) {
 		case CREATE:
@@ -49,9 +55,8 @@ public class SqlCountryDao extends AbstractSqlDao<Country> implements
 	}
 
 	@Override
-	public void loadReferences(Country entity, Class<?> clazz) {
+	public void loadReferences(Country entity) {
 		// not used
-
 	}
 
 	@Override
@@ -62,7 +67,7 @@ public class SqlCountryDao extends AbstractSqlDao<Country> implements
 	}
 
 	@Override
-	protected Collection<ReferenceLink> getReferences(Country entity) {
+	protected Collection<ReferenceLink> getReferences() {
 		return new ArrayList<ReferenceLink>();
 	}
 

@@ -17,6 +17,10 @@ import org.uagrm.addressbook.model.dao.ServiceDao;
  */
 public class SqlServiceDao extends AbstractSqlDao<Service> implements ServiceDao {
 
+	public SqlServiceDao() {
+		super(Service.class);
+	}
+
 	@Override
 	protected void fillValues(Service entity, ResultSet rs) throws SQLException {
 		final Service service = entity;
@@ -27,8 +31,9 @@ public class SqlServiceDao extends AbstractSqlDao<Service> implements ServiceDao
 	}
 
 	@Override
-	protected String getFields(Service service, ActionType action) {
+	protected String getFields(ActionType action) {
 		final StrBuilder buffer = new StrBuilder();
+		final Service service = getInstance();
 
 		switch (action) {
 		case CREATE:
@@ -51,7 +56,7 @@ public class SqlServiceDao extends AbstractSqlDao<Service> implements ServiceDao
 	}
 
 	@Override
-	public void loadReferences(Service entity, Class<?> clazz) {
+	public void loadReferences(Service entity) {
 		// not used
 	}
 
@@ -64,7 +69,7 @@ public class SqlServiceDao extends AbstractSqlDao<Service> implements ServiceDao
 	}
 
 	@Override
-	protected Collection<ReferenceLink> getReferences(Service entity) {
+	protected Collection<ReferenceLink> getReferences() {
 		return new ArrayList<ReferenceLink>();
 	}
 }

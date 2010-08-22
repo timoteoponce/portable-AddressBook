@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.actions.ActionType;
 import org.uagrm.addressbook.model.Entity;
-import org.uagrm.addressbook.model.dao.GenericDao;
+import org.uagrm.addressbook.model.dao.Home;
 import org.uagrm.addressbook.model.dao.ReferenceLink;
 import org.uagrm.addressbook.model.dao.SqlOperation;
 import org.uagrm.data.DatabaseHandler;
@@ -20,27 +20,60 @@ import org.uagrm.data.DatabaseHandlerImpl;
  * 
  * @param <T>
  */
-public abstract class AbstractSqlDao<T> implements GenericDao<T> {
+public abstract class AbstractSqlDao<T> implements Home<T> {
 
 	public static final String VAR_TABLE = "${table}";
 	public static final String VAR_VALUES = "${values}";
 	public static final String VAR_CONDITION = "${condition}";
 	public static final String VAR_COLUMNS = "${columns}";
 
+	private T instance;
+
+	private final Class<T> entityClass;
+
 	private final DatabaseHandler handler = DatabaseHandlerImpl.getInstance();
 
 	private final Logger log;
 
-	public AbstractSqlDao() {
+	public AbstractSqlDao(final Class<T> entityClass) {
 		log = Logger.getLogger(getClass());
+		this.entityClass = entityClass;
 	}
 
 	@Override
-	public void create(T entity) {
+	public void setInstance(T instance) {
+		this.instance = instance;
+	}
+
+	@Override
+	public T getInstance() {
+		if (this.instance == null) {
+			setInstance(newInstance());
+		}
+		return this.instance;
+	}
+
+	@Override
+	public void clearInstance() {
+		setInstance(null);
+	}
+
+	@Override
+	public T newInstance() {
+		T newInstance = null;
+		try {
+			newInstance = entityClass.newInstance();
+		} catch (Exception e) {
+			log.error(e, e);
+		}
+		return newInstance;
+	}
+
+	@Override
+	public void persist() {
 		final QueryBuilder builder = QueryBuilder.createQuery(SqlOperation.SQL_INSERT);
 		builder.setVariable(VAR_TABLE, getTableName());
-		builder.setVariable(VAR_VALUES, getFields(entity,
-				ActionType.CREATE));
+		builder.setVariable(VAR_VALUES, getFields(ActionType.CREATE));
 		log.info("Query result: " + handler.executeUpdate(builder.getQuery()));
 		// retrieve the generated ID
 		builder.init(SqlOperation.SQL_SELECT_LAST_ID);
@@ -48,7 +81,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 		ResultSet rs = handler.executeQuery(builder.getQuery());
 		try {
 			rs.next();
-			((Entity) entity).setId(rs.getInt(1));
+			((Entity) instance).setId(rs.getInt(1));
 		} catch (SQLException e) {
 			log.error(e, e);
 		} finally {
@@ -57,18 +90,18 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	}
 
 	@Override
-	public void delete(T entity) {
+	public void delete() {
 		final QueryBuilder builder = QueryBuilder.createQuery(SqlOperation.SQL_DELETE);
 		builder.setVariable(VAR_TABLE, getTableName());
-		builder.setVariable(VAR_CONDITION, "id = " + ((Entity) entity).getId());
+		builder.setVariable(VAR_CONDITION, "id = " + ((Entity) instance).getId());
 
 		log.info("Query result: " + handler.executeUpdate(builder.getQuery()));
-		deleteReferences(entity);
+		deleteReferences();
 	}
 
-	protected void deleteReferences(T entity) {
+	protected void deleteReferences() {
 		log.info("Removing all references.");
-		Collection<ReferenceLink> references = getReferences(entity);
+		Collection<ReferenceLink> references = getReferences();
 
 		for (ReferenceLink ref : references) {
 			deleteReference(ref);
@@ -100,7 +133,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	}	
 
 	@Override
-	public T read(T entity) {
+	public T find(T entity) {
 		final QueryBuilder builder = QueryBuilder.createQuery(SqlOperation.SQL_SELECT);
 		builder.setVariable(VAR_TABLE, getTableName());
 		builder.setVariable(VAR_COLUMNS, "*");
@@ -136,6 +169,7 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 				T tempEntity = loadValues(rs);
 				resultList.add(tempEntity);
 			}
+			clearInstance();
 		} catch (SQLException e) {
 			log.error(e, e);
 		} finally {
@@ -145,11 +179,11 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	}
 
 	@Override
-	public void update(T entity) {
+	public void update() {
 		final QueryBuilder builder = QueryBuilder.createQuery(SqlOperation.SQL_UPDATE);
 		builder.setVariable(VAR_TABLE, getTableName());
-		builder.setVariable(VAR_VALUES, getFields(entity, ActionType.UPDATE));
-		builder.setVariable(VAR_CONDITION, "id = " + ((Entity) entity).getId());
+		builder.setVariable(VAR_VALUES, getFields(ActionType.UPDATE));
+		builder.setVariable(VAR_CONDITION, "id = " + ((Entity) instance).getId());
 
 		log.info("Query result: " + handler.executeUpdate(builder.getQuery()));
 	}
@@ -158,19 +192,29 @@ public abstract class AbstractSqlDao<T> implements GenericDao<T> {
 	protected DatabaseHandler getDatabaseHandler() {
 		return handler;
 	}	
-	
-	abstract protected T loadValues(ResultSet rs) throws SQLException;
 
-	abstract protected String getFields(T entity, ActionType action);
+	protected T loadValues(ResultSet rs) throws SQLException {
+		T newInstance = newInstance();
+		fillValues(newInstance, rs);
+		loadReferences(newInstance);
+
+		return newInstance;
+	}
+
+	@Override
+	public Number getId() {
+		return ((Entity) getInstance()).getId();
+	}
+
+	abstract protected String getFields(ActionType action);
 
 	abstract protected String getTableName();
 
-	abstract protected void fillValues(T entity, ResultSet rs)
+	abstract protected void fillValues(T instance, ResultSet rs)
 			throws SQLException;
+	
+	abstract public void loadReferences(T instance);
 
-	@Override
-	abstract public void loadReferences(T entity, Class<?> clazz);
-
-	abstract protected Collection<ReferenceLink> getReferences(T entity);
+	abstract protected Collection<ReferenceLink> getReferences();
 
 }

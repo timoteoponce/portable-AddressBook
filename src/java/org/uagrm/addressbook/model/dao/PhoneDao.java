@@ -9,7 +9,7 @@ import org.uagrm.addressbook.model.Phone;
  * @author Timoteo Ponce
  * 
  */
-public interface PhoneDao extends GenericDao<Phone> {
+public interface PhoneDao extends Home<Phone> {
     static final String TABLE_NAME = "PHONE";
     
     Set<Phone> getByContact(Contact contact);

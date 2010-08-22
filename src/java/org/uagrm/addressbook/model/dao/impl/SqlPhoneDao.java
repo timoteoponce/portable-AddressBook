@@ -22,6 +22,10 @@ import org.uagrm.addressbook.model.dao.SqlOperation;
  */
 public class SqlPhoneDao extends AbstractSqlDao<Phone> implements PhoneDao {
 
+	public SqlPhoneDao() {
+		super(Phone.class);
+	}
+
 	@Override
 	protected void fillValues(Phone entity, ResultSet rs) throws SQLException {
 		final Phone phone = entity;
@@ -32,8 +36,9 @@ public class SqlPhoneDao extends AbstractSqlDao<Phone> implements PhoneDao {
 	}
 
 	@Override
-	protected String getFields(Phone phone, ActionType action) {
+	protected String getFields(ActionType action) {
 		final StrBuilder buffer = new StrBuilder();
+		final Phone phone = getInstance();
 
 		switch (action) {
 		case CREATE:
@@ -57,7 +62,7 @@ public class SqlPhoneDao extends AbstractSqlDao<Phone> implements PhoneDao {
 	}
 
 	@Override
-	public void loadReferences(Phone entity, Class<?> clazz) {
+	public void loadReferences(Phone entity) {
 		// not used
 	}
 
@@ -70,7 +75,7 @@ public class SqlPhoneDao extends AbstractSqlDao<Phone> implements PhoneDao {
 	}
 
 	@Override
-	protected Collection<ReferenceLink> getReferences(Phone entity) {
+	protected Collection<ReferenceLink> getReferences() {
 		return new ArrayList<ReferenceLink>();
 	}
 

@@ -1,9 +1,7 @@
 package org.uagrm.addressbook.controller;
 
 import org.uagrm.addressbook.model.Phone;
-import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GenericDao;
-import org.uagrm.addressbook.model.dao.PhoneDao;
+import org.uagrm.addressbook.model.dao.Home;
 
 
 /**
@@ -15,21 +13,15 @@ public class PhoneController extends AbstractController<Phone> {
 
 	private static Controller<Phone> instance;
 
-	private final PhoneDao dao = DaoFactory.getInstance(PhoneDao.class);
-
-	private PhoneController() {
+	private PhoneController(Home<Phone> home) {
+		super(home);
 	}
 
-	public static Controller<Phone> getInstance() {
+	public static Controller<Phone> getInstance(Home<Phone> home) {
 		if (instance == null) {
-			instance = new PhoneController();
+			instance = new PhoneController(home);
 		}
 		return instance;
-	}
-
-	@Override
-	protected GenericDao<Phone> getDao() {
-		return dao;
 	}
 
 	@Override
