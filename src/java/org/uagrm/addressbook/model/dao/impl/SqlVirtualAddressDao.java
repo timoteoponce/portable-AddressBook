@@ -14,7 +14,7 @@ import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Service;
 import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GenericDao;
+import org.uagrm.addressbook.model.dao.Home;
 import org.uagrm.addressbook.model.dao.ReferenceLink;
 import org.uagrm.addressbook.model.dao.ServiceDao;
 import org.uagrm.addressbook.model.dao.SqlOperation;
@@ -26,6 +26,10 @@ import org.uagrm.addressbook.model.dao.VirtualAddressDao;
  */
 public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress> implements VirtualAddressDao {
 
+	public SqlVirtualAddressDao() {
+		super(VirtualAddress.class);
+	}
+
 	@Override
 	protected void fillValues(VirtualAddress entity, ResultSet rs) throws SQLException {
 		final VirtualAddress vAddress = entity;
@@ -36,14 +40,15 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress> impleme
 	}
 
 	private Service getService(int serviceId) {
-		GenericDao<Service> serviceDao = DaoFactory.getInstance(ServiceDao.class);
-		Service service = serviceDao.read(new Service(serviceId));
+		Home<Service> serviceDao = DaoFactory.getInstance(ServiceDao.class);
+		Service service = serviceDao.find(new Service(serviceId));
 		return service;
 	}
 
 	@Override
-	protected String getFields(VirtualAddress vAddress, ActionType action) {
+	protected String getFields(ActionType action) {
 		final StrBuilder buffer = new StrBuilder();
+		final VirtualAddress vAddress = getInstance();
 
 		switch (action) {
 		case CREATE:
@@ -67,7 +72,7 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress> impleme
 	}
 
 	@Override
-	public void loadReferences(VirtualAddress entity, Class<?> clazz) {
+	public void loadReferences(VirtualAddress entity) {
 		// not used
 	}
 
@@ -80,7 +85,7 @@ public class SqlVirtualAddressDao extends AbstractSqlDao<VirtualAddress> impleme
 	}
 
 	@Override
-	protected Collection<ReferenceLink> getReferences(VirtualAddress entity) {
+	protected Collection<ReferenceLink> getReferences() {
 		return new ArrayList<ReferenceLink>();
 	}
 

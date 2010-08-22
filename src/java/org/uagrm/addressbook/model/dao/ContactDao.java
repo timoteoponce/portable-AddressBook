@@ -9,17 +9,17 @@ import org.uagrm.addressbook.model.Group;
  * @author Timoteo Ponce
  *
  */
-public interface ContactDao extends GenericDao<Contact> {
+public interface ContactDao extends Home<Contact> {
     
     	static final String TABLE_NAME = "CONTACTS";
 
 	Set<Contact> getByGroup(Group group);
 	
-	void saveGroups(Contact entity);
+	void saveGroups();
 
-	void saveAddresses(Contact entity);
+	void saveAddresses();
 
-	void saveVirtualAddresses(Contact entity);
+	void saveVirtualAddresses();
 
-	void savePhones(Contact entity);
+	void savePhones();
 }

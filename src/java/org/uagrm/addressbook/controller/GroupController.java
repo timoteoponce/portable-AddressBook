@@ -3,9 +3,8 @@ package org.uagrm.addressbook.controller;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
-import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GenericDao;
 import org.uagrm.addressbook.model.dao.GroupDao;
+import org.uagrm.addressbook.model.dao.Home;
 import org.uagrm.addressbook.model.dto.EntityStatus;
 import org.uagrm.addressbook.model.dto.StatusType;
 
@@ -19,47 +18,50 @@ public class GroupController extends AbstractController<Group> {
 
 	private static Controller<Group> instance;
 
-	private final GroupDao dao = DaoFactory.getInstance(GroupDao.class);
-
-	private GroupController() {
+	private GroupController(Home<Group> home) {
+		super(home);
 	}
 
-	public static Controller<Group> getInstance() {
+	public static Controller<Group> getInstance(Home<Group> home) {
 		if (instance == null) {
-			instance = new GroupController();
+			instance = new GroupController(home);
 		}
 		return instance;
+	}
+
+	private GroupDao getSpecificHome() {
+		return (GroupDao) getHome();
 	}
 
 	@Override
 	public void save(Group group, boolean updateViews) {
 		LOG.debug("Saving group");
+		getSpecificHome().setInstance(group);
 		// save or update the group
 		if (group.getId() == null) {
 			LOG.debug("Creating...");
-			dao.create(group);
+			getHome().persist();
 		} else {
 			LOG.debug("Updating...");
-			dao.update(group);
+			getHome().update();
 		}
 		saveReferences(group, Contact.class);
 		if (updateViews) {
 			updateAllViews(EntityStatus.create(group, StatusType.UPDATED));
 		}
+		getSpecificHome().clearInstance();
 	}
 
 	@Override
 	protected void saveReferences(Group group, Class<?> target) {
 		LOG.info("Saving Group references: " + target + " [ "
 				+ group.getContacts().size() + " ]");
-		if (target.equals(Contact.class)) {
-			dao.saveContacts(group);
-		}
-	}
+		getSpecificHome().setInstance(group);
 
-	@Override
-	protected GenericDao<Group> getDao() {
-		return dao;
+		if (target.equals(Contact.class)) {
+			getSpecificHome().saveContacts();
+		}
+		getSpecificHome().clearInstance();
 	}
 
 }

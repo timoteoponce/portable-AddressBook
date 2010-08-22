@@ -15,7 +15,6 @@ import javax.swing.JTextPane;
 import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
-import org.uagrm.addressbook.model.Contact;
 import org.uagrm.addressbook.model.Group;
 import org.uagrm.addressbook.view.event.GenericEvent;
 import org.uagrm.addressbook.view.event.GenericEventListener;
@@ -83,9 +82,6 @@ public class GroupView extends JPanel implements View<Group>, GenericEventListen
 	@Override
 	public void setModel(Group model) {
 		this.group = model;
-		if (group.getContacts().isEmpty()) {
-			groupController.preloadEntity(group, Contact.class);
-		}
 		loadValues();
 	}
 

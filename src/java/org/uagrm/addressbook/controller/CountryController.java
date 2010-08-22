@@ -1,9 +1,7 @@
 package org.uagrm.addressbook.controller;
 
 import org.uagrm.addressbook.model.Country;
-import org.uagrm.addressbook.model.dao.CountryDao;
-import org.uagrm.addressbook.model.dao.DaoFactory;
-import org.uagrm.addressbook.model.dao.GenericDao;
+import org.uagrm.addressbook.model.dao.Home;
 
 
 /**
@@ -15,21 +13,17 @@ public class CountryController extends AbstractController<Country> {
 
 	private static Controller<Country> instance;
 
-	private final CountryDao dao = DaoFactory.getInstance(CountryDao.class);
 
-	private CountryController() {
+
+	private CountryController(Home<Country> home) {
+		super(home);
 	}
 
-	public static Controller<Country> getInstance() {
+	public static Controller<Country> getInstance(Home<Country> home) {
 		if (instance == null) {
-			instance = new CountryController();
+			instance = new CountryController(home);
 		}
 		return instance;
-	}
-
-	@Override
-	protected GenericDao<Country> getDao() {
-		return dao;
 	}
 
 	@Override

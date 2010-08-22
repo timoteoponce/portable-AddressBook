@@ -170,9 +170,6 @@ public class GroupEditDialog extends AbstractDialogView<Group> {
 	}
 
 	private void updateContactList() {
-		// if (getModel().getContacts().isEmpty()) {
-		controller.preloadEntity(getModel(), Contact.class);
-		// }
 		contactList.addAllElements(getModel().getContacts());
 	}
 

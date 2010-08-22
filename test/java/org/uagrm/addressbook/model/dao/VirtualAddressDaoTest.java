@@ -18,13 +18,12 @@ public class VirtualAddressDaoTest implements GenericDaoTestNot {
 	@Override
 	@Test
 	public void createEntries() {
-		VirtualAddress vAddress = new VirtualAddress();
-		vAddress.setIdentifier("timo.slack@mymail.com");
-		vAddress.setService(getService());
-		vAddress.setWebsite("http://timouagrm.co.nr");
+		dao.getInstance().setIdentifier("timo.slack@mymail.com");
+		dao.getInstance().setService(getService());
+		dao.getInstance().setWebsite("http://timouagrm.co.nr");
 
-		dao.create(vAddress);
-		Assert.assertNotNull(vAddress.getId());
+		dao.persist();
+		Assert.assertNotNull(dao.getInstance().getId());
 	}
 
 	private Service getService() {
@@ -36,14 +35,14 @@ public class VirtualAddressDaoTest implements GenericDaoTestNot {
 	public void updateEntries() {
 		Collection<VirtualAddress> list = dao.selectAll();
 		if (!list.isEmpty()) {
-			VirtualAddress vAddress = list.iterator().next();
-			final Integer id = vAddress.getId();
-			vAddress.setIdentifier("msn:timo.com");
-			vAddress.setService(getImProtocol());
+			dao.setInstance(list.iterator().next());
+			final Integer id = dao.getInstance().getId();
+			dao.getInstance().setIdentifier("msn:timo.com");
+			dao.getInstance().setService(getImProtocol());
 
-			dao.update(vAddress);
+			dao.update();
 
-			Assert.assertEquals(id, vAddress.getId());
+			Assert.assertEquals(id, dao.getInstance().getId());
 		}
 	}
 
@@ -53,21 +52,20 @@ public class VirtualAddressDaoTest implements GenericDaoTestNot {
 
 	private Service createService(String name) {
 		final ServiceDao serviceDao = DaoFactory.getInstance(ServiceDao.class);
+		serviceDao.getInstance().setName(name);
+		serviceDao.persist();
 
-		Service service = new Service();
-		service.setName(name);
-		serviceDao.create(service);
-
-		return service;
+		return serviceDao.getInstance();
 	}
 
 	@Override
 	@Test
 	public void deleteEntries() {
 		VirtualAddress vAddress = dao.selectAll().iterator().next();
-		dao.delete(vAddress);
+		dao.setInstance(vAddress);
+		dao.delete();
 
-		Assert.assertNull(dao.read(vAddress));
+		Assert.assertNull(dao.find(vAddress));
 	}
 
 }

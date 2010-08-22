@@ -238,36 +238,24 @@ public class ContactEditDialog extends AbstractDialogView<Contact> {
 	}
 
 	private void updateGroupList() {
-		if (getModel().getGroups().isEmpty()) {
-			contactController.preloadEntity(getModel(), Group.class);
-		}
 		groupPanelList.clear();
 		groupPanelList.addAllElements(getModel().getGroups());
 		groupPanelList.updateUI();
 	}
 
 	private void updateAddressList() {
-		if (!getModel().hasAddresses()) {
-			contactController.preloadEntity(getModel(), Address.class);
-		}
 		addressPanelList.clear();
 		addressPanelList.addAllElements(getModel().getAddresses());
 		addressPanelList.updateUI();
 	}
 
 	private void updatePhoneList() {
-		if (getModel().getPhones().isEmpty()) {
-			contactController.preloadEntity(getModel(), Phone.class);
-		}
 		phonePanelList.clear();
 		phonePanelList.addAllElements(getModel().getPhones());
 		phonePanelList.updateUI();
 	}
 
 	private void updateVAddressList() {
-		if (getModel().getVirtualAddresses().isEmpty()) {
-			contactController.preloadEntity(getModel(), VirtualAddress.class);
-		}
 		vAddressPanelList.clear();
 		vAddressPanelList.addAllElements(getModel().getVirtualAddresses());
 		vAddressPanelList.updateUI();

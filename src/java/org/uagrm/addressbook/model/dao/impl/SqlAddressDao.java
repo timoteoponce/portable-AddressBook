@@ -26,6 +26,10 @@ import org.uagrm.addressbook.model.dao.SqlOperation;
 public class SqlAddressDao extends AbstractSqlDao<Address> implements
 		AddressDao {
 
+	public SqlAddressDao() {
+		super(Address.class);
+	}
+
 	@Override
 	protected void fillValues(Address entity, ResultSet rs) throws SQLException {
 		final Address address = entity;
@@ -38,12 +42,13 @@ public class SqlAddressDao extends AbstractSqlDao<Address> implements
 
 	private Country getCountry(int countryId) {
 		CountryDao countryDao = DaoFactory.getInstance(CountryDao.class);
-		return countryDao.read(new Country(countryId));
+		return countryDao.find(new Country(countryId));
 	}
 
 	@Override
-	protected String getFields(Address address, ActionType action) {
+	protected String getFields(ActionType action) {
 		final StrBuilder buffer = new StrBuilder();
+		final Address address = getInstance();
 
 		switch (action) { 
 		case CREATE:
@@ -69,7 +74,7 @@ public class SqlAddressDao extends AbstractSqlDao<Address> implements
 	}
 
 	@Override
-	public void loadReferences(Address entity, Class<?> clazz) {
+	public void loadReferences(final Address address) {
 		// not used
 	}
 
@@ -82,7 +87,7 @@ public class SqlAddressDao extends AbstractSqlDao<Address> implements
 	}
 
 	@Override
-	protected Collection<ReferenceLink> getReferences(Address entity) {
+	protected Collection<ReferenceLink> getReferences() {
 		return new ArrayList<ReferenceLink>();
 	}
 

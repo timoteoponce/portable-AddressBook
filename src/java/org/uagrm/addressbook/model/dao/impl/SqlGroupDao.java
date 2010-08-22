@@ -26,14 +26,15 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 
 	private static final Logger LOG = Logger.getLogger(SqlGroupDao.class);
 
-	@Override
-	public void loadReferences(Group group, Class<?> clazz) { 
-		if (clazz.equals(Contact.class)) {			
-			ContactDao contactDao = DaoFactory.getInstance(ContactDao.class);
+	public SqlGroupDao() {
+		super(Group.class);
+	}
 
-			group.getContacts().clear();
-			group.getContacts().addAll(contactDao.getByGroup(group));
-		}
+	@Override
+	public void loadReferences(Group group) {
+		ContactDao contactDao = DaoFactory.getInstance(ContactDao.class);
+		group.getContacts().clear();
+		group.getContacts().addAll(contactDao.getByGroup(group));
 	}
 
 	@Override
@@ -60,17 +61,17 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 	}
 
 	@Override
-	public void saveContacts(Group group) {		
-		removeContactReferences(group);
+	public void saveContacts() {
+		removeContactReferences(getInstance());
 
-		for (Contact contact : group.getContacts()) {
+		for (Contact contact : getInstance().getContacts()) {
 			if (contact.getId() == null) {
 				throw new IllegalArgumentException("Unsaved contact");
 			} else {// update
-				addContactReference(group, contact);
+				addContactReference(getInstance(), contact);
 			}
 		}
-		LOG.info("Contacts saved: " + group.getContacts().size());
+		LOG.info("Contacts saved: " + getInstance().getContacts().size());
 	}
 
 	private void addContactReference(Group group, Contact contact) {
@@ -83,7 +84,7 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 
 	private void removeContactReferences(Group group) {
 		LOG.debug("Removing group -> contact references.");
-		deleteReference(getReferences(group).iterator().next());
+		deleteReference(getReferences().iterator().next());
 	}
 
 	@Override
@@ -95,8 +96,10 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 	}
 
 	@Override
-	protected String getFields(Group group, ActionType action) {
+	protected String getFields(ActionType action) {
 		final StrBuilder buffer = new StrBuilder();
+		final Group group = getInstance();
+
 		switch (action) {
 		case CREATE:
 			buffer.append("(null,'" + group.getName() + "',");
@@ -127,9 +130,9 @@ public class SqlGroupDao extends AbstractSqlDao<Group> implements GroupDao {
 	}
 
 	@Override
-	protected Collection<ReferenceLink> getReferences(Group entity) {
+	protected Collection<ReferenceLink> getReferences() {
 		Collection<ReferenceLink> list = new ArrayList<ReferenceLink>();
-		list.add(new ReferenceLink(entity.getId(), null, "ID_GROUP", null,
+		list.add(new ReferenceLink(getId().intValue(), null, "ID_GROUP", null,
 				GroupDao.TABLE_GROUP_CONTACTS));
 		return list;
 	}

@@ -9,7 +9,7 @@ import org.uagrm.addressbook.model.Contact;
  * @author Timoteo Ponce
  *
  */
-public interface AddressDao extends GenericDao<Address> {
+public interface AddressDao extends Home<Address> {
     static final String TABLE_NAME = "ADDRESS";
     
     Set<Address> getByContact(Contact contact);

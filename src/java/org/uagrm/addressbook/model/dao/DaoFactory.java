@@ -3,6 +3,7 @@ package org.uagrm.addressbook.model.dao;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.uagrm.addressbook.model.dao.impl.SqlAddressDao;
 import org.uagrm.data.DatabaseProperty;
 
@@ -14,6 +15,8 @@ import org.uagrm.data.DatabaseProperty;
  * 
  */
 public class DaoFactory {
+	private static final Logger LOG = Logger.getLogger(DaoFactory.class);
+
 	private static final Map<String, Object> daoMap = new HashMap<String, Object>();
 
 	public static <T> T getInstance(Class<T> clazz) {
@@ -26,16 +29,20 @@ public class DaoFactory {
 
 	private static <T> T createInstance(Class<T> clazz) {
 		try {
-			final String daoTypeId = GenericDao.class.getPackage().getName() + ".impl." + DatabaseProperty.DAO_PREFIX.getValue();
+			String daoTypeId = Home.class.getPackage().getName() + ".impl." + DatabaseProperty.DAO_PREFIX.getValue();
+			daoTypeId += clazz.getSimpleName();
 
-			Object instance = Class.forName(daoTypeId + clazz.getSimpleName()).newInstance();
+			if (!daoTypeId.endsWith("Dao")) {
+				LOG.info("Given class[" + clazz.getSimpleName() + "] is an entity, using proper Dao class instead");
+				daoTypeId += "Dao";
+			}
+
+			Object instance = Class.forName(daoTypeId).newInstance();
 			daoMap.put(clazz.getName(), instance);
 			return (T) instance;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IllegalStateException("Request Home instance not available");
 		}
-		return null;
 	}
 
 }

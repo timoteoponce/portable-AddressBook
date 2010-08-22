@@ -1,31 +1,39 @@
 package org.uagrm.addressbook.controller;
 
+import java.lang.reflect.Method;
 
-public class ControllerFactory {	
+import org.apache.commons.lang.reflect.MethodUtils;
+import org.apache.log4j.Logger;
+import org.uagrm.addressbook.model.dao.DaoFactory;
+import org.uagrm.addressbook.model.dao.Home;
 
-	private static <T> T getInstance(Class<T> clazz) {
-		T instance = (T) createInstance(clazz);
+public class ControllerFactory {
+
+	private static final Logger LOG = Logger.getLogger(ControllerFactory.class);
+
+	private static <T> T getInstance(Class<T> controllerClass, Class<T> entityClass) {
+		T instance = (T) createInstance(controllerClass, entityClass);
 		return instance;
 	}
 
-	public static <T> T createInstance(Class<T> clazz) {
-		T instance = null;
+	private static <T> T createInstance(Class<T> clazz, Class<T> entityClass) {
 		try {
-			instance = (T) clazz.getMethod("getInstance").invoke(null);
+			final Home<T> entityHome = (Home<T>) DaoFactory.getInstance(entityClass);
+			Method method = MethodUtils.getAccessibleMethod(clazz, "getInstance", Home.class);
+			T instance = (T) method.invoke(clazz, (Home) entityHome);
+			return instance;
 		} catch (Exception e) {
-			System.err.println("Problem instantiating Controller class");
+			throw new IllegalStateException("Problem instantiating Controller class");
 		}
-		return instance;
 	}
 
-	public static <T> Controller<T> getInstanceFor(Class<T> clazz) {
-		final String className = Controller.class.getPackage().getName() + "." + clazz.getSimpleName() + Controller.class.getSimpleName();
+	public static <T> Controller<T> getInstanceFor(Class<T> entityClass) {
+		final String className = Controller.class.getPackage().getName() + "." + entityClass.getSimpleName() + Controller.class.getSimpleName();
 		try {
 			final Class<T> outputClass = (Class<T>) Class.forName(className);
-			return (Controller<T>) getInstance(outputClass);
+			return (Controller<T>) getInstance(outputClass, entityClass);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			throw new IllegalStateException("Problem instantiating Controller class");
 		}
-		return null;
 	}
 }
