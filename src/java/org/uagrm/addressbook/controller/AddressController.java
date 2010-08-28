@@ -13,22 +13,12 @@ public class AddressController extends AbstractController<Address> {
 	// private static final Logger LOG =
 	// Logger.getLogger(AddressController.class);
 
-	private static Controller<Address> instance;
-
-
-	private AddressController(Home<Address> home) {
+	public AddressController(final Home<Address> home) {
 		super(home);
 	}
 
-	public static Controller<Address> getInstance(Home<Address> home) {
-		if (instance == null) {
-			instance = new AddressController(home);
-		}
-		return instance;
-	}
-
 	@Override
-	protected void saveReferences(Address element, Class<?> target) {
+	protected void saveReferences(final Address element, final Class<?> target) {
 		// not needed
 	}
 

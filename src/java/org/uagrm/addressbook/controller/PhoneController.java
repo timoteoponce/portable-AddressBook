@@ -10,22 +10,12 @@ import org.uagrm.addressbook.model.dao.Home;
  */
 public class PhoneController extends AbstractController<Phone> {
 
-
-	private static Controller<Phone> instance;
-
-	private PhoneController(Home<Phone> home) {
+	public PhoneController(final Home<Phone> home) {
 		super(home);
 	}
 
-	public static Controller<Phone> getInstance(Home<Phone> home) {
-		if (instance == null) {
-			instance = new PhoneController(home);
-		}
-		return instance;
-	}
-
 	@Override
-	protected void saveReferences(Phone element, Class<?> target) {
+	protected void saveReferences(final Phone element, final Class<?> target) {
 		// not needed
 	}
 

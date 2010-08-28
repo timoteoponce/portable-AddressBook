@@ -13,7 +13,7 @@ public class AddressActionPanelList extends ActionPanelList<Address> {
 
 
 
-	public AddressActionPanelList(boolean editionEnabled) {
+	public AddressActionPanelList(final Boolean editionEnabled) {
 		super(editionEnabled);
 	}
 

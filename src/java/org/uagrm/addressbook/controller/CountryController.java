@@ -10,24 +10,12 @@ import org.uagrm.addressbook.model.dao.Home;
  */
 public class CountryController extends AbstractController<Country> {
 
-
-	private static Controller<Country> instance;
-
-
-
-	private CountryController(Home<Country> home) {
+	public CountryController(final Home<Country> home) {
 		super(home);
 	}
 
-	public static Controller<Country> getInstance(Home<Country> home) {
-		if (instance == null) {
-			instance = new CountryController(home);
-		}
-		return instance;
-	}
-
 	@Override
-	protected void saveReferences(Country element, Class<?> target) {
+	protected void saveReferences(final Country element, final Class<?> target) {
 		// not needed
 	}
 

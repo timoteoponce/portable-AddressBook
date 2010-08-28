@@ -1,11 +1,20 @@
 package org.uagrm.addressbook.model.dao;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
+import org.uagrm.addressbook.model.Address;
+import org.uagrm.addressbook.model.Contact;
+import org.uagrm.addressbook.model.Country;
+import org.uagrm.addressbook.model.Group;
+import org.uagrm.addressbook.model.Phone;
+import org.uagrm.addressbook.model.Service;
+import org.uagrm.addressbook.model.VirtualAddress;
 import org.uagrm.addressbook.model.dao.impl.SqlAddressDao;
-import org.uagrm.data.DatabaseProperty;
+import org.uagrm.addressbook.model.dao.impl.SqlContactDao;
+import org.uagrm.addressbook.model.dao.impl.SqlCountryDao;
+import org.uagrm.addressbook.model.dao.impl.SqlGroupDao;
+import org.uagrm.addressbook.model.dao.impl.SqlPhoneDao;
+import org.uagrm.addressbook.model.dao.impl.SqlServiceDao;
+import org.uagrm.addressbook.model.dao.impl.SqlVirtualAddressDao;
+import org.uagrm.addressbook.util.BaseFactory;
 
 /**
  * Factory class used to instantiate DAOs implementations from DAO interfaces.
@@ -15,34 +24,20 @@ import org.uagrm.data.DatabaseProperty;
  * 
  */
 public class DaoFactory {
-	private static final Logger LOG = Logger.getLogger(DaoFactory.class);
 
-	private static final Map<String, Object> daoMap = new HashMap<String, Object>();
-
-	public static <T> T getInstance(Class<T> clazz) {
-		T instance = (T) daoMap.get(clazz.getName());
-		if (instance == null) {
-			instance = createInstance(clazz);
-		}
-		return instance;
+	private final static BaseFactory factory = new BaseFactory();
+	static {
+		// <entity,dao>
+		factory.bind(Address.class, SqlAddressDao.class);
+		factory.bind(Contact.class, SqlContactDao.class);
+		factory.bind(Country.class, SqlCountryDao.class);
+		factory.bind(Group.class, SqlGroupDao.class);
+		factory.bind(Phone.class, SqlPhoneDao.class);
+		factory.bind(Service.class, SqlServiceDao.class);
+		factory.bind(VirtualAddress.class, SqlVirtualAddressDao.class);
 	}
 
-	private static <T> T createInstance(Class<T> clazz) {
-		try {
-			String daoTypeId = Home.class.getPackage().getName() + ".impl." + DatabaseProperty.DAO_PREFIX.getValue();
-			daoTypeId += clazz.getSimpleName();
-
-			if (!daoTypeId.endsWith("Dao")) {
-				LOG.info("Given class[" + clazz.getSimpleName() + "] is an entity, using proper Dao class instead");
-				daoTypeId += "Dao";
-			}
-
-			Object instance = Class.forName(daoTypeId).newInstance();
-			daoMap.put(clazz.getName(), instance);
-			return (T) instance;
-		} catch (Exception e) {
-			throw new IllegalStateException("Request Home instance not available");
-		}
+	public static <T> T getInstance(final Class<T> daoClass) {
+		return factory.getInstance(daoClass);
 	}
-
 }
