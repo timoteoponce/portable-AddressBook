@@ -16,17 +16,8 @@ public class GroupController extends AbstractController<Group> {
 
 	private static final Logger LOG = Logger.getLogger(GroupController.class);
 
-	private static Controller<Group> instance;
-
-	private GroupController(Home<Group> home) {
+	public GroupController(final Home<Group> home) {
 		super(home);
-	}
-
-	public static Controller<Group> getInstance(Home<Group> home) {
-		if (instance == null) {
-			instance = new GroupController(home);
-		}
-		return instance;
 	}
 
 	private GroupDao getSpecificHome() {
@@ -34,7 +25,7 @@ public class GroupController extends AbstractController<Group> {
 	}
 
 	@Override
-	public void save(Group group, boolean updateViews) {
+	public void save(final Group group, final boolean updateViews) {
 		LOG.debug("Saving group");
 		getSpecificHome().setInstance(group);
 		// save or update the group
@@ -53,7 +44,7 @@ public class GroupController extends AbstractController<Group> {
 	}
 
 	@Override
-	protected void saveReferences(Group group, Class<?> target) {
+	protected void saveReferences(final Group group, final Class<?> target) {
 		LOG.info("Saving Group references: " + target + " [ "
 				+ group.getContacts().size() + " ]");
 		getSpecificHome().setInstance(group);

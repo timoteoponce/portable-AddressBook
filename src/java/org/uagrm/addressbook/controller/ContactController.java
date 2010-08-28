@@ -23,21 +23,12 @@ public class ContactController extends AbstractController<Contact> {
 
 	private static final Logger LOG = Logger.getLogger(ContactController.class);
 
-	private static Controller<Contact> instance;
-
-	private ContactController(Home<Contact> home) {
+	public ContactController(final Home<Contact> home) {
 		super(home);
 	}
 
-	public static Controller<Contact> getInstance(Home<Contact> home) {
-		if (instance == null) {
-			instance = new ContactController(home);
-		}
-		return instance;
-	}
-
 	@Override
-	public void save(Contact contact, boolean updateViews) {
+	public void save(final Contact contact, final boolean updateViews) {
 		LOG.debug("Saving contact");
 		getHome().setInstance(contact);
 
@@ -64,7 +55,7 @@ public class ContactController extends AbstractController<Contact> {
 	}
 
 	@Override
-	protected void saveReferences(Contact contact, Class<?> target) {
+	protected void saveReferences(final Contact contact, final Class<?> target) {
 		LOG.info("Saving Contact references: " + target);
 		getHome().setInstance(contact);
 
@@ -84,7 +75,7 @@ public class ContactController extends AbstractController<Contact> {
 		getHome().clearInstance();
 	}
 
-	private void updateAddresses(Set<Address> addresses) {
+	private void updateAddresses(final Set<Address> addresses) {
 		Controller<Address> controller = ControllerFactory
 .getInstanceFor(Address.class);
 		for (Address address : addresses) {
@@ -92,7 +83,7 @@ public class ContactController extends AbstractController<Contact> {
 		}
 	}
 
-	private void updatePhones(Set<Phone> phones) {
+	private void updatePhones(final Set<Phone> phones) {
 		Controller<Phone> controller = ControllerFactory
 .getInstanceFor(Phone.class);
 		for (Phone phone : phones) {
@@ -100,7 +91,7 @@ public class ContactController extends AbstractController<Contact> {
 		}
 	}
 
-	private void updateVirtualAddresses(Set<VirtualAddress> vAddresses) {
+	private void updateVirtualAddresses(final Set<VirtualAddress> vAddresses) {
 		Controller<VirtualAddress> controller = ControllerFactory
 .getInstanceFor(VirtualAddress.class);
 		for (VirtualAddress vAddress : vAddresses) {
@@ -109,14 +100,14 @@ public class ContactController extends AbstractController<Contact> {
 	}
 
 	@Override
-	public <K> java.util.Collection<Contact> getElementsBy(java.lang.Class<K> targetClass, K target) {
+	public <K> java.util.Collection<Contact> getElementsBy(final java.lang.Class<K> targetClass, final K target) {
 		final List<Contact> list = new ArrayList<Contact>();
 		if (targetClass.equals(Group.class) && ((Group) target).getId() != null) {			
 			Group group = (Group) target;
 			list.addAll(getSpecificHome().getByGroup(group));
 		} else {
 			refreshElementList();
-			list.addAll((List<Contact>) getElements());
+			list.addAll(getElements());
 		}
 		return list;
 	}

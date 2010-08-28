@@ -11,22 +11,12 @@ import org.uagrm.addressbook.model.dao.Home;
 public class VirtualAddressController extends
  AbstractController<VirtualAddress> {
 
-
-	private static Controller<VirtualAddress> instance;
-
-	private VirtualAddressController(Home<VirtualAddress> home) {
+	public VirtualAddressController(final Home<VirtualAddress> home) {
 		super(home);
 	}
 
-	public static Controller<VirtualAddress> getInstance(Home<VirtualAddress> home) {
-		if (instance == null) {
-			instance = new VirtualAddressController(home);
-		}
-		return instance;
-	}
-
 	@Override
-	protected void saveReferences(VirtualAddress element, Class<?> target) {
+	protected void saveReferences(final VirtualAddress element, final Class<?> target) {
 		// not needed
 	}
 
