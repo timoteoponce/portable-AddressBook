@@ -38,6 +38,6 @@ public class DaoFactory {
 	}
 
 	public static <T> T getInstance(final Class<T> daoClass) {
-		return factory.getInstance(daoClass);
+		return (T) factory.getInstance(daoClass);
 	}
 }

@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import org.apache.log4j.Logger;
 import org.uagrm.addressbook.controller.Controller;
 import org.uagrm.addressbook.controller.ControllerFactory;
 import org.uagrm.addressbook.model.Group;
@@ -24,7 +25,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author Timoteo Ponce
  */
 public class GroupListView extends AbstractListView<Group> {
-	// private static final Logger LOG = Logger.getLogger(GroupListView.class);
+	 private static final Logger LOG = Logger.getLogger(GroupListView.class);
 
 	private final Controller<Group> controller = ControllerFactory.getInstanceFor(Group.class);
 	private final ActionButtons actionButtons = new ActionButtons();
@@ -43,6 +44,7 @@ public class GroupListView extends AbstractListView<Group> {
 
 	@Override
 	public void updateList() {
+		LOG.debug("Updating group list");
 		getListModel().clear();
 		getListModel().addElement(new Group(null, "All", ""));
 		getListModel().addAllElements(controller.getElements());
@@ -51,7 +53,7 @@ public class GroupListView extends AbstractListView<Group> {
 
 	@Override
 	public void addNew() {
-		GroupEditDialog dialog = new GroupEditDialog(getMainWindow());
+		GroupEditDialog dialog = new GroupEditDialog(getMainWindow());		
 		dialog.setModel(new Group());
 		dialog.setEditable(true);
 		dialog.setSaveable(true);

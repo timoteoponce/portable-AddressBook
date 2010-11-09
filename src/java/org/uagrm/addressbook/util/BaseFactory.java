@@ -39,7 +39,7 @@ public class BaseFactory {
 	 * @param classDefinition
 	 * @return
 	 */
-	public <T> T getInstance(final Class<?> classDefinition, final Object... args) {
+	public Object getInstance(final Class<?> classDefinition, final Object... args) {
 		if (classMapper.containsKey(classDefinition)) {
 			return getOrCreateInstance(classDefinition, args);
 		} else {
@@ -52,11 +52,12 @@ public class BaseFactory {
 	 * @param classDefinition
 	 * @return
 	 */
-	private <T> T getOrCreateInstance(final Class<?> classDefinition, final Object... args) {
-		T instance = (T) instanceCache.get(classDefinition);
+	private Object getOrCreateInstance(final Class<?> classDefinition, final Object... args) {
+		Object instance = instanceCache.get(classDefinition);
 		if (instance == null) {
 			instance = newInstance(classDefinition, args);
-		}
+			instanceCache.put(classDefinition, instance);
+		}		
 		return instance;
 	}
 
@@ -66,21 +67,21 @@ public class BaseFactory {
 	 * @param args
 	 * @return
 	 */
-	public <T> T newInstance(final Class<?> classDefinition, final Object... args) {
+	public Object newInstance(final Class<?> classDefinition, final Object... args) {
 		try {
-			T instance = null;
+			Object instance = null;
 			final Class<?> classInstance = classMapper.get(classDefinition);
 			
 			if (args.length > 0) {
 				final Constructor<?>[] constructorArray = classInstance.getConstructors();
 				for (Constructor<?> constructor : constructorArray) {
 					if (constructor.getParameterTypes().length == args.length) {
-						instance = (T) constructor.newInstance(args);
+						instance = constructor.newInstance(args);
 						break;
 					}
 				}
 			} else {				
-				instance = (T) classInstance.newInstance();
+				instance = classInstance.newInstance();
 			}
 			return instance;
 		} catch (Exception e) {

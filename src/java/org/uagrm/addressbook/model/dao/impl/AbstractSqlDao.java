@@ -86,7 +86,7 @@ public abstract class AbstractSqlDao<T> implements Home<T> {
 			log.error(e, e);
 		} finally {
 			handler.closeQuietly(rs);
-		}
+		}		
 	}
 
 	@Override

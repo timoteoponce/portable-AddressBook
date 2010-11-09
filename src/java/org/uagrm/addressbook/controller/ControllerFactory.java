@@ -20,7 +20,7 @@ public class ControllerFactory {
 
 	private static <T> Controller<T> getInstance(final Class<T> controllerClass, final Class<T> entityClass) {
 		final Home<T> entityHome = (Home<T>) DaoFactory.getInstance(entityClass);			
-		final Controller<T> instance = factory.getInstance(controllerClass, entityHome);
+		final Controller<T> instance = (Controller<T>) factory.getInstance(controllerClass, entityHome);
 		return instance;
 	}
 
