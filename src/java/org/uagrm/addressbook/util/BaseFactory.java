@@ -57,7 +57,7 @@ public class BaseFactory {
 		if (instance == null) {
 			instance = newInstance(classDefinition, args);
 			instanceCache.put(classDefinition, instance);
-		}		
+		}
 		return instance;
 	}
 
